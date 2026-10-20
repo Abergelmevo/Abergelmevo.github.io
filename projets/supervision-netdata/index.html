@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -38,7 +38,9 @@
         <a href="/progression/">Progression</a>
         <a href="/projets/" aria-current="page">Projets</a>
         <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
         <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
     </nav>
   </div>
@@ -67,7 +69,7 @@
   <h2>Ce que j'ai fait</h2>
   <ol class="steps">
     <li><strong>Une VM Debian 11 sur Hyper-V</strong>Créée sur l'hyperviseur de l'entreprise, avec une adresse IP fixe : c'est elle qu'on ouvre dans le navigateur et qu'on autorise dans les pare-feu.</li>
-    <li><strong>Netdata par le script officiel</strong><code>kickstart.sh</code> installe l'agent et démarre le service ; <code>systemctl status netdata</code> le confirme, et le tableau de bord local répond sur le port 19999.</li>
+    <li><strong>Netdata par le script officiel</strong><code>kickstart.sh</code> installe l'agent et démarre le service ; <code>systemctl status netdata</code> le confirme, et le tableau de bord local répond.</li>
     <li><strong>Rattacher les serveurs Windows</strong>Installeur déposé sur un partage restreint ; chaque agent rejoint l'espace commun de Netdata Cloud par un jeton qui permet d'ajouter des machines : il ne doit pas circuler.</li>
     <li><strong>Vérifier les alertes</strong>Règles à deux niveaux, avertissement et critique. Montée en charge CPU provoquée sur un serveur : l'alerte remonte, et le pic se retrouve dans l'historique.</li>
   </ol>
@@ -76,7 +78,7 @@
     <div class="tech__body">
       <p>VM créée à partir de l'image Debian avec micrologiciels ; adresse fixe obtenue en désactivant le DHCP dans <code>/etc/network/interfaces</code>.</p>
       <figure class="fig">
-    <div class="fig__frame"><img src="/assets/img/projets/supervision-netdata/03-installation-agent.webp" width="732" height="347" alt="Terminal affichant « Successfully installed the Netdata Agent » et l'adresse générique d'accès au tableau de bord sur le port 19999." loading="lazy" decoding="async"></div>
+    <div class="fig__frame"><img src="/assets/img/projets/supervision-netdata/03-installation-agent.webp" width="732" height="347" alt="Terminal affichant « Successfully installed the Netdata Agent » et l'adresse générique d'accès au tableau de bord." loading="lazy" decoding="async"></div>
     <figcaption><b>Fig. 1</b>Installation réussie de l'agent Netdata sur la VM Debian 11 avec le script officiel.</figcaption>
   </figure>
       <p class="code-title">Terminal · l'erreur de l'incident</p>
@@ -117,7 +119,7 @@ bash: usermod : commande introuvable</code></pre>
         <text class="dg-title" x="16" y="24">Réseau de l'entreprise</text>
         <rect class="dg-box" x="16" y="40" width="368" height="56" rx="6"/>
         <text class="dg-title" x="32" y="63">VM Debian 11 · agent Netdata</text>
-        <text class="dg-sub" x="32" y="83">tableau de bord local, port 19999</text>
+        <text class="dg-sub" x="32" y="83">tableau de bord local</text>
         <rect class="dg-box" x="16" y="112" width="368" height="56" rx="6"/>
         <text class="dg-title" x="32" y="135">5 serveurs Windows · agent Netdata</text>
         <text class="dg-sub" x="32" y="155">installeur pris sur un partage restreint</text>
@@ -186,6 +188,6 @@ bash: usermod : commande introuvable</code></pre>
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

@@ -1,0 +1,44 @@
+/* CV : une page A4, même typographie que le site (polices hébergées sur le site). */
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 600; font-display: swap; src: url(/assets/fonts/inter-normal-latin.woff2) format('woff2'); }
+@font-face { font-family: 'Newsreader'; font-style: normal; font-weight: 400 600; font-display: swap; src: url(/assets/fonts/newsreader-normal-latin.woff2) format('woff2'); }
+
+@page { size: A4; margin: 11mm 12mm; }
+
+:root { --ink: #1B1D21; --ink-2: #3A3E45; --ink-3: #6B6F76; --accent: #0F5C57; --line: #E2DFD8; }
+* { box-sizing: border-box; }
+html { background: #EDEBE6; }
+body { margin: 0; font: 400 9.3pt/1.42 'Inter', system-ui, sans-serif; color: var(--ink-2); }
+.cv { background: #fff; width: 210mm; min-height: 297mm; margin: 24px auto; padding: 11mm 12mm; }
+a { color: inherit; text-decoration: none; }
+b { color: var(--ink); font-weight: 600; }
+p { margin: 0 0 5px; }
+ul { margin: 0; padding-left: 14px; }
+li { margin-bottom: 4px; }
+
+.cv__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; border-bottom: 2px solid var(--accent); padding-bottom: 9px; margin-bottom: 10px; }
+.cv__head h1 { font: 500 23pt/1.05 'Newsreader', Georgia, serif; color: var(--ink); margin: 0 0 3px; letter-spacing: -.01em; }
+.cv__title { font-weight: 600; color: var(--accent); margin: 0 0 2px; }
+.cv__now { margin: 0; color: var(--ink-3); }
+.cv__contact { list-style: none; padding: 0; text-align: right; font-size: 8.4pt; }
+.cv__contact li { margin: 0 0 2px; }
+.cv__profile { margin: 0 0 10px; }
+
+.cv__grid { display: grid; grid-template-columns: minmax(0, 1fr) 62mm; gap: 8mm; }
+h2 { font: 600 8.2pt/1.2 'Inter', sans-serif; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 10px 0 6px; padding-bottom: 3px; border-bottom: 1px solid var(--line); }
+section:first-child h2 { margin-top: 0; }
+.cv__job { margin-bottom: 8px; }
+.cv__role { margin: 0; }
+.cv__when { margin: 0 0 4px; font-size: 8.4pt; color: var(--ink-3); }
+.cv__side p { margin-bottom: 6px; }
+.cv__certs ul { padding-left: 12px; }
+
+@media print {
+  html { background: #fff; }
+  .cv { margin: 0; padding: 0; width: auto; min-height: 0; }
+}
+@media screen and (max-width: 800px) {
+  .cv { width: auto; margin: 0; padding: 20px 16px; }
+  .cv__head { flex-direction: column; }
+  .cv__contact { text-align: left; }
+  .cv__grid { grid-template-columns: 1fr; }
+}

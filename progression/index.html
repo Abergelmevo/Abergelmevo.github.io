@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -38,7 +38,9 @@
         <a href="/progression/" aria-current="page">Progression</a>
         <a href="/projets/">Projets</a>
         <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
         <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
     </nav>
   </div>
@@ -65,7 +67,7 @@
           <span class="timeline__when">2023 – 2025</span>
           <h3>BTS SIO, option SISR</h3>
           <p class="timeline__where">PST&amp;B · alternance dans une PME de distribution (~20 personnes)</p>
-          <p>Le service informatique tient en deux personnes : le dirigeant et moi. J'apprends en faisant tourner une vraie infrastructure (postes, annuaire, sauvegardes, accès distant), et en labo à l'école (réseau Cisco, pare-feu pfSense, haute disponibilité).</p>
+          <p>J'ai la main sur presque toute l'infrastructure. J'apprends en faisant tourner une vraie infrastructure (postes, annuaire, sauvegardes, accès distant), et en labo à l'école (réseau Cisco, pare-feu pfSense, haute disponibilité).</p>
           <div class="shift">
             <div>
               <h4>Au début</h4>
@@ -114,8 +116,9 @@
         <li class="is-current">
           <span class="timeline__when">Depuis septembre 2026</span>
           <h3>Cycle ingénieur cybersécurité</h3>
-          <p class="timeline__where">École 2600 · alternance chez Recygo (groupe La Poste)</p>
-          <p>Après une PME où je faisais tout, une organisation où la sécurité se pilote : feuille de route cyber, tests d'intrusion, plans de continuité et de reprise (PCA, PRA), politique de sécurité (PSSI), gestion des identités et des postes. Projets à venir : ils rejoindront ce portfolio quand ils pourront être présentés.</p>
+          <p class="timeline__where">École 2600 · ingénieur cybersécurité et administration en alternance chez Recygo</p>
+          <p>Après une PME où je faisais tout, une entreprise où la sécurité se pilote. Au sein de la direction SI et Data, mes missions : tenir la feuille de route cybersécurité du SI et des applications SaaS à partir des tests d'intrusion, former et tester les collaborateurs, écrire la gouvernance (PCA, PRA, PSSI), sécuriser les identités et les postes, et mener des projets d'automatisation métier. À l'école, le niveau monte d'un cran : je programme désormais le noyau Linux, de l'attaque à la détection. Les projets de l'alternance rejoindront ce portfolio quand ils pourront être présentés.</p>
+          <p class="muted">Projets : <a href="/projets/noyau-linux-miniedr-bpf/">noyau Linux, rootkit et miniEDR en BPF-LSM</a>, <a href="/projets/#en-cours">missions en cours chez Recygo</a>.</p>
         </li>
       </ol>
     </div>
@@ -191,7 +194,7 @@
       <div class="stage">
         <span class="stage__when">04</span>
         <h3>Documenter les incidents</h3>
-        <p>Une même adresse IP portée par le switch cœur et par le pare-feu, un dirigeant bloqué en RDP par Protected Users : je garde la trace de ce qui a raté et de la correction.</p>
+        <p>Une même adresse IP portée par le switch cœur et par le pare-feu, un compte à privilèges bloqué en RDP par Protected Users : je garde la trace de ce qui a raté et de la correction.</p>
         <a href="/projets/portail-b2b-dmz/">Portail B2B →</a>
       </div>
       <div class="stage">
@@ -210,22 +213,57 @@
   </div>
 </section>
 
-<section class="section">
+<section class="section" id="axes">
   <div class="wrap">
     <div class="section-head">
       <div>
         <p class="eyebrow">Et maintenant</p>
-        <h2>Ce que je travaille encore</h2>
-        <p>Mes projets ont aussi montré mes limites. Voici ce que je cherche à améliorer.</p>
+        <h2>Ce que je développe maintenant</h2>
+        <p>Quatre axes que je pousse plus loin, chacun à partir de ce que j'ai déjà fait.</p>
       </div>
     </div>
-    <div class="p-body">
-      <ul class="retro">
-        <li><span><strong>Automatiser.</strong> J'ai beaucoup configuré à la main. Je veux décrire mes infrastructures en code (Ansible, scripts versionnés) pour les rendre reproductibles.</span></li>
-        <li><span><strong>Appliquer le moindre privilège jusqu'au bout.</strong> En faire un réflexe de conception plutôt qu'une correction : droits par utilisateur, double authentification sur tout accès distant, comptes d'administration nominatifs.</span></li>
-        <li><span><strong>Segmenter.</strong> Sur un réseau à plat, tout le monde peut joindre tout le monde : je veux faire du découpage en VLAN (administration, serveurs, utilisateurs, objets connectés) un point de départ, pas un chantier de rattrapage.</span></li>
-        <li><span><strong>Passer à l'échelle.</strong> Gouvernance, gestion des risques et continuité d'activité dans un grand groupe : c'est l'objet de mon cycle ingénieur.</span></li>
-      </ul>
+    <div class="cards cards--2 cards--fit">
+      <article class="stage">
+        <span class="stage__when">Automatisation</span>
+        <h3>Automatiser ce qui se répète</h3>
+        <p>Des tâches qui tournent seules et se vérifient : n8n relie le SIEM à un modèle d'IA local, PowerShell audite et nettoie l'annuaire, Python analyse les journaux, un script envoie chaque matin le bilan de sécurité.</p>
+        <ul>
+          <li><a href="/projets/siem-ia-locale/">Pipeline n8n + IA locale</a><span>production</span></li>
+          <li><a href="/projets/audit-active-directory/">Scripts PowerShell d'audit AD</a><span>production</span></li>
+          <li><a href="https://github.com/Abergelmevo/security-scripts" rel="noopener noreferrer">Scripts Python de sécurité</a><span>GitHub</span></li>
+        </ul>
+        <p class="stage__next"><strong>La suite :</strong> décrire les déploiements en code avec Ansible, pour reconstruire un serveur à l'identique.</p>
+      </article>
+      <article class="stage">
+        <span class="stage__when">Offensif</span>
+        <h3>Tester en attaquant</h3>
+        <p>Je vérifie mes défenses du côté de l'attaquant : une chaîne d'attaque Active Directory jusqu'au Golden Ticket, et un cyber range qui mesure ce que le SIEM voit vraiment d'une intrusion.</p>
+        <ul>
+          <li><a href="/projets/attaque-active-directory/">Attaque d'un Active Directory</a><span>homelab</span></li>
+          <li><a href="/projets/cyber-range-pentest/">Cyber range FortiGate</a><span>homelab</span></li>
+        </ul>
+        <p class="stage__next"><strong>La suite :</strong> deux certifications en préparation, l'eJPT côté attaque (examen le 14 décembre 2026) et la HTB CDSA côté défense, puis le test d'intrusion approfondi pendant le cycle ingénieur.</p>
+      </article>
+      <article class="stage">
+        <span class="stage__when">Sécurité de l'IA</span>
+        <h3>Utiliser l'IA sans ouvrir de brèche</h3>
+        <p>Un modèle de langage local explique les alertes critiques sans qu'aucune donnée ne quitte le serveur. Ses inventions sont bornées par un prompt strict, une température basse et le rejet des réponses suspectes.</p>
+        <ul>
+          <li><a href="/projets/siem-ia-locale/">SIEM durci + IA locale</a><span>production</span></li>
+          <li><a href="/articles/ia-locale-garde-fous/">Garde-fous d'un modèle local</a><span>article</span></li>
+        </ul>
+        <p class="stage__next"><strong>La suite :</strong> les risques propres aux assistants et aux agents d'IA, comme l'injection de consignes, la fuite de données ou les droits trop larges.</p>
+      </article>
+      <article class="stage">
+        <span class="stage__when">Gouvernance</span>
+        <h3>Faire décider la direction</h3>
+        <p>Traduire un audit en décisions : une feuille de route remise à la direction, des objectifs de reprise à fixer, une charte qui dit aux salariés ce qui est collecté, une analyse de risques avant de monter un cluster.</p>
+        <ul>
+          <li><a href="/projets/audit-active-directory/">Feuille de route après audit</a><span>production</span></li>
+          <li><a href="/projets/sauvegarde-veeam/">RPO, RTO et règle 3-2-1</a><span>production</span></li>
+        </ul>
+        <p class="stage__next"><strong>La suite :</strong> chez Recygo, la politique de sécurité, le plan de continuité et le plan de reprise à écrire puis à faire vivre.</p>
+      </article>
     </div>
   </div>
 </section>
@@ -241,6 +279,6 @@
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -38,7 +38,9 @@
         <a href="/progression/">Progression</a>
         <a href="/projets/" aria-current="page">Projets</a>
         <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
         <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
     </nav>
   </div>
@@ -146,7 +148,7 @@ SW-CORE# show spanning-tree vlan 1
   <h2>L'incident</h2>
   <div class="incident">
     <p class="incident__title">Le nouveau switch devient racine STP et coupe tout le réseau</p>
-    <div class="incident__row"><span class="incident__tag incident__tag--problem">Problème</span><p>Au branchement du switch UniFi, coupure générale. La racine du Spanning Tree n'était plus le cœur : à priorité égale (32768 par défaut), l'élection se joue sur l'adresse MAC la plus basse, et celle de l'UniFi l'était.</p></div>
+    <div class="incident__row"><span class="incident__tag incident__tag--problem">Problème</span><p>Au branchement du switch UniFi, coupure générale. La racine du Spanning Tree n'était plus le cœur. Le switch neuf annonçait la priorité par défaut, 32768 ; le cœur Cisco y ajoute le numéro du VLAN (32769 sur le VLAN 1) : la plus petite valeur gagne l'élection.</p></div>
     <div class="incident__row"><span class="incident__tag incident__tag--fix">Résolution</span><p>Priorité 4096 sur les VLAN actifs du switch cœur, qui redevient racine. La leçon : fixer la racine avant de brancher, car un switch neuf arrive avec la priorité par défaut et peut gagner l'élection.</p></div>
   </div>
 </section>
@@ -221,8 +223,12 @@ SW-CORE# show spanning-tree vlan 1
     <li>Gestion du risque en production</li>
   </ul>
 </section>
+<section class="p-section" id="articles-lies">
+  <h2>Pour aller plus loin</h2>
+  <ul class="retro"><li><span><a href="/articles/switch-racine-spanning-tree/"><strong>Un switch neuf devient racine Spanning Tree</strong></a> : Au branchement d'un switch d'accès neuf, tout le réseau coupe. Le Spanning Tree l'a élu racine à la place du cœur, dont la priorité n'était pas fixée.</span></li></ul>
+</section>
     </div>
-    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li><li><a href="#articles-lies">Pour aller plus loin</a></li></ol></aside>
   </div>
 </article>
 <section class="p-next wrap" aria-label="Autres projets">
@@ -247,6 +253,6 @@ SW-CORE# show spanning-tree vlan 1
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

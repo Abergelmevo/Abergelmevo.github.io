@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -38,7 +38,9 @@
         <a href="/progression/">Progression</a>
         <a href="/projets/" aria-current="page">Projets</a>
         <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
         <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
     </nav>
   </div>
@@ -59,8 +61,8 @@
     <div class="p-body">
 <section class="p-section" id="contexte">
   <h2>Contexte</h2>
-  <p>Six utilisateurs se connectaient depuis leur poste personnel pour atteindre les partages du NAS, le bureau à distance et les applications métier. Le serveur OpenVPN tournait sur le pare-feu pfSense lui-même. Au-delà de <strong>trois connexions simultanées</strong>, les sessions tombaient et la mémoire du pare-feu saturait. Chaque coupure devenait un ticket.</p>
-  <p>La cause tenait à l'architecture : OpenVPN chiffre en espace utilisateur, sur la machine qui assure déjà le filtrage et le NAT de toute l'entreprise sur deux liens WAN. Ce projet prolonge mes premiers déploiements d'<a href="/projets/acces-distant-fortigate-splashtop/">accès distant</a>, faits poste par poste.</p>
+  <p>Six utilisateurs se connectaient à distance pour atteindre les partages du NAS, le bureau à distance et les applications métier. Le serveur OpenVPN tournait sur le pare-feu pfSense lui-même. Au-delà de <strong>trois connexions simultanées</strong>, les sessions tombaient et la mémoire du pare-feu saturait. Chaque coupure devenait un ticket.</p>
+  <p>La cause tenait à l'architecture : OpenVPN chiffre en espace utilisateur, sur la machine qui assure déjà le filtrage et le NAT de toute l'entreprise. Ce projet prolonge mes premiers déploiements d'<a href="/projets/acces-distant-fortigate-splashtop/">accès distant</a>, faits poste par poste.</p>
 </section>
 
 <section class="p-section" id="demarche">
@@ -76,7 +78,7 @@
     <div class="fig__frame">
       <svg viewBox="0 0 680 300" role="img" aria-labelledby="vpn-path-t">
         <title id="vpn-path-t">Chemin d'une connexion WireGuard entrante : l'équipement de l'opérateur, puis le pare-feu, puis la VM dédiée, qui ne donne accès qu'au réseau local</title>
-        <text class="dg-tag" x="16" y="18">Connexion entrante · UDP 51820</text>
+        <text class="dg-tag" x="16" y="18">Connexion entrante · UDP</text>
 
         <rect class="dg-box" x="16" y="32" width="180" height="68" rx="8"/>
         <text class="dg-title" x="106" y="57" text-anchor="middle">Poste distant</text>
@@ -139,7 +141,7 @@
       </div>
       <p class="code-title">Bash · installation de Firezone</p>
       <pre class="code"><code><span class="c"># Le script d'installation est téléchargé, lu, puis seulement exécuté</span>
-curl -fsSL https://raw.githubusercontent.com/firezone/firezone/legacy/scripts/install.sh -o install.sh
+curl -fsSL &lt;URL du script officiel&gt; -o install.sh
 <span class="c"># Il exigeait « v2 » dans la version de Docker Compose (la version installée est plus récente)</span>
 sed -i 's/$dc version | grep -q "v2"/$dc version | grep -qE "v[2-9]"/' install.sh
 bash install.sh</code></pre>
@@ -173,18 +175,18 @@ docker compose ps &amp;&amp; docker logs firezone-firezone-1 --tail 10</code></p
   <div class="incident">
     <p class="incident__title">Depuis l'extérieur, aucune connexion n'aboutit</p>
     <div class="incident__row"><span class="incident__tag incident__tag--problem">Problème</span><p>La redirection de port et la règle du pare-feu étaient correctes, mais une capture de paquets sur l'interface WAN ne montrait aucune trame entrante.</p></div>
-    <div class="incident__row"><span class="incident__tag incident__tag--fix">Résolution</span><p>L'adresse publique est portée par l'équipement de l'opérateur, qui ne livre au pare-feu qu'une adresse privée : le trafic traverse deux NAT. J'ai ajouté une règle chez l'opérateur, du port UDP 51820 vers le WAN du pare-feu, qui redirige ensuite vers la VM.</p></div>
+    <div class="incident__row"><span class="incident__tag incident__tag--fix">Résolution</span><p>L'adresse publique est portée par l'équipement de l'opérateur, qui ne livre au pare-feu qu'une adresse privée : le trafic traverse deux NAT. J'ai ajouté une redirection chez l'opérateur, vers le WAN du pare-feu, qui redirige ensuite vers la VM.</p></div>
   </div>
 </section>
 
 <section class="p-section" id="resultats">
   <h2>Résultats</h2>
-  <p>Test de bout en bout depuis un poste personnel, sur une connexion résidentielle : tunnel établi en quelques secondes, ping d'un contrôleur de domaine à <strong>55 ms sans perte</strong>, lecteur du NAS monté avec les identifiants du domaine, session de bureau à distance ouverte sur un serveur interne, droits NTFS appliqués normalement.</p>
+  <p>Test de bout en bout depuis l'extérieur, sur une connexion résidentielle : tunnel établi en quelques secondes, ping d'un contrôleur de domaine à <strong>55 ms sans perte</strong>, lecteur du NAS monté avec les identifiants du domaine, session de bureau à distance ouverte sur un serveur interne, droits NTFS appliqués normalement.</p>
   <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/vpn-wireguard/03-ping-a-travers-le-tunnel.webp" width="866" height="192" alt="Invite de commandes Windows : ping vers une adresse interne, quatre réponses, 0 % de perte, minimum 33 ms, maximum 106 ms, moyenne 55 ms." loading="lazy" decoding="async"></div>
     <figcaption><b>Fig. 3</b>Test à travers le tunnel depuis une connexion résidentielle : 4 réponses du contrôleur de domaine, 0 % de perte et 55 ms de moyenne.</figcaption>
   </figure>
-  <p>Une limite demeure, comme avec OpenVPN : sur un poste hors domaine, seuls les noms complets se résolvent, car le client Windows ne gère pas le suffixe de recherche DNS.</p>
+  <p>Une limite existait déjà avec OpenVPN : les noms courts ne se résolvaient pas, le client Windows ne gérant pas le suffixe de recherche DNS ; il fallait utiliser les noms complets.</p>
   <p>Un premier utilisateur était migré et se connectait sans intervention ; les autres suivaient, OpenVPN en secours. La tenue à six connexions simultanées et la mémoire du pare-feu n'ont donc pas été mesurées. Ce VPN a ensuite servi à ouvrir un accès encadré au prestataire du <a href="/projets/portail-b2b-dmz/">portail B2B en DMZ</a>.</p>
 </section>
 
@@ -234,6 +236,6 @@ docker compose ps &amp;&amp; docker logs firezone-firezone-1 --tail 10</code></p
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

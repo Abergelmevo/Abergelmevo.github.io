@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -41,7 +41,9 @@
         <a href="/progression/">Progression</a>
         <a href="/projets/" aria-current="page">Projets</a>
         <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
         <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/en/projects/audit-active-directory/" hreflang="en" lang="en" title="English version">EN</a>
     </nav>
   </div>
@@ -147,7 +149,7 @@ Import-Csv .\postes_inactifs.csv | ForEach-Object {
 <section class="p-section" id="incident">
   <h2>L'incident</h2>
   <div class="incident">
-    <p class="incident__title">Le dirigeant ne peut plus se connecter à distance</p>
+    <p class="incident__title">Un compte à privilèges ne peut plus se connecter à distance</p>
     <div class="incident__row"><span class="incident__tag incident__tag--problem">Problème</span><p>Quelques minutes après l'ajout de son compte au groupe <code>Protected Users</code>, sa connexion bureau à distance est refusée.</p></div>
     <div class="incident__row"><span class="incident__tag incident__tag--fix">Résolution</span><p>Retrait du groupe, remise à zéro de la délégation, fermeture complète de sa session : accès rétabli le jour même. Depuis, je teste chaque ajout sur un compte non critique aux usages identiques, et je préviens l'utilisateur avant.</p></div>
   </div>
@@ -198,14 +200,18 @@ Import-Csv .\postes_inactifs.csv | ForEach-Object {
     <li>Communication des risques à la direction</li>
   </ul>
 </section>
+<section class="p-section" id="articles-lies">
+  <h2>Pour aller plus loin</h2>
+  <ul class="retro"><li><span><a href="/articles/retirer-smbv1-controleur-domaine/"><strong>Retirer SMBv1 d'un contrôleur de domaine</strong></a> : Écouter cinq jours qui utilise encore SMBv1, le retirer, redémarrer le contrôleur pendant que le second authentifie, puis vérifier la réplication.</span></li></ul>
+</section>
     </div>
-    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li><li><a href="#articles-lies">Pour aller plus loin</a></li></ol></aside>
   </div>
 </article>
 <section class="p-next wrap" aria-label="Autres projets">
   <div class="p-next__grid">
     <a href="/projets/attaque-active-directory/"><small>← Projet précédent</small><span>Attaque d'un Active Directory (homelab)</span></a>
-    <span></span>
+    <a href="/projets/noyau-linux-miniedr-bpf/"><small>Projet suivant →</small><span>Noyau Linux : rootkit, puis miniEDR en BPF-LSM</span></a>
   </div>
   <article class="thread p-thread">
   <div class="thread__head"><h3>Fil rouge : Active Directory</h3><p>De l'administration courante à l'audit, puis à l'attaque.</p></div>
@@ -224,6 +230,6 @@ Import-Csv .\postes_inactifs.csv | ForEach-Object {
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

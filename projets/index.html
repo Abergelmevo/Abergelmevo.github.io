@@ -7,13 +7,13 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Projets — Mevorah Abergel</title>
-<meta name="description" content="20 projets d'administration systèmes, réseaux et cybersécurité, de 2023 à 2026 : production en entreprise, homelab et projets d'école.">
+<meta name="description" content="21 projets d'administration systèmes, réseaux et cybersécurité, de 2023 à 2026 : production en entreprise, homelab et projets d'école.">
 <link rel="canonical" href="https://abergelmevo.github.io/projets/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Mevorah Abergel">
 <meta property="og:title" content="Projets — Mevorah Abergel">
-<meta property="og:description" content="20 projets d'administration systèmes, réseaux et cybersécurité, de 2023 à 2026 : production en entreprise, homelab et projets d'école.">
+<meta property="og:description" content="21 projets d'administration systèmes, réseaux et cybersécurité, de 2023 à 2026 : production en entreprise, homelab et projets d'école.">
 <meta property="og:url" content="https://abergelmevo.github.io/projets/">
 <meta property="og:image" content="https://abergelmevo.github.io/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -38,7 +38,9 @@
         <a href="/progression/">Progression</a>
         <a href="/projets/" aria-current="page">Projets</a>
         <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
         <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
     </nav>
   </div>
@@ -46,19 +48,28 @@
 <main id="contenu">
 
 <section class="wrap p-hero">
-  <p class="eyebrow">20 projets <span class="sep"></span> 2023 → 2026</p>
+  <p class="eyebrow">21 projets <span class="sep"></span> 2023 → 2026</p>
   <h1>Projets</h1>
   <p class="lead">Chaque fiche dit d'où vient le projet : <strong>production</strong> (l'infrastructure réelle de l'entreprise où j'étais en alternance), <strong>homelab</strong> (mon laboratoire personnel), <strong>projet d'école</strong> ou <strong>étude de cas</strong>. Les plus récents sont en haut.</p>
 </section>
 <section class="wrap pb-88">
   <div class="filters" role="group" aria-label="Filtrer les projets">
-    <div class="filter-group"><span class="filter-group__label">Période</span><button class="chip" type="button" data-filter="stage" data-value="all" aria-pressed="true">Tous</button><button class="chip" type="button" data-filter="stage" data-value="licence" aria-pressed="false">Licence pro ASS&amp;R<span class="n">10</span></button><button class="chip" type="button" data-filter="stage" data-value="bts" aria-pressed="false">BTS SIO SISR<span class="n">10</span></button></div>
-    <div class="filter-group"><span class="filter-group__label">Contexte</span><button class="chip" type="button" data-filter="context" data-value="all" aria-pressed="true">Tous</button><button class="chip" type="button" data-filter="context" data-value="production" aria-pressed="false">Production<span class="n">12</span></button><button class="chip" type="button" data-filter="context" data-value="homelab" aria-pressed="false">Homelab<span class="n">2</span></button><button class="chip" type="button" data-filter="context" data-value="lab" aria-pressed="false">Laboratoire<span class="n">4</span></button><button class="chip" type="button" data-filter="context" data-value="ecole" aria-pressed="false">Projet d'école<span class="n">1</span></button><button class="chip" type="button" data-filter="context" data-value="etude" aria-pressed="false">Étude de cas<span class="n">1</span></button></div>
-    <div class="filter-group"><span class="filter-group__label">Thème</span><button class="chip" type="button" data-filter="theme" data-value="all" aria-pressed="true">Tous</button><button class="chip" type="button" data-filter="theme" data-value="defense" aria-pressed="false">Défense &amp; détection<span class="n">9</span></button><button class="chip" type="button" data-filter="theme" data-value="offensif" aria-pressed="false">Offensif<span class="n">2</span></button><button class="chip" type="button" data-filter="theme" data-value="systemes" aria-pressed="false">Systèmes &amp; annuaire<span class="n">11</span></button><button class="chip" type="button" data-filter="theme" data-value="reseau" aria-pressed="false">Réseau<span class="n">10</span></button><button class="chip" type="button" data-filter="theme" data-value="supervision" aria-pressed="false">Supervision<span class="n">4</span></button><button class="chip" type="button" data-filter="theme" data-value="resilience" aria-pressed="false">Sauvegarde &amp; continuité<span class="n">5</span></button><button class="chip" type="button" data-filter="theme" data-value="cloud" aria-pressed="false">Cloud<span class="n">1</span></button></div>
+    <div class="filter-group"><span class="filter-group__label">Période</span><button class="chip" type="button" data-filter="stage" data-value="all" aria-pressed="true">Tous</button><button class="chip" type="button" data-filter="stage" data-value="ingenieur" aria-pressed="false">Cycle ingénieur<span class="n">1</span></button><button class="chip" type="button" data-filter="stage" data-value="licence" aria-pressed="false">Licence pro ASS&amp;R<span class="n">10</span></button><button class="chip" type="button" data-filter="stage" data-value="bts" aria-pressed="false">BTS SIO SISR<span class="n">10</span></button></div>
+    <div class="filter-group"><span class="filter-group__label">Contexte</span><button class="chip" type="button" data-filter="context" data-value="all" aria-pressed="true">Tous</button><button class="chip" type="button" data-filter="context" data-value="production" aria-pressed="false">Production<span class="n">12</span></button><button class="chip" type="button" data-filter="context" data-value="homelab" aria-pressed="false">Homelab<span class="n">2</span></button><button class="chip" type="button" data-filter="context" data-value="lab" aria-pressed="false">Laboratoire<span class="n">4</span></button><button class="chip" type="button" data-filter="context" data-value="ecole" aria-pressed="false">Projet d'école<span class="n">2</span></button><button class="chip" type="button" data-filter="context" data-value="etude" aria-pressed="false">Étude de cas<span class="n">1</span></button></div>
+    <div class="filter-group"><span class="filter-group__label">Thème</span><button class="chip" type="button" data-filter="theme" data-value="all" aria-pressed="true">Tous</button><button class="chip" type="button" data-filter="theme" data-value="defense" aria-pressed="false">Défense &amp; détection<span class="n">10</span></button><button class="chip" type="button" data-filter="theme" data-value="offensif" aria-pressed="false">Offensif<span class="n">3</span></button><button class="chip" type="button" data-filter="theme" data-value="systemes" aria-pressed="false">Systèmes &amp; annuaire<span class="n">12</span></button><button class="chip" type="button" data-filter="theme" data-value="reseau" aria-pressed="false">Réseau<span class="n">10</span></button><button class="chip" type="button" data-filter="theme" data-value="supervision" aria-pressed="false">Supervision<span class="n">4</span></button><button class="chip" type="button" data-filter="theme" data-value="resilience" aria-pressed="false">Sauvegarde &amp; continuité<span class="n">5</span></button><button class="chip" type="button" data-filter="theme" data-value="cloud" aria-pressed="false">Cloud<span class="n">1</span></button></div>
   </div>
   <h2 class="visually-hidden">Liste des projets</h2>
   <p class="results-count" data-count aria-live="polite"></p>
   <div class="cards" data-cards>
+<a class="card" href="/projets/noyau-linux-miniedr-bpf/" data-stage="ingenieur" data-context="ecole" data-themes="systemes offensif defense">
+  <div class="card__media"><img src="/assets/img/projets/noyau-linux-miniedr-bpf/cover.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="card__body">
+    <div class="card__meta"><span class="badge badge--ecole">Projet d'école</span><span>Septembre – octobre 2026</span></div>
+    <h3>Noyau Linux : rootkit, puis miniEDR en BPF-LSM</h3>
+    <p>Quatre TP enchaînés à l'École 2600 : un Linux construit de zéro, deux appels système, un rootkit par hook ftrace, puis un miniEDR en eBPF qui surveille et emprisonne des processus.</p>
+    <div class="card__kpi"><b>17/17</b><span>tests du miniEDR réussis sur l'image finale</span></div>
+  </div>
+</a>
 <a class="card" href="/projets/audit-active-directory/" data-stage="licence" data-context="production" data-themes="systemes defense">
   <div class="card__media"><img src="/assets/img/projets/audit-active-directory/cover.webp" alt="" loading="lazy" decoding="async"></div>
   <div class="card__body">
@@ -240,6 +251,36 @@
   </div>
 </a>
   </div>
+
+  <h2 class="upcoming__title" id="en-cours">En cours et à venir</h2>
+  <p class="upcoming__intro">Cycle ingénieur à l'École 2600 et alternance chez Recygo : chaque projet aura sa fiche dès qu'il pourra être présenté, sans rien de confidentiel.</p>
+  <div class="cards cards--fit">
+    <article class="stage">
+      <span class="stage__when">Depuis sept. 2026 · Recygo</span>
+      <h3>Piloter la feuille de route cybersécurité</h3>
+      <p>Définir, chiffrer et suivre les chantiers de sécurité du système d'information et des applications SaaS, à partir des tests d'intrusion internes et externes.</p>
+    </article>
+    <article class="stage">
+      <span class="stage__when">Depuis sept. 2026 · Recygo</span>
+      <h3>Former et tester les collaborateurs</h3>
+      <p>Sensibiliser toutes les équipes à la cybersécurité, puis mesurer les bons réflexes par des tests.</p>
+    </article>
+    <article class="stage">
+      <span class="stage__when">Depuis sept. 2026 · Recygo</span>
+      <h3>Écrire la gouvernance</h3>
+      <p>Rédiger et tenir à jour le plan de continuité, le plan de reprise, le plan d'assurance sécurité et la politique de sécurité du SI.</p>
+    </article>
+    <article class="stage">
+      <span class="stage__when">Depuis sept. 2026 · Recygo</span>
+      <h3>Sécuriser les identités et les postes</h3>
+      <p>Administrer et durcir la gestion des identités et la gestion unifiée des postes, dans un environnement Microsoft 365 et Azure.</p>
+    </article>
+    <article class="stage">
+      <span class="stage__when">Depuis sept. 2026 · Recygo</span>
+      <h3>Automatiser les processus métier</h3>
+      <p>Piloter et réaliser des projets d'automatisation avec n8n, entre les applications de l'entreprise.</p>
+    </article>
+  </div>
 </section>
 </main>
 <footer class="site-footer">
@@ -253,6 +294,6 @@
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

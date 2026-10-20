@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -38,7 +38,9 @@
         <a href="/progression/">Progression</a>
         <a href="/projets/">Projets</a>
         <a href="/articles/" aria-current="page">Articles</a>
+        <a href="/certifications/">Certifications</a>
         <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
     </nav>
   </div>
@@ -53,11 +55,53 @@
 <section class="wrap pb-88">
   <h2 class="visually-hidden">Liste des articles</h2>
   <div class="cards cards--2">
+<a class="card card--article" href="/articles/retirer-smbv1-controleur-domaine/">
+  <div class="card__body">
+    <div class="card__meta"><span class="badge">Retour d'expérience</span><span>Juin – septembre 2026 · 3 min</span></div>
+    <h3>Retirer SMBv1 d'un contrôleur de domaine</h3>
+    <p>Écouter cinq jours qui utilise encore SMBv1, le retirer, redémarrer le contrôleur pendant que le second authentifie, puis vérifier la réplication.</p>
+  </div>
+</a>
+<a class="card card--article" href="/articles/golden-ticket-refuse/">
+  <div class="card__body">
+    <div class="card__meta"><span class="badge">Retour d'expérience</span><span>Août 2026 · 4 min</span></div>
+    <h3>Golden Ticket refusé trois fois</h3>
+    <p>Un Golden Ticket forgé avec la bonne clé krbtgt, refusé trois fois par le contrôleur, et ce que chaque refus montre des vérifications de Kerberos.</p>
+  </div>
+</a>
 <a class="card card--article" href="/articles/passerelle-dupliquee-dmz/">
   <div class="card__body">
     <div class="card__meta"><span class="badge">Retour d'expérience</span><span>Août 2026 · 3 min</span></div>
     <h3>Le ping passe, mais aucune connexion TCP ne sort</h3>
-    <p>Retour d'expérience : un serveur en DMZ qui répond au ping mais n'ouvre aucune connexion TCP, une table d'états pfSense qui se contredit, et une adresse de passerelle portée par deux équipements.</p>
+    <p>Un serveur en DMZ qui répond au ping mais n'ouvre aucune connexion TCP, une table d'états pfSense qui se contredit, et une adresse de passerelle portée par deux équipements.</p>
+  </div>
+</a>
+<a class="card card--article" href="/articles/conformite-qui-baisse/">
+  <div class="card__body">
+    <div class="card__meta"><span class="badge">Retour d'expérience</span><span>Juillet 2026 · 4 min</span></div>
+    <h3>Un score de conformité qui baisse quand on progresse</h3>
+    <p>Un laboratoire AWS audité avec Prowler, un taux de conformité qui recule alors que la configuration s'améliore, et les deux chiffres qui permettent de le lire.</p>
+  </div>
+</a>
+<a class="card card--article" href="/articles/switch-racine-spanning-tree/">
+  <div class="card__body">
+    <div class="card__meta"><span class="badge">Retour d'expérience</span><span>Juillet 2026 · 4 min</span></div>
+    <h3>Un switch neuf devient racine Spanning Tree</h3>
+    <p>Au branchement d'un switch d'accès neuf, tout le réseau coupe. Le Spanning Tree l'a élu racine à la place du cœur, dont la priorité n'était pas fixée.</p>
+  </div>
+</a>
+<a class="card card--article" href="/articles/bilan-184-alertes/">
+  <div class="card__body">
+    <div class="card__meta"><span class="badge">Retour d'expérience</span><span>2026 · 4 min</span></div>
+    <h3>Le bilan du matin qui oubliait 184 alertes critiques</h3>
+    <p>184 alertes critiques simulées, aucune dans le bilan du matin. Un fichier local incomplet, un bloc except qui avalait les erreurs, et un script réécrit sur l'indexer.</p>
+  </div>
+</a>
+<a class="card card--article" href="/articles/ia-locale-garde-fous/">
+  <div class="card__body">
+    <div class="card__meta"><span class="badge">Retour d'expérience</span><span>2026 · 4 min</span></div>
+    <h3>Une IA locale qui invente une règle de conformité</h3>
+    <p>Un modèle de langage local, branché sur le SIEM, ajoute une règle de conformité absente du texte qu'il traduit. Trois garde-fous, et une décision qui reste humaine.</p>
   </div>
 </a>
   </div>
@@ -74,6 +118,6 @@
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

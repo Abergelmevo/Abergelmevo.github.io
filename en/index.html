@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Skip to content</a>
@@ -39,7 +39,9 @@
     <nav class="nav" id="site-nav" aria-label="Main navigation">
         <a href="/en/" aria-current="page">Home</a>
         <a href="/en/#projects">Projects</a>
+        <a href="/en/certifications/">Certifications</a>
         <a href="/en/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/" hreflang="fr" lang="fr" title="Version française">FR</a>
     </nav>
   </div>
@@ -48,21 +50,21 @@
 <section class="hero">
   <div class="wrap hero__grid">
     <div>
-      <p class="status"><span class="dot" aria-hidden="true"></span><span>Engineering degree in cybersecurity · work-study at Recygo (La Poste group)</span></p>
+      <p class="status"><span class="dot" aria-hidden="true"></span><span>Engineering degree in cybersecurity · work-study at Recygo (a La Poste and Suez company)</span></p>
       <h1>Build an infrastructure, <em>then defend it.</em></h1>
-      <p class="lead">For three years of work-study, I ran IT for a small business of about twenty people, where the IT department was two people: the managing director and me. Network, Active Directory, backups, then detection and security audits. This English version covers three flagship projects; the full portfolio is in French.</p>
+      <p class="lead">For three years of work-study, I ran IT for a small business of about twenty people, with my hands on almost the entire infrastructure. Network, Active Directory, backups, then detection and security audits. This English version covers three flagship projects; the full portfolio is in French.</p>
       <div class="btn-row">
         <a class="btn btn--primary" href="#projects">See the projects <span class="arrow" aria-hidden="true">→</span></a>
         <a class="btn" href="/projets/" hreflang="fr">Full portfolio (French)</a>
+        <a class="btn" href="/assets/cv-mevorah-abergel.pdf">Download my CV (PDF, French)</a>
       </div>
     </div>
     <div class="facts">
       <dl>
-        <div class="row"><dt>Today</dt><dd>Engineering degree in cybersecurity at École 2600, work-study at Recygo</dd></div>
+        <div class="row"><dt>Today</dt><dd>Cybersecurity and administration engineer (work-study) at Recygo, engineering degree at École 2600</dd></div>
         <div class="row"><dt>Path</dt><dd>BTS SIO (2-year IT diploma) → professional bachelor's in network and systems security (UPEC) → engineering degree</dd></div>
         <div class="row"><dt>Field work</dt><dd>3 years on the same small-business infrastructure, in production</dd></div>
-        <div class="row"><dt>Projects</dt><dd>20 documented, 12 of them in production</dd></div>
-        <div class="row"><dt>Focus</dt><dd>Active Directory, Wazuh SIEM, Cisco and pfSense networking</dd></div>
+        <div class="row"><dt>Projects</dt><dd>21 documented, 12 of them in production</dd></div>
       </dl>
     </div>
   </div>
@@ -99,7 +101,7 @@
       <div>
         <p class="eyebrow">Progression</p>
         <h2>Three stages, the same logic</h2>
-        <p>First keep the infrastructure running. Then audit it, measure it and attack it to defend it better. Now, scale up to a large group.</p>
+        <p>First keep the infrastructure running. Then audit it, measure it and attack it to defend it better. Now, running a company's cybersecurity, from roadmap to governance.</p>
       </div>
       <a class="more" href="/progression/" hreflang="fr">Full path (French) →</a>
     </div>
@@ -128,9 +130,13 @@
       </article>
       <article class="stage stage--current">
         <span class="stage__when">Since Sept. 2026</span>
-        <h3>Upcoming projects</h3>
+        <h3>Down to the kernel</h3>
         <span class="stage__where">Engineering degree · École 2600 · Recygo</span>
-        <p>In a large group: cybersecurity roadmap, penetration testing, business continuity and disaster recovery, security policy, identity and endpoint management. These projects will join the portfolio once they can be presented.</p>
+        <p>At school, programming the Linux kernel, from attack to detection. At Recygo, work-study cybersecurity and administration engineer: security roadmap, governance, identities and automation.</p>
+        <ul>
+          <li><a href="/projets/noyau-linux-miniedr-bpf/" hreflang="fr">Linux kernel and miniEDR (FR)</a><span>2026</span></li>
+          <li><a href="/projets/#en-cours" hreflang="fr">Current missions at Recygo (FR)</a><span>2026</span></li>
+        </ul>
       </article>
     </div>
   </div>
@@ -142,7 +148,7 @@
       <div>
         <p class="eyebrow">Selection</p>
         <h2>Flagship projects</h2>
-        <p>Three projects translated into English. All 20 projects, from the BTS to the engineering degree, are documented in French.</p>
+        <p>Three projects translated into English. All 21 projects, from the BTS to the engineering degree, are documented in French.</p>
       </div>
       <a class="more" href="/projets/" hreflang="fr">All projects (French) →</a>
     </div>
@@ -260,6 +266,95 @@
   </div>
 </section>
 
+<section class="section" id="certifications">
+  <div class="wrap">
+    <div class="section-head">
+      <div><p class="eyebrow">Certifications</p><h2>Certifications</h2><p>Certifications first, then the courses I completed during my studies.</p></div>
+      <a class="more" href="/en/certifications/">All certifications →</a>
+    </div>
+    <div class="certs certs--compact">
+<article class="cert cert--certification">
+  <div class="cert__top"><span class="badge badge--production">Obtained</span><span class="cert__date">July 2026</span></div>
+  <div class="cert__main">
+  <h3>CCNA</h3>
+  <p class="cert__issuer">Cisco</p>
+  <p class="cert__desc">Cisco's reference networking certification (Associate level): it validates building, running and troubleshooting an enterprise network, from cabling to security and automation.</p>
+  
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--certification">
+  <div class="cert__top"><span class="badge badge--production">Obtained</span><span class="cert__date">January 2024</span></div>
+  <div class="cert__main">
+  <h3>Certificate in Web 3.0 and blockchain technologies</h3>
+  <p class="cert__issuer">Paris School of Technology &amp; Business</p>
+  <p class="cert__desc">Professional certificate built into the school's BTS SIO, focused on Web 3.0 and blockchain technologies.</p>
+  <p class="cert__detail">Highest honours</p>
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--certification">
+  <div class="cert__top"><span class="badge">In progress</span><span class="cert__date">December 2026</span></div>
+  <div class="cert__main">
+  <h3>eJPT v2 (Junior Penetration Tester)</h3>
+  <p class="cert__issuer">INE Security (eLearnSecurity)</p>
+  <p class="cert__desc">Hands-on entry-level penetration testing certification: a 48-hour exam on a lab network, from reconnaissance to pivoting between subnets.</p>
+  <p class="cert__detail">Exam scheduled for 14 December 2026</p>
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--certification">
+  <div class="cert__top"><span class="badge">In progress</span></div>
+  <div class="cert__main">
+  <h3>HTB CDSA (Certified Defensive Security Analyst)</h3>
+  <p class="cert__issuer">Hack The Box</p>
+  <p class="cert__desc">Hands-on blue-team certification: investigating incidents in a simulated SOC with Splunk and Elastic, then delivering a professional-grade incident report.</p>
+  
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--formation">
+  <div class="cert__top"><span class="badge badge--production">Completed</span><span class="cert__date">May 2024</span></div>
+  <div class="cert__main">
+  <h3>Introduction to Cybersecurity</h3>
+  <p class="cert__issuer">Cisco Networking Academy</p>
+  <p class="cert__desc">Cisco's entry course in cybersecurity: common threats and attacks, protecting personal data, then defending an organisation.</p>
+  
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--formation">
+  <div class="cert__top"><span class="badge badge--production">Completed</span><span class="cert__date">June 2024</span></div>
+  <div class="cert__main">
+  <h3>CNIL GDPR MOOC (L'atelier RGPD), modules 1 and 2</h3>
+  <p class="cert__issuer">CNIL</p>
+  <p class="cert__desc">The MOOC written by the CNIL's lawyers: the GDPR framework and its key notions, then the principles any data processing must follow.</p>
+  <p class="cert__detail">Final quizzes: 93% and 100%</p>
+  
+  
+  
+  </div>
+  
+</article>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="contact">
   <div class="wrap contact">
     <div>
@@ -285,6 +380,6 @@
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

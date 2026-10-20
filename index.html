@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -41,7 +41,9 @@
         <a href="/progression/">Progression</a>
         <a href="/projets/">Projets</a>
         <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
         <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
     </nav>
   </div>
@@ -50,21 +52,21 @@
 <section class="hero">
   <div class="wrap hero__grid">
     <div>
-      <p class="status"><span class="dot" aria-hidden="true"></span><span>Cycle ingénieur cybersécurité · alternance chez Recygo (groupe La Poste)</span></p>
+      <p class="status"><span class="dot" aria-hidden="true"></span><span>Cycle ingénieur cybersécurité · alternance chez Recygo (La Poste et Suez)</span></p>
       <h1>Construire une infrastructure, <em>puis la défendre.</em></h1>
-      <p class="lead">Pendant trois ans d'alternance, j'ai administré l'informatique d'une PME d'une vingtaine de personnes, où le service informatique tenait en deux personnes : le dirigeant et moi. Réseau, Active Directory, sauvegardes, puis détection et audit de sécurité. Chaque fiche de ce site raconte un projet, ses incidents et ses résultats mesurés.</p>
+      <p class="lead">Pendant trois ans d'alternance, j'ai administré l'informatique d'une PME d'une vingtaine de personnes, avec la main sur presque toute l'infrastructure. Réseau, Active Directory, sauvegardes, puis détection et audit de sécurité. Chaque fiche de ce site raconte un projet, ses incidents et ses résultats mesurés.</p>
       <div class="btn-row">
         <a class="btn btn--primary" href="/projets/">Voir les projets <span class="arrow" aria-hidden="true">→</span></a>
         <a class="btn" href="/progression/">Ma progression</a>
+        <a class="btn" href="/assets/cv-mevorah-abergel.pdf">Télécharger mon CV (PDF)</a>
       </div>
     </div>
     <div class="facts">
       <dl>
-        <div class="row"><dt>Aujourd'hui</dt><dd>Cycle ingénieur cybersécurité à l'École 2600, alternance chez Recygo</dd></div>
+        <div class="row"><dt>Aujourd'hui</dt><dd>Ingénieur cybersécurité et administration en alternance chez Recygo, cycle ingénieur à l'École 2600</dd></div>
         <div class="row"><dt>Parcours</dt><dd>BTS SIO SISR → Licence pro ASS&amp;R (UPEC) → cycle ingénieur</dd></div>
         <div class="row"><dt>Terrain</dt><dd>3 ans sur la même infrastructure de PME, en production</dd></div>
-        <div class="row"><dt>Projets</dt><dd>20 documentés, dont 12 en production</dd></div>
-        <div class="row"><dt>Spécialités</dt><dd>Active Directory, SIEM Wazuh, réseau Cisco et pfSense</dd></div>
+        <div class="row"><dt>Projets</dt><dd>21 documentés, dont 12 en production</dd></div>
       </dl>
     </div>
   </div>
@@ -101,7 +103,7 @@
       <div>
         <p class="eyebrow">Progression</p>
         <h2>Trois étapes, la même logique</h2>
-        <p>D'abord faire tourner l'infrastructure. Ensuite l'auditer, la mesurer et l'attaquer pour mieux la défendre. Aujourd'hui, passer à l'échelle d'un grand groupe.</p>
+        <p>D'abord faire tourner l'infrastructure. Ensuite l'auditer, la mesurer et l'attaquer pour mieux la défendre. Aujourd'hui, piloter la cybersécurité d'une entreprise, de la feuille de route à la gouvernance.</p>
       </div>
       <a class="more" href="/progression/">Tout le parcours →</a>
     </div>
@@ -130,9 +132,13 @@
       </article>
       <article class="stage stage--current">
         <span class="stage__when">Depuis sept. 2026</span>
-        <h3>Projets à venir</h3>
+        <h3>Aller au cœur des systèmes</h3>
         <span class="stage__where">Cycle ingénieur · École 2600 · Recygo</span>
-        <p>Dans un grand groupe : feuille de route cyber, tests d'intrusion, continuité (PCA, PRA), politique de sécurité, gestion des identités et des postes. Ces projets rejoindront le portfolio quand ils pourront être présentés.</p>
+        <p>À l'école, programmer le noyau Linux, de l'attaque à la détection. Chez Recygo, ingénieur cybersécurité et administration en alternance : feuille de route cyber, gouvernance, identités et automatisation.</p>
+        <ul>
+          <li><a href="/projets/noyau-linux-miniedr-bpf/">Noyau Linux et miniEDR</a><span>2026</span></li>
+          <li><a href="/projets/#en-cours">Missions en cours chez Recygo</a><span>2026</span></li>
+        </ul>
       </article>
     </div>
   </div>
@@ -169,7 +175,7 @@
         <h2>Projets phares</h2>
         <p>Six projets représentatifs. Les autres, du BTS au cycle ingénieur, sont sur la page Projets.</p>
       </div>
-      <a class="more" href="/projets/">Les 20 projets →</a>
+      <a class="more" href="/projets/">Les 21 projets →</a>
     </div>
     <div class="cards">
 <a class="card" href="/projets/audit-active-directory/" data-stage="licence" data-context="production" data-themes="systemes defense">
@@ -312,6 +318,95 @@
   </div>
 </section>
 
+<section class="section" id="certifications">
+  <div class="wrap">
+    <div class="section-head">
+      <div><p class="eyebrow">Certifications</p><h2>Certifications</h2><p>Les certifications, puis les formations suivies pendant mes études.</p></div>
+      <a class="more" href="/certifications/">Toutes les certifications →</a>
+    </div>
+    <div class="certs certs--compact">
+<article class="cert cert--certification">
+  <div class="cert__top"><span class="badge badge--production">Obtenue</span><span class="cert__date">juillet 2026</span></div>
+  <div class="cert__main">
+  <h3>CCNA</h3>
+  <p class="cert__issuer">Cisco</p>
+  <p class="cert__desc">La certification réseau de référence de Cisco, niveau Associate : elle valide la mise en place, l'exploitation et le dépannage d'un réseau d'entreprise, du câblage jusqu'à la sécurité et l'automatisation.</p>
+  
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--certification">
+  <div class="cert__top"><span class="badge badge--production">Obtenue</span><span class="cert__date">janvier 2024</span></div>
+  <div class="cert__main">
+  <h3>Certificat en Web 3.0 et technologies blockchain</h3>
+  <p class="cert__issuer">Paris School of Technology &amp; Business</p>
+  <p class="cert__desc">Certification professionnelle intégrée au BTS SIO de l'école, consacrée au Web 3.0 et aux technologies blockchain.</p>
+  <p class="cert__detail">Mention très bien</p>
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--certification">
+  <div class="cert__top"><span class="badge">En cours</span><span class="cert__date">décembre 2026</span></div>
+  <div class="cert__main">
+  <h3>eJPT v2 (Junior Penetration Tester)</h3>
+  <p class="cert__issuer">INE Security (eLearnSecurity)</p>
+  <p class="cert__desc">Certification pratique d'entrée en test d'intrusion : un examen de 48 heures sur un réseau de laboratoire, de la reconnaissance jusqu'au pivot entre sous-réseaux.</p>
+  <p class="cert__detail">Examen prévu le 14 décembre 2026</p>
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--certification">
+  <div class="cert__top"><span class="badge">En cours</span></div>
+  <div class="cert__main">
+  <h3>HTB CDSA (Certified Defensive Security Analyst)</h3>
+  <p class="cert__issuer">Hack The Box</p>
+  <p class="cert__desc">Certification pratique côté défense : enquêter sur des incidents dans un SOC simulé avec Splunk et Elastic, puis rendre un rapport d'incident de niveau professionnel.</p>
+  
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--formation">
+  <div class="cert__top"><span class="badge badge--production">Terminée</span><span class="cert__date">mai 2024</span></div>
+  <div class="cert__main">
+  <h3>Introduction to Cybersecurity</h3>
+  <p class="cert__issuer">Cisco Networking Academy</p>
+  <p class="cert__desc">Le cours d'entrée de Cisco en cybersécurité : menaces et attaques courantes, protection des données personnelles, puis défense d'une organisation.</p>
+  
+  
+  
+  
+  </div>
+  
+</article>
+<article class="cert cert--formation">
+  <div class="cert__top"><span class="badge badge--production">Terminée</span><span class="cert__date">juin 2024</span></div>
+  <div class="cert__main">
+  <h3>MOOC L'atelier RGPD, modules 1 et 2</h3>
+  <p class="cert__issuer">CNIL</p>
+  <p class="cert__desc">Le MOOC des juristes de la CNIL : le cadre du RGPD et ses notions clés, puis les principes qu'un traitement de données doit respecter.</p>
+  <p class="cert__detail">Quiz finaux : 93 % et 100 %</p>
+  
+  
+  
+  </div>
+  
+</article>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="contact">
   <div class="wrap contact">
     <div>
@@ -337,6 +432,6 @@
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

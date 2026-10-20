@@ -25,7 +25,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Skip to content</a>
@@ -39,7 +39,9 @@
     <nav class="nav" id="site-nav" aria-label="Main navigation">
         <a href="/en/">Home</a>
         <a href="/en/#projects" aria-current="page">Projects</a>
+        <a href="/en/certifications/">Certifications</a>
         <a href="/en/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/projets/audit-active-directory/" hreflang="fr" lang="fr" title="Version française">FR</a>
     </nav>
   </div>
@@ -145,7 +147,7 @@ Import-Csv .\postes_inactifs.csv | ForEach-Object {
 <section class="p-section" id="incident">
   <h2>The incident</h2>
   <div class="incident">
-    <p class="incident__title">The managing director can no longer log in remotely</p>
+    <p class="incident__title">A privileged account can no longer log in remotely</p>
     <div class="incident__row"><span class="incident__tag incident__tag--problem">Problem</span><p>A few minutes after their account was added to the <code>Protected Users</code> group, their remote desktop connection was refused.</p></div>
     <div class="incident__row"><span class="incident__tag incident__tag--fix">Fix</span><p>Removed from the group, delegation reset, session fully closed: access restored the same day. Since then, I test every addition on a non-critical account with the same usage, and I warn the user beforehand.</p></div>
   </div>
@@ -203,7 +205,7 @@ Import-Csv .\postes_inactifs.csv | ForEach-Object {
 <section class="p-next wrap" aria-label="More projects">
   <div class="p-next__grid">
     <a href="/en/#projects"><small>← English pages</small><span>Flagship projects</span></a>
-    <a href="/projets/"><small>Full portfolio →</small><span>All 20 projects, in French</span></a>
+    <a href="/projets/"><small>Full portfolio →</small><span>All 21 projects, in French</span></a>
   </div>
 </section>
 </main>
@@ -218,6 +220,6 @@ Import-Csv .\postes_inactifs.csv | ForEach-Object {
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

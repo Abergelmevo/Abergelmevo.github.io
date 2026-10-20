@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- frame-ancestors n'est pas pris en compte dans une balise meta : GitHub Pages ne permet pas d'envoyer cet en-tête HTTP. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Noyau Linux : rootkit, puis miniEDR en BPF-LSM — Mevorah Abergel</title>
+<meta name="description" content="Quatre TP enchaînés à l'École 2600 : un Linux construit de zéro, deux appels système, un rootkit par hook ftrace, puis un miniEDR en eBPF qui surveille et emprisonne des processus.">
+<link rel="canonical" href="https://abergelmevo.github.io/projets/noyau-linux-miniedr-bpf/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Mevorah Abergel">
+<meta property="og:title" content="Noyau Linux : rootkit, puis miniEDR en BPF-LSM — Mevorah Abergel">
+<meta property="og:description" content="Quatre TP enchaînés à l'École 2600 : un Linux construit de zéro, deux appels système, un rootkit par hook ftrace, puis un miniEDR en eBPF qui surveille et emprisonne des processus.">
+<meta property="og:url" content="https://abergelmevo.github.io/projets/noyau-linux-miniedr-bpf/">
+<meta property="og:image" content="https://abergelmevo.github.io/assets/img/projets/noyau-linux-miniedr-bpf/cover.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand__name">Mevorah Abergel</span>
+      <span class="brand__role">Cyber &amp; infra</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="bars"><span></span></span>Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/progression/">Progression</a>
+        <a href="/projets/" aria-current="page">Projets</a>
+        <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
+        <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
+        <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
+    </nav>
+  </div>
+</header>
+<main id="contenu">
+
+<article>
+  <header class="p-hero wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/projets/">Projets</a> / <a href="/projets/?stage=ingenieur">Cycle ingénieur</a></nav>
+    <div class="p-badges"><span class="badge">Cycle ingénieur</span><span class="badge badge--ecole">Projet d'école</span><span class="p-read">Lecture : 3 min</span></div>
+    <h1>Programmer le noyau Linux : du système bootable au miniEDR en BPF-LSM</h1>
+    <p class="lead">Un Linux construit de zéro, modifié de l'intérieur, attaqué avec un rootkit puis défendu par un miniEDR en eBPF : quatre TP sur une seule image disque.</p>
+    <dl class="p-meta"><div><dt>Contexte</dt><dd>Projet d'école · École 2600, cycle ingénieur, module de sécurité des systèmes (noyau Linux)</dd></div><div><dt>Période</dt><dd>Septembre – octobre 2026</dd></div><div><dt>Mon rôle</dt><dd>Réalisé en autonomie, quatre TP cumulatifs</dd></div><div><dt>Outils</dt><dd>Linux 6.12 · C · eBPF / BPF-LSM · ftrace · QEMU · GRUB</dd></div></dl>
+    <section class="brief" aria-label="En bref"><p class="brief__title">En bref</p><div class="brief__grid"><div><span class="brief__k">Le problème</span><p>Comprendre le noyau Linux de l'intérieur : le démarrer, y ajouter du code, l'attaquer puis le défendre, sur une image unique livrée en fin de module.</p></div><div><span class="brief__k">Ce que j'ai fait</span><p>J'ai recompilé un noyau 6.12, ajouté deux appels système, écrit un rootkit par hook ftrace et un système de fichiers chiffrant, puis un miniEDR en BPF-LSM.</p></div><div><span class="brief__k">Le résultat</span><p>Une image QEMU bootable, un miniEDR qui journalise et emprisonne des processus : 17 tests sur 17 sur l'image finale, cinq incidents noyau résolus.</p></div></div></section>
+    <div class="kpis"><div class="kpi"><span class="kpi__value">17/17</span><span class="kpi__label">tests du miniEDR réussis sur l'image finale</span></div><div class="kpi"><span class="kpi__value">2</span><span class="kpi__label">appels système ajoutés dans l'arbre du noyau</span></div><div class="kpi"><span class="kpi__value">5</span><span class="kpi__label">incidents noyau diagnostiqués et corrigés</span></div></div>
+  </header>
+  <div class="wrap p-layout">
+    <div class="p-body">
+<section class="p-section" id="contexte">
+  <h2>Contexte</h2>
+  <p>Module de sécurité des systèmes de mon cycle ingénieur à l'École 2600 : programmer le noyau Linux. Quatre TP enchaînés, et un seul rendu : une image disque enrichie de TP en TP, livrée compressée en fin de module avec les sources et les scripts de test.</p>
+  <p>La méthode est imposée par l'environnement : tout le code s'écrit et se compile sur la machine hôte, puis s'injecte dans l'image montée en loopback. La machine virtuelle QEMU, un Alpine sans en-têtes noyau, ne sert qu'à charger et tester.</p>
+</section>
+
+<section class="p-section" id="demarche">
+  <h2>Ce que j'ai fait</h2>
+  <ol class="steps">
+    <li><strong>Construire un Linux qui démarre</strong>Un fichier traité comme un disque, une table MBR, une partition ext4, un système Alpine, un noyau 6.12.9 recompilé et GRUB dans le secteur d'amorçage : l'image démarre jusqu'au login sur la console série.</li>
+    <li><strong>Ajouter du code au noyau</strong>Deux appels système dans l'arbre des sources, déclarés dans la table x86-64 (l'un désactivable par une option de configuration), puis un module chargeable qui expose un périphérique <code>/dev/version</code>.</li>
+    <li><strong>L'attaquer</strong>Un rootkit qui intercepte <code>getdents64</code> par un hook ftrace : le fichier visé disparaît de tout listage sans être touché sur le disque. Puis un système de fichiers qui chiffre à l'écriture et déchiffre à la lecture.</li>
+    <li><strong>Le défendre</strong>Un miniEDR en BPF-LSM : des programmes eBPF attachés aux points de décision de sécurité du noyau journalisent chaque ouverture et chaque exécution, et peuvent emprisonner un processus en lui refusant des chemins.</li>
+  </ol>
+  <details class="tech">
+    <summary>Voir les détails techniques</summary>
+    <div class="tech__body">
+      <p><strong>Rootkit.</strong> Trois contraintes imposées : passer par ftrace, ne jamais modifier la table des appels système, ne pas toucher au bit de protection en écriture du processeur (CR0). Le vrai point d'entrée est <code>__x64_sys_getdents64</code>, qui reçoit un unique <code>struct pt_regs *</code> ; et <code>kallsyms_lookup_name</code> n'est plus exportée depuis le noyau 5.7 : je la résous par une kprobe temporaire posée sur son propre nom. Le tampon renvoyé est copié en espace noyau, filtré, puis rendu à l'utilisateur.</p>
+      <p class="code-title">VM · test du rootkit</p>
+      <pre class="code"><code>=== avant chargement ===
+rootkit
+=== chargement ===
+hidemod: hook pose sur __x64_sys_getdents64
+--- /dev/rootkit existe en acces direct :
+crw-rw-rw-    1 root     root       10, 124  /dev/rootkit
+--- mais absent des listages :
+  /dev/      : (masque)
+  /home/user : (masque)</code></pre>
+      <p><strong>Système de fichiers chiffrant.</strong> Il se monte par-dessus un répertoire de stockage et décale chaque lettre d'un nombre passé en option : <code>foobar</code> lu en clair est <code>sbbone</code> sur le disque avec un décalage de 13. Il s'appuie sur l'enregistrement d'un système de fichiers, la résolution de chemins et les lectures et écritures noyau.</p>
+      <p class="code-title">Kconfig · ce qu'il a fallu activer pour BPF-LSM</p>
+      <pre class="code"><code>CONFIG_BPF_SYSCALL=y       <span class="c"># l'appel bpf() lui-même</span>
+CONFIG_BPF_JIT=y           <span class="c"># requis par BPF_LSM (trampolines)</span>
+CONFIG_BPF_LSM=y           <span class="c"># attacher des programmes aux hooks LSM</span>
+CONFIG_SECURITYFS=y        <span class="c"># expose /sys/kernel/security/lsm</span>
+CONFIG_DEBUG_INFO_BTF=y    <span class="c"># types du noyau embarqués : socle du CO-RE</span></code></pre>
+      <p><strong>miniEDR.</strong> Hooks en mode <em>sleepable</em>, exigé par <code>bpf_d_path</code> pour résoudre le chemin complet ; événements écrits sans copie dans un ring buffer de 16 Mo ; PPID lu via CO-RE, l'offset du champ étant relocalisé au chargement grâce au BTF. La politique d'emprisonnement vit dans une table épinglée dans bpffs, partagée entre le daemon et l'outil <code>jailer</code>, deux processus distincts.</p>
+      <p class="code-title">VM · journal du daemon</p>
+      <pre class="code"><code>[FILE_OPEN] pid=423 ppid=381 uid=0 comm=sh   path=/bin/busybox
+[EXEC]      pid=423 ppid=381 uid=0 comm=sh
+[FILE_OPEN] pid=423 ppid=381 uid=0 comm=cat  path=/etc/hostname</code></pre>
+      <p>Le filtre par nom de processus ne s'applique qu'à l'émission des événements, jamais à la prison : sinon, il suffirait de porter le nom filtré pour s'évader.</p>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Incident</th><th>Cause</th><th>Correction</th></tr></thead>
+          <tbody>
+            <tr><td>La VM se fige au chargement du rootkit</td><td>GCC transforme l'appel à la fonction d'origine en saut (tail call) : le hook se rappelle lui-même</td><td><code>barrier()</code> et <code>notrace</code>, appel vérifié au désassemblage</td></tr>
+            <tr><td><code>ls</code> boucle jusqu'à l'OOM killer</td><td>Position du répertoire virtuel et du répertoire de stockage désynchronisées</td><td>Positions recopiées avant et après le parcours</td></tr>
+            <tr><td><code>umount</code> bloqué à 100 % du processeur</td><td>Mauvais destructeur de superbloc pour des inodes créés à la volée</td><td><code>kill_anon_super</code></td></tr>
+            <tr><td>Édition de liens statique impossible</td><td>Bibliothèque statique manquante sur l'hôte Debian</td><td>Compilation dans un conteneur Alpine (musl), binaires statiques</td></tr>
+            <tr><td>Programme BPF refusé par le verifier</td><td>Deux tampons de 256 octets sur une pile limitée à 512</td><td>Un seul chemin résolu, tampon réutilisé</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+</section>
+
+<section class="p-section" id="incident">
+  <h2>L'incident</h2>
+  <div class="incident">
+    <p class="incident__title">Le shell est emprisonné, mais <code>cat /etc/hostname</code> passe</p>
+    <div class="incident__row"><span class="incident__tag incident__tag--problem">Problème</span><p>Le PID du shell était bien dans la table de prison, et pourtant <code>cat</code> lisait un chemin interdit. Le shell lance chaque commande par <code>fork()</code> puis <code>exec()</code> : <code>cat</code> a son propre PID, absent de la table.</p></div>
+    <div class="incident__row"><span class="incident__tag incident__tag--fix">Résolution</span><p>Héritage de la politique : si le PID n'est pas dans la table, le programme cherche celui du parent. C'est cet héritage qui rend l'emprisonnement effectif.</p></div>
+  </div>
+</section>
+
+<section class="p-section" id="resultats">
+  <h2>Résultats</h2>
+  <figure class="fig fig--diagram">
+    <div class="fig__frame">
+      <svg viewBox="0 0 680 310" role="img" aria-labelledby="miniedr-t">
+        <title id="miniedr-t">Architecture du miniEDR : les appels système des processus passent par les hooks LSM, où un programme eBPF vérifié journalise dans un ring buffer lu par le daemon et applique la politique de la table épinglée, écrite par l'outil jailer.</title>
+        <rect class="dg-zone" x="0" y="8" width="680" height="104" rx="8"/>
+        <text class="dg-tag" x="12" y="28">Espace utilisateur</text>
+        <rect class="dg-box" x="12" y="40" width="160" height="58" rx="6"/>
+        <text class="dg-title" x="24" y="64">Processus</text>
+        <text class="dg-sub" x="24" y="83">open(), exec()</text>
+        <rect class="dg-box" x="252" y="40" width="176" height="58" rx="6"/>
+        <text class="dg-title" x="264" y="64">Daemon miniedr</text>
+        <text class="dg-sub" x="264" y="83">journal des événements</text>
+        <rect class="dg-box" x="508" y="40" width="160" height="58" rx="6"/>
+        <text class="dg-title" x="520" y="64">Outil jailer</text>
+        <text class="dg-sub" x="520" y="83">emprisonne un PID</text>
+
+        <rect class="dg-zone" x="0" y="150" width="680" height="152" rx="8"/>
+        <text class="dg-tag" x="12" y="170">Noyau 6.12 · BPF-LSM + BTF</text>
+        <rect class="dg-box" x="12" y="190" width="160" height="70" rx="6"/>
+        <text class="dg-title" x="24" y="216">Hooks LSM</text>
+        <text class="dg-sub" x="24" y="236">ouverture, exécution</text>
+        <rect class="dg-box dg-box--accent" x="252" y="182" width="176" height="86" rx="6"/>
+        <text class="dg-title" x="264" y="207">Programme eBPF</text>
+        <text class="dg-sub" x="264" y="227">vérifié au chargement</text>
+        <text class="dg-sub" x="264" y="246">décide : 0 ou −EPERM</text>
+        <rect class="dg-box dg-box--warn" x="508" y="190" width="160" height="70" rx="6"/>
+        <text class="dg-title" x="520" y="216">Table épinglée</text>
+        <text class="dg-sub" x="520" y="236">PID → chemins interdits</text>
+
+        <path class="dg-line" d="M92 98 V183"/>
+        <polygon class="dg-arrow" points="87,183 92,190 97,183"/>
+        <text class="dg-sub" x="100" y="140">appel système</text>
+        <path class="dg-line" d="M172 225 H245"/>
+        <polygon class="dg-arrow" points="245,220 252,225 245,230"/>
+        <path class="dg-line dg-line--accent" d="M340 182 V105"/>
+        <polygon class="dg-arrow dg-arrow--accent" points="335,105 340,98 345,105"/>
+        <text class="dg-sub" x="348" y="140">ring buffer 16 Mo</text>
+        <path class="dg-line" d="M588 98 V183"/>
+        <polygon class="dg-arrow" points="583,183 588,190 593,183"/>
+        <text class="dg-sub" x="596" y="140">écrit</text>
+        <path class="dg-line" d="M508 225 H435"/>
+        <polygon class="dg-arrow" points="435,220 428,225 435,230"/>
+        <text class="dg-sub" x="452" y="217">lue</text>
+      </svg>
+    </div>
+    <figcaption><b>Fig. 1</b>Le programme eBPF, vérifié par le noyau avant d'être chargé, journalise chaque ouverture et chaque exécution et applique la politique écrite par l'outil jailer.</figcaption>
+  </figure>
+  <p>L'image finale démarre, contient le noyau recompilé, les deux appels système, trois modules (le périphérique, le rootkit et le système de fichiers chiffrant) et le miniEDR. Un script rejoue tout sur l'image livrée : <strong>17 tests sur 17</strong>, du noyau BPF-LSM actif jusqu'à la prison qui refuse <code>/etc</code> et <code>/proc</code> tout en laissant passer le reste.</p>
+  <p>La série se lit de part et d'autre : au TP3, un hook ftrace mal compilé figeait la machine ; au TP4, le verifier BPF refuse simplement de charger un programme incorrect. C'est le basculement qu'ont opéré les outils de détection modernes, comme Falco ou Tetragon, et je l'ai vécu côté attaque comme côté défense.</p>
+</section>
+
+<section class="p-section" id="ameliorations">
+  <h2>Ce que j'améliorerais</h2>
+  <ul class="retro">
+    <li><span>Attacher la politique à un <strong>cgroup v2</strong> ou au stockage par tâche plutôt qu'au PID : l'héritage ne remonte qu'au parent direct, et deux <code>fork()</code> suffisent à en sortir.</span></li>
+    <li><span><strong>Épingler aussi le lien BPF</strong> : aujourd'hui, arrêter le daemon libère la prison, et la table épinglée reste orpheline.</span></li>
+    <li><span>Garder la règle tirée du rootkit pour tout hook noyau : <strong>un passe-plat d'abord</strong>, la logique ensuite, et l'appel vérifié au désassemblage avant tout chargement.</span></li>
+  </ul>
+</section>
+
+<section class="p-section" id="competences">
+  <h2>Compétences</h2>
+  <ul class="tags">
+    <li>Programmation noyau Linux (C)</li>
+    <li>Appels système et modules</li>
+    <li>Rootkits et dissimulation</li>
+    <li>eBPF, BPF-LSM et CO-RE</li>
+    <li>Débogage noyau</li>
+    <li>Construction d'images Linux</li>
+  </ul>
+</section>
+    </div>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+  </div>
+</article>
+<section class="p-next wrap" aria-label="Autres projets">
+  <div class="p-next__grid">
+    <a href="/projets/audit-active-directory/"><small>← Projet précédent</small><span>Audit et durcissement Active Directory</span></a>
+    <span></span>
+  </div>
+  
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Mevorah Abergel — cybersécurité &amp; infrastructure.</span>
+    <nav aria-label="Liens de pied de page">
+      <a href="/projets/">Projets</a>
+      <a href="/progression/">Progression</a>
+      <a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
+</body>
+</html>

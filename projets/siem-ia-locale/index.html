@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
 </head>
 <body>
 <a class="skip" href="#contenu">Aller au contenu</a>
@@ -38,7 +38,9 @@
         <a href="/progression/">Progression</a>
         <a href="/projets/" aria-current="page">Projets</a>
         <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
         <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
         <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
     </nav>
   </div>
@@ -277,8 +279,12 @@ sudo grep "52502" /var/ossec/logs/alerts/alerts.json | tail -1 | python3 -m json
     <li>Sauvegarde Veeam</li>
   </ul>
 </section>
+<section class="p-section" id="articles-lies">
+  <h2>Pour aller plus loin</h2>
+  <ul class="retro"><li><span><a href="/articles/bilan-184-alertes/"><strong>Le bilan du matin qui oubliait 184 alertes critiques</strong></a> : 184 alertes critiques simulées, aucune dans le bilan du matin. Un fichier local incomplet, un bloc except qui avalait les erreurs, et un script réécrit sur l'indexer.</span></li><li><span><a href="/articles/ia-locale-garde-fous/"><strong>Une IA locale qui invente une règle de conformité</strong></a> : Un modèle de langage local, branché sur le SIEM, ajoute une règle de conformité absente du texte qu'il traduit. Trois garde-fous, et une décision qui reste humaine.</span></li></ul>
+</section>
     </div>
-    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li><li><a href="#articles-lies">Pour aller plus loin</a></li></ol></aside>
   </div>
 </article>
 <section class="p-next wrap" aria-label="Autres projets">
@@ -307,6 +313,6 @@ sudo grep "52502" /var/ossec/logs/alerts/alerts.json | tail -1 | python3 -m json
     </nav>
   </div>
 </footer>
-<script src="/assets/js/site.js" defer></script>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
 </body>
 </html>

@@ -3,6 +3,7 @@
   <url><loc>https://abergelmevo.github.io/</loc></url>
   <url><loc>https://abergelmevo.github.io/progression/</loc></url>
   <url><loc>https://abergelmevo.github.io/projets/</loc></url>
+  <url><loc>https://abergelmevo.github.io/projets/noyau-linux-miniedr-bpf/</loc></url>
   <url><loc>https://abergelmevo.github.io/projets/audit-active-directory/</loc></url>
   <url><loc>https://abergelmevo.github.io/projets/attaque-active-directory/</loc></url>
   <url><loc>https://abergelmevo.github.io/projets/portail-b2b-dmz/</loc></url>
@@ -27,6 +28,14 @@
   <url><loc>https://abergelmevo.github.io/en/projects/audit-active-directory/</loc></url>
   <url><loc>https://abergelmevo.github.io/en/projects/soc-wazuh/</loc></url>
   <url><loc>https://abergelmevo.github.io/en/projects/attaque-active-directory/</loc></url>
+  <url><loc>https://abergelmevo.github.io/certifications/</loc></url>
+  <url><loc>https://abergelmevo.github.io/en/certifications/</loc></url>
   <url><loc>https://abergelmevo.github.io/articles/</loc></url>
+  <url><loc>https://abergelmevo.github.io/articles/retirer-smbv1-controleur-domaine/</loc></url>
+  <url><loc>https://abergelmevo.github.io/articles/golden-ticket-refuse/</loc></url>
   <url><loc>https://abergelmevo.github.io/articles/passerelle-dupliquee-dmz/</loc></url>
+  <url><loc>https://abergelmevo.github.io/articles/conformite-qui-baisse/</loc></url>
+  <url><loc>https://abergelmevo.github.io/articles/switch-racine-spanning-tree/</loc></url>
+  <url><loc>https://abergelmevo.github.io/articles/bilan-184-alertes/</loc></url>
+  <url><loc>https://abergelmevo.github.io/articles/ia-locale-garde-fous/</loc></url>
 </urlset>
