@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- frame-ancestors n'est pas pris en compte dans une balise meta : GitHub Pages ne permet pas d'envoyer cet en-tête HTTP. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le ping passe, mais aucune connexion TCP ne sort — Mevorah Abergel</title>
+<meta name="description" content="Retour d'expérience : un serveur en DMZ qui répond au ping mais n'ouvre aucune connexion TCP, une table d'états pfSense qui se contredit, et une adresse de passerelle portée par deux équipements.">
+<link rel="canonical" href="https://abergelmevo.github.io/articles/passerelle-dupliquee-dmz/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Mevorah Abergel">
+<meta property="og:title" content="Le ping passe, mais aucune connexion TCP ne sort — Mevorah Abergel">
+<meta property="og:description" content="Retour d'expérience : un serveur en DMZ qui répond au ping mais n'ouvre aucune connexion TCP, une table d'états pfSense qui se contredit, et une adresse de passerelle portée par deux équipements.">
+<meta property="og:url" content="https://abergelmevo.github.io/articles/passerelle-dupliquee-dmz/">
+<meta property="og:image" content="https://abergelmevo.github.io/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand__name">Mevorah Abergel</span>
+      <span class="brand__role">Cyber &amp; infra</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="bars"><span></span></span>Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/progression/">Progression</a>
+        <a href="/projets/">Projets</a>
+        <a href="/articles/" aria-current="page">Articles</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
+    </nav>
+  </div>
+</header>
+<main id="contenu">
+
+<article>
+  <header class="p-hero wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/articles/">Articles</a></nav>
+    <div class="p-badges"><span class="badge">Retour d'expérience</span><span class="p-read">Lecture : 3 min</span></div>
+    <h1>Le ping passe, mais aucune connexion TCP ne sort : une passerelle dupliquée entre switch cœur et pfSense</h1>
+    <p class="lead">Avant la mise en ligne d'un portail en DMZ, son serveur répondait au ping mais n'ouvrait aucune connexion TCP : voici comment la table d'états du pare-feu, puis l'ARP, ont mené à une adresse de passerelle portée par deux équipements.</p>
+    <dl class="p-meta p-meta--3"><div><dt>Publié</dt><dd>Août 2026</dd></div><div><dt>Contexte</dt><dd>Production · PME, DMZ derrière pfSense, switch cœur Cisco</dd></div><div><dt>Projet lié</dt><dd><a href="/projets/portail-b2b-dmz/">Portail B2B en DMZ, noté A</a></dd></div></dl>
+  </header>
+  <div class="wrap p-layout">
+    <div class="p-body">
+<section class="p-section" id="symptome">
+  <h2>Le symptôme</h2>
+  <p>Le serveur du <a href="/projets/portail-b2b-dmz/">portail B2B</a> venait d'être installé dans sa DMZ : un VLAN dédié sur le switch cœur, un réseau /30, et pfSense comme unique passerelle. Avant d'ouvrir le portail, il devait joindre le dépôt de Wazuh pour installer son agent, puis le SIEM interne.</p>
+  <p>Rien ne sortait. Un test de connexion TCP vers un DNS public échouait (<code>TcpTestSucceeded : False</code>), alors que le ping passait. Le blocage a duré plusieurs semaines avant l'ouverture : le temps de trouver la bonne question.</p>
+</section>
+
+<section class="p-section" id="hypotheses">
+  <h2>Ce que le symptôme écarte déjà</h2>
+  <p>Avant de toucher à quoi que ce soit, le symptôme permettait déjà de raisonner :</p>
+  <ul class="retro">
+    <li><span>Le <strong>ping passe</strong> : le serveur a une adresse, un lien et un chemin vers sa passerelle. Le câblage, le VLAN du port et l'adressage ne sont pas en cause.</span></li>
+    <li><span>Le test vise une <strong>adresse IP</strong>, pas un nom : le DNS n'intervient pas.</span></li>
+    <li><span>Ce qui échoue, ce sont des <strong>connexions TCP</strong>, qui demandent un aller et un retour cohérents. La question devient : par où passent les paquets, et que fait le pare-feu de leur réponse ?</span></li>
+  </ul>
+</section>
+
+<section class="p-section" id="etats">
+  <h2>Ce que montre la table d'états</h2>
+  <p>pfSense garde une trace de chaque connexion qu'il autorise : un « état ». La commande <code>pfctl -ss</code> les affiche. Pour une même connexion sortante du serveur, les paquets SYN apparaissaient tantôt sur l'<strong>interface DMZ</strong> du pare-feu, tantôt sur l'<strong>interface de liaison avec le switch cœur</strong>.</p>
+  <p>Or la politique d'états était liée à l'interface (<em>if-bound</em>) : un état créé sur une interface ne vaut que pour elle. Quand la réponse revenait par l'autre chemin, elle ne retrouvait pas son état et le pare-feu la rejetait. Un paquet qui entre dans un pare-feu par deux portes différentes, c'est le signe que quelque chose, en amont, l'y envoie par deux chemins.</p>
+</section>
+
+<section class="p-section" id="arp">
+  <h2>Qui répond à la passerelle ?</h2>
+  <p>Pour joindre sa passerelle, le serveur demande en ARP : « qui a cette adresse ? », puis envoie ses trames à l'équipement qui répond. Si deux équipements portent la même adresse, le serveur retient l'un ou l'autre selon le moment.</p>
+  <p>Sur le switch cœur, <code>show ip interface brief</code> a donné la réponse : l'interface virtuelle (SVI) du VLAN de la DMZ portait <strong>la même adresse IP</strong> que l'interface DMZ du pare-feu. Selon la réponse ARP retenue, le serveur envoyait son trafic directement au pare-feu, ou au switch, qui le routait vers le pare-feu par sa liaison.</p>
+  <figure class="fig fig--diagram">
+        <div class="fig__frame">
+          <svg viewBox="0 0 680 280" role="img" aria-labelledby="art-arp-t">
+            <title id="art-arp-t">Adresse dupliquée : le serveur envoie son trafic soit directement à l'interface DMZ du pare-feu, soit au switch cœur, qui le route vers une autre interface du pare-feu</title>
+            <rect class="dg-box" x="16" y="110" width="170" height="60" rx="8"/>
+            <text class="dg-title" x="101" y="135" text-anchor="middle">Serveur DMZ</text>
+            <text class="dg-sub" x="101" y="153" text-anchor="middle">requête ARP</text>
+
+            <rect class="dg-box" x="400" y="16" width="264" height="104" rx="8"/>
+            <text class="dg-title" x="532" y="40" text-anchor="middle">Pare-feu pfSense</text>
+            <rect class="dg-box dg-box--accent" x="414" y="56" width="112" height="48" rx="6"/>
+            <text class="dg-sub" x="470" y="84" text-anchor="middle">interface DMZ</text>
+            <rect class="dg-box" x="538" y="56" width="112" height="48" rx="6"/>
+            <text class="dg-sub" x="594" y="84" text-anchor="middle">liaison cœur</text>
+
+            <rect class="dg-box dg-box--warn" x="400" y="180" width="264" height="72" rx="8"/>
+            <text class="dg-title" x="532" y="205" text-anchor="middle">Switch cœur</text>
+            <text class="dg-sub" x="532" y="223" text-anchor="middle">interface du VLAN de la DMZ</text>
+            <text class="dg-sub" x="532" y="240" text-anchor="middle">avec la même adresse</text>
+
+            <path class="dg-line dg-line--accent" d="M186 125 H280 V80 H406"/>
+            <polygon class="dg-arrow dg-arrow--accent" points="414,80 405,75 405,85"/>
+            <text class="dg-tag" x="343" y="70" text-anchor="middle">Chemin prévu</text>
+
+            <path class="dg-line dg-line--warn" d="M186 155 H280 V216 H392"/>
+            <polygon class="dg-arrow" points="400,216 391,211 391,221"/>
+            <text class="dg-tag" x="336" y="236" text-anchor="middle">Chemin parasite</text>
+
+            <line class="dg-line dg-line--warn" x1="594" y1="180" x2="594" y2="113"/>
+            <polygon class="dg-arrow" points="594,104 589,113 599,113"/>
+            <text class="dg-tag" x="604" y="150">Routé</text>
+          </svg>
+        </div>
+        <figcaption><b>Fig. 1</b>Deux équipements répondaient à l'adresse de la passerelle. Selon la réponse ARP retenue, le trafic entrait dans le pare-feu par l'interface DMZ ou par sa liaison avec le switch cœur ; avec des états liés à l'interface, les retours étaient rejetés.</figcaption>
+      </figure>
+</section>
+
+<section class="p-section" id="correction">
+  <h2>La correction, sans casser le reste</h2>
+  <p>Le switch cœur porte tout le réseau de l'entreprise : avant de modifier l'interface, j'ai vérifié qu'elle ne servait à rien d'autre. Sa configuration et la table de routage ne montraient que la route locale du VLAN.</p>
+  <p class="code-title">Cisco IOS-XE et pfSense · correction (noms et adresses génériques)</p>
+  <pre class="code"><code><span class="c">! 1. L'interface du VLAN DMZ porte-t-elle une adresse ?</span>
+SW-CORE# show ip interface brief | include Vlan&lt;DMZ&gt;
+
+<span class="c">! 2. Avant de la retirer : rien d'autre ne dépend de cette interface</span>
+SW-CORE# show running-config interface Vlan&lt;DMZ&gt;
+SW-CORE# show ip route | include &lt;réseau DMZ&gt;
+
+<span class="c">! 3. Plus d'adresse : le VLAN reste actif en couche 2</span>
+SW-CORE(config)# interface Vlan&lt;DMZ&gt;
+SW-CORE(config-if)# no ip address
+
+<span class="c"># 4. pfSense : purger les seuls états du serveur, les autres sessions restent</span>
+pfctl -k &lt;adresse du serveur&gt;
+
+<span class="c">! 5. Enregistrer seulement après validation</span>
+SW-CORE# write memory</code></pre>
+  <p>Après la correction, le pare-feu était le seul à porter l'adresse de la passerelle. Le test TCP a réussi (<code>TcpTestSucceeded : True</code>), le dépôt et le manager Wazuh étaient joignables, et l'agent du serveur est apparu « Active » dans le SIEM avant l'ouverture du portail.</p>
+</section>
+
+<section class="p-section" id="lecons">
+  <h2>Ce que j'en retiens</h2>
+  <ul class="retro">
+    <li><span><strong>Avant de configurer une passerelle</strong>, vérifier qu'aucun équipement du segment ne porte déjà son adresse : table ARP, configuration du switch cœur. Ce contrôle de deux minutes aurait évité plusieurs semaines de blocage.</span></li>
+    <li><span><strong>Lire la table d'états</strong> d'un pare-feu quand « le ping passe mais pas le TCP » : un état créé sur une interface et une réponse arrivée par une autre trahissent un chemin asymétrique.</span></li>
+    <li><span><strong>Modifier le cœur de réseau comme une opération à risque</strong>, même pour une seule ligne : vérifier les dépendances, ne purger que ce qui est en cause, enregistrer seulement après validation.</span></li>
+  </ul>
+</section>
+    </div>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#symptome">Le symptôme</a></li><li><a href="#hypotheses">Ce que le symptôme écarte déjà</a></li><li><a href="#etats">Ce que montre la table d'états</a></li><li><a href="#arp">Qui répond à la passerelle ?</a></li><li><a href="#correction">La correction, sans casser le reste</a></li><li><a href="#lecons">Ce que j'en retiens</a></li></ol></aside>
+  </div>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Mevorah Abergel — cybersécurité &amp; infrastructure.</span>
+    <nav aria-label="Liens de pied de page">
+      <a href="/projets/">Projets</a>
+      <a href="/progression/">Progression</a>
+      <a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

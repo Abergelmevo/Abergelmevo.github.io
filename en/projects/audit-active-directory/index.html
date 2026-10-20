@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- frame-ancestors n'est pas pris en compte dans une balise meta : GitHub Pages ne permet pas d'envoyer cet en-tête HTTP. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Active Directory audit and hardening — Mevorah Abergel</title>
+<meta name="description" content="First audit of a directory that had never been reviewed: SMBv1 removed from the domain controller, krbtgt rotated after 11 years, 169 stale objects deleted, no unplanned downtime.">
+<link rel="canonical" href="https://abergelmevo.github.io/en/projects/audit-active-directory/">
+<link rel="alternate" hreflang="fr" href="https://abergelmevo.github.io/projets/audit-active-directory/">
+<link rel="alternate" hreflang="en" href="https://abergelmevo.github.io/en/projects/audit-active-directory/">
+<link rel="alternate" hreflang="x-default" href="https://abergelmevo.github.io/projets/audit-active-directory/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_GB">
+<meta property="og:site_name" content="Mevorah Abergel">
+<meta property="og:title" content="Active Directory audit and hardening — Mevorah Abergel">
+<meta property="og:description" content="First audit of a directory that had never been reviewed: SMBv1 removed from the domain controller, krbtgt rotated after 11 years, 169 stale objects deleted, no unplanned downtime.">
+<meta property="og:url" content="https://abergelmevo.github.io/en/projects/audit-active-directory/">
+<meta property="og:image" content="https://abergelmevo.github.io/assets/img/projets/audit-active-directory/cover.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/en/">
+      <span class="brand__name">Mevorah Abergel</span>
+      <span class="brand__role">Cyber &amp; infra</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="bars"><span></span></span>Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Main navigation">
+        <a href="/en/">Home</a>
+        <a href="/en/#projects" aria-current="page">Projects</a>
+        <a href="/en/#contact">Contact</a>
+        <a class="nav__lang" href="/projets/audit-active-directory/" hreflang="fr" lang="fr" title="Version française">FR</a>
+    </nav>
+  </div>
+</header>
+<main id="contenu">
+
+<article>
+  <header class="p-hero wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/en/">Home</a> / <a href="/en/#projects">Projects</a></nav>
+    <div class="p-badges"><span class="badge">Professional bachelor's (ASS&amp;R)</span><span class="badge badge--production">Production</span><span class="p-read">2 min read</span></div>
+    <h1>Auditing and hardening a production Active Directory</h1>
+    <p class="lead">A directory that had never been audited since it was created, which I measured with PingCastle and then fixed in production, one weakness at a time.</p>
+    <dl class="p-meta"><div><dt>Context</dt><dd>Production · small business, 808 objects, two Windows Server domain controllers</dd></div><div><dt>Period</dt><dd>June – September 2026</dd></div><div><dt>My role</dt><dd>Led independently; account changes approved by management</dd></div><div><dt>Tools</dt><dd>PingCastle · PowerShell · GPO · auditpol · repadmin</dd></div></dl>
+    <section class="brief" aria-label="In short"><p class="brief__title">In short</p><div class="brief__grid"><div><span class="brief__k">The problem</span><p>An 808-object Active Directory that had never been audited: a PingCastle score of 100/100, the worst possible, and no test environment.</p></div><div><span class="brief__k">What I did</span><p>I ranked the findings by real-world risk and fixed them in production: SMBv1, krbtgt, NTLMv1, privileged accounts and 169 stale objects.</p></div><div><span class="brief__k">The result</span><p>“Anomalies” score down from 100 to 74, 169 stale objects deleted, SMBv1 removed from the controller and existing Golden Tickets invalidated, with no unplanned downtime.</p></div></div></section>
+    <div class="kpis"><div class="kpi"><span class="kpi__value">100 → 74</span><span class="kpi__label">PingCastle “Anomalies” score</span></div><div class="kpi"><span class="kpi__value">169</span><span class="kpi__label">stale objects deleted</span></div><div class="kpi"><span class="kpi__value">11 years</span><span class="kpi__label">age of the krbtgt password before rotation</span></div></div>
+  </header>
+  <div class="wrap p-layout">
+    <div class="p-body">
+<section class="p-section" id="context">
+  <h2>Context</h2>
+  <p>The directory had been created with the company and never audited since. It held 808 objects for about twenty real users: former employees, machines that no longer existed, leftovers from an Exchange server migrated to Microsoft 365.</p>
+  <p>Two constraints: <strong>no test environment</strong>, so every command ran on the production controllers; and <strong>no unannounced downtime</strong>, with management sign-off for any change to an account.</p>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/audit-active-directory/01-pingcastle-analyse.webp" width="843" height="311" alt="PingCastle console: choosing the domain to analyse, starting the task and detecting about 808 objects; the domain name is masked." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 1</b>Running the PingCastle 3.5 audit in privileged healthcheck mode on the production domain: about 808 Active Directory objects analysed.</figcaption>
+  </figure>
+</section>
+
+<section class="p-section" id="approach">
+  <h2>What I did</h2>
+  <ol class="steps">
+    <li><strong>Measure, then prioritise</strong>First PingCastle scan: 100/100 in three of the four categories. I ranked the findings by what an attacker could do with them, not only by points.</li>
+    <li><strong>Remove SMBv1 without breaking anything</strong>Five days of SMBv1 access auditing: none. Disabled, uninstalled, then the primary controller rebooted while the second one handled authentication.</li>
+    <li><strong>Rotate krbtgt twice</strong>Its password had not changed in 11 years: a Golden Ticket forged during that time was still valid. Two rotations five days apart invalidate it.</li>
+    <li><strong>Clean up accounts without deleting directly</strong>Each object was disabled, moved to a “Quarantine” OU, observed, and only then deleted: 100 computers and 69 accounts in total.</li>
+    <li><strong>Close weak access paths</strong>NTLMv1 and LM refused by GPO, 11 admin accounts protected against delegation, minimum password length raised from 1 to 10 characters, advanced auditing sent to the <a href="/en/projects/soc-wazuh/">Wazuh SIEM</a>.</li>
+  </ol>
+  <details class="tech">
+    <summary>See technical details</summary>
+    <div class="tech__body">
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Initial finding</th><th>Risk</th><th class="num">Points</th></tr></thead>
+          <tbody>
+            <tr><td>SMBv1 enabled on the domain controller</td><td>Unauthenticated remote code execution (EternalBlue)</td><td class="num">100</td></tr>
+            <tr><td>krbtgt unchanged for 4,019 days</td><td>Golden Tickets still valid</td><td class="num">50</td></tr>
+            <tr><td>74% of computer accounts inactive</td><td>Reusable accounts nobody watches</td><td class="num">30</td></tr>
+            <tr><td>Administrators without the “sensitive account” flag</td><td>Credential theft through Kerberos delegation</td><td class="num">20</td></tr>
+            <tr><td>NTLMv1 and LM accepted</td><td>Hashes that can be captured and cracked quickly</td><td class="num">15</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="code-title">PowerShell · removing SMBv1</p>
+      <pre class="code"><code><span class="c"># Listen before cutting: who still uses SMBv1?</span>
+Set-SmbServerConfiguration -AuditSmb1Access $true -Force
+Get-WinEvent -LogName "Microsoft-Windows-SMBServer/Audit" | Where-Object Id -eq 3000
+
+<span class="c"># No access in 5 days: disable, then uninstall</span>
+Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
+Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart
+
+<span class="c"># After the reboot (the second controller handles authentication):</span>
+<span class="c"># force replication to check it resumes without errors</span>
+repadmin /syncall /AdeP</code></pre>
+      <p class="code-title">PowerShell · quarantine (excerpt)</p>
+      <pre class="code"><code>$quarantaine = "OU=Quarantaine,DC=corp,DC=local"
+Import-Csv .\postes_inactifs.csv | ForEach-Object {
+    $pc = Get-ADComputer $_.Name
+    Disable-ADAccount -Identity $pc
+    Move-ADObject -Identity $pc.DistinguishedName -TargetPath $quarantaine
+    Add-Content C:\Temp\log_postes.txt "$(Get-Date -Format s);$($pc.Name);quarantaine"
+}</code></pre>
+      <div class="fig-pair">
+        <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/audit-active-directory/02-ntlmv2-uniquement.webp" width="425" height="516" alt="Windows security policy setting window: LAN Manager authentication level set to send NTLM version 2 responses only." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 2</b>Domain controller policy set to “Send NTLMv2 response only, refuse LM and NTLM”, which shuts out LM/NTLMv1 authentication.</figcaption>
+  </figure>
+        <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/audit-active-directory/03-politique-mots-de-passe.webp" width="585" height="284" alt="Two extracts of the domain password policy: before, complexity disabled and a minimum length of 1 character; after, complexity enabled and 10 characters." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 3</b>Domain password policy before and after the fix: minimum length raised from 1 to 10 characters and complexity enabled.</figcaption>
+  </figure>
+      </div>
+      <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/audit-active-directory/04-strategie-audit.webp" width="594" height="501" alt="Two audit policy tables: before, almost every category is set to No auditing; after, directory access, logons, account management and privilege use are audited for success and failure." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 4</b>Domain controller audit policy before and after: key categories move from “No auditing” to “Success, Failure”.</figcaption>
+  </figure>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Fix</th><th>MITRE ATT&amp;CK technique mitigated</th></tr></thead>
+          <tbody>
+            <tr><td>SMBv1 uninstalled</td><td>T1210 · exploitation of remote services (EternalBlue, MS17-010)</td></tr>
+            <tr><td>Double krbtgt rotation</td><td>T1558.001 · Golden Ticket: tickets already forged are invalidated, not those a new theft of the key would allow</td></tr>
+            <tr><td>NTLMv1 and LM refused</td><td>T1557 · authentication interception: captured LM and NTLMv1 responses no longer crack in minutes</td></tr>
+            <tr><td>Stale accounts deleted</td><td>T1078 · valid accounts: fewer dormant accounts to hijack</td></tr>
+            <tr><td>MachineAccountQuota set to 0</td><td>T1136.002 · domain account creation (computer accounts)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+</section>
+
+<section class="p-section" id="incident">
+  <h2>The incident</h2>
+  <div class="incident">
+    <p class="incident__title">The managing director can no longer log in remotely</p>
+    <div class="incident__row"><span class="incident__tag incident__tag--problem">Problem</span><p>A few minutes after their account was added to the <code>Protected Users</code> group, their remote desktop connection was refused.</p></div>
+    <div class="incident__row"><span class="incident__tag incident__tag--fix">Fix</span><p>Removed from the group, delegation reset, session fully closed: access restored the same day. Since then, I test every addition on a non-critical account with the same usage, and I warn the user beforehand.</p></div>
+  </div>
+</section>
+
+<section class="p-section" id="results">
+  <h2>Results</h2>
+  <figure class="fig fig--bars">
+    <div class="fig__frame">
+      <div class="hbars">
+        <div class="hbars__row">
+          <p class="hbars__head"><span>“Anomalies” score</span><b>100 → 74</b></p>
+          <svg class="hbars__svg" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><rect class="ch-before" width="100" height="3"/><rect class="ch-after" y="5" width="74" height="3"/></svg>
+        </div>
+        <div class="hbars__row">
+          <p class="hbars__head"><span>Age of the krbtgt password</span><b>4,019 days → under 10 days</b></p>
+          <svg class="hbars__svg" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><rect class="ch-before" width="100" height="3"/><rect class="ch-after" y="5" width="0.6" height="3"/></svg>
+        </div>
+      </div>
+      <p class="hbars__legend"><span class="hbars__key hbars__key--before"></span>before <span class="hbars__key hbars__key--after"></span>after</p>
+    </div>
+    <figcaption><b>Fig. 5</b>Two indicators between the first and the last PingCastle scan (June → August 2026), each on its own scale.</figcaption>
+  </figure>
+  <p>At the last scan, in August 2026, SMBv1 was uninstalled, the krbtgt password was less than ten days old, LM and NTLMv1 were refused, and a standard user could no longer join a machine to the domain. Work that required a maintenance window was handed to management as a roadmap.</p>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/audit-active-directory/05-pingcastle-anomalies.webp" width="364" height="80" alt="PingCastle gauge for the Anomalies category, at 74 out of 100." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 6</b>Final PingCastle scan (August 2026): the “Anomalies” category brought down from 100 to 74/100.</figcaption>
+  </figure>
+</section>
+
+<section class="p-section" id="improvements">
+  <h2>What I would improve</h2>
+  <ul class="retro">
+    <li><span>Enable the <strong>Active Directory Recycle Bin</strong> and back up the controllers' system state before any deletion.</span></li>
+    <li><span>Use <strong>Microsoft's krbtgt reset script</strong>, which checks replication between each step.</span></li>
+    <li><span>Aim for a <strong>12-character minimum</strong>, as recommended by ANSSI (the French cybersecurity agency), and deploy advanced auditing through GPO.</span></li>
+  </ul>
+</section>
+
+<section class="p-section" id="skills">
+  <h2>Skills</h2>
+  <ul class="tags">
+    <li>Active Directory security audit</li>
+    <li>Kerberos and privileged accounts</li>
+    <li>GPO</li>
+    <li>PowerShell</li>
+    <li>Change management in production</li>
+    <li>Communicating risk to management</li>
+  </ul>
+</section>
+    </div>
+    <aside class="p-toc" aria-label="Contents"><p>On this page</p><ol><li><a href="#context">Context</a></li><li><a href="#approach">What I did</a></li><li><a href="#incident">The incident</a></li><li><a href="#results">Results</a></li><li><a href="#improvements">What I would improve</a></li><li><a href="#skills">Skills</a></li></ol></aside>
+  </div>
+</article>
+<section class="p-next wrap" aria-label="More projects">
+  <div class="p-next__grid">
+    <a href="/en/#projects"><small>← English pages</small><span>Flagship projects</span></a>
+    <a href="/projets/"><small>Full portfolio →</small><span>All 20 projects, in French</span></a>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Mevorah Abergel — cybersecurity &amp; infrastructure.</span>
+    <nav aria-label="Footer links">
+      <a href="/en/">Home</a>
+      <a href="/projets/">All projects (French)</a>
+      <a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

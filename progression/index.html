@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- frame-ancestors n'est pas pris en compte dans une balise meta : GitHub Pages ne permet pas d'envoyer cet en-tête HTTP. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Progression — Mevorah Abergel</title>
+<meta name="description" content="Comment mon niveau a évolué de 2023 à 2026 : du BTS SIO à la licence ASS&amp;R puis au cycle ingénieur cybersécurité, et les sujets qui reviennent à chaque étape, à chaque fois plus loin.">
+<link rel="canonical" href="https://abergelmevo.github.io/progression/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Mevorah Abergel">
+<meta property="og:title" content="Progression — Mevorah Abergel">
+<meta property="og:description" content="Comment mon niveau a évolué de 2023 à 2026 : du BTS SIO à la licence ASS&amp;R puis au cycle ingénieur cybersécurité, et les sujets qui reviennent à chaque étape, à chaque fois plus loin.">
+<meta property="og:url" content="https://abergelmevo.github.io/progression/">
+<meta property="og:image" content="https://abergelmevo.github.io/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand__name">Mevorah Abergel</span>
+      <span class="brand__role">Cyber &amp; infra</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="bars"><span></span></span>Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/progression/" aria-current="page">Progression</a>
+        <a href="/projets/">Projets</a>
+        <a href="/articles/">Articles</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
+    </nav>
+  </div>
+</header>
+<main id="contenu">
+<section class="wrap p-hero">
+  <p class="eyebrow">2023 → 2026 <span class="sep"></span> Parcours</p>
+  <h1>Ce que je savais faire en 2023, et ce que je sais faire aujourd'hui</h1>
+  <p class="lead">Ce portfolio couvre trois années d'alternance dans la même PME, puis le début d'un cycle ingénieur. Le plus parlant n'est pas la liste des outils : c'est la façon dont les mêmes sujets reviennent, à chaque fois traités plus en profondeur.</p>
+</section>
+
+<section class="wrap pb-72">
+  <div class="p-layout pb-0">
+    <div class="p-body">
+      <h2 class="visually-hidden">Chronologie</h2>
+      <ol class="timeline">
+        <li>
+          <span class="timeline__when">Avant 2023</span>
+          <h3>Une reconversion</h3>
+          <p class="timeline__where">Prépa médecine → informatique</p>
+          <p>J'ai quitté une prépa médecine pour l'informatique. J'y ai gardé une habitude : vouloir comprendre un système jusque dans ses détails avant d'y toucher.</p>
+        </li>
+        <li>
+          <span class="timeline__when">2023 – 2025</span>
+          <h3>BTS SIO, option SISR</h3>
+          <p class="timeline__where">PST&amp;B · alternance dans une PME de distribution (~20 personnes)</p>
+          <p>Le service informatique tient en deux personnes : le dirigeant et moi. J'apprends en faisant tourner une vraie infrastructure (postes, annuaire, sauvegardes, accès distant), et en labo à l'école (réseau Cisco, pare-feu pfSense, haute disponibilité).</p>
+          <div class="shift">
+            <div>
+              <h4>Au début</h4>
+              <ul>
+                <li>Installer et configurer en suivant une procédure</li>
+                <li>Dépanner poste par poste</li>
+                <li>Documenter une fois le travail fini</li>
+              </ul>
+            </div>
+            <div>
+              <h4>À la fin</h4>
+              <ul>
+                <li>Supprimer un point unique de défaillance (second DC, DHCP en failover)</li>
+                <li>Mettre en place sauvegarde et supervision</li>
+                <li>Concevoir une DMZ et un pare-feu redondant en labo</li>
+              </ul>
+            </div>
+          </div>
+          <p class="muted">Projets : <a href="/projets/mise-en-service-postes/">postes en domaine</a>, <a href="/projets/second-controleur-domaine/">second DC</a>, <a href="/projets/supervision-netdata/">Netdata</a>, <a href="/projets/sauvegarde-veeam/">Veeam</a>, <a href="/projets/acces-distant-fortigate-splashtop/">accès distant</a>, <a href="/projets/pfsense-dmz-haute-dispo/">pfSense</a>, <a href="/projets/reseau-cisco/">réseau Cisco</a>, <a href="/projets/projet-one/">Projet ONE</a>, <a href="/projets/ad-multisite/">AD multi-site</a>, <a href="/projets/raid1-debian/">RAID 1</a>.</p>
+        </li>
+        <li>
+          <span class="timeline__when">2025 – 2026</span>
+          <h3>Licence professionnelle ASS&amp;R</h3>
+          <p class="timeline__where">UPEC · toujours dans la même entreprise</p>
+          <p>Même infrastructure, autre regard. Je ne déploie plus seulement des services : je les audite, je mesure ce qu'ils valent, et je reproduis les attaques en labo pour savoir pourquoi je durcis ce que je durcis.</p>
+          <div class="shift">
+            <div>
+              <h4>Au début</h4>
+              <ul>
+                <li>Déployer un outil et vérifier qu'il fonctionne</li>
+                <li>Corriger ce qu'on me signale</li>
+              </ul>
+            </div>
+            <div>
+              <h4>À la fin</h4>
+              <ul>
+                <li>Auditer avant d'agir : PingCastle, Prowler, audit du cœur de réseau</li>
+                <li>Mesurer avant et après chaque changement</li>
+                <li>Gérer un incident en production et en tirer une procédure</li>
+                <li>Attaquer en labo ce que je défends en production</li>
+              </ul>
+            </div>
+          </div>
+          <p class="muted">Projets : <a href="/projets/soc-wazuh/">SOC Wazuh</a>, <a href="/projets/cyber-range-pentest/">cyber range</a>, <a href="/projets/siem-ia-locale/">SIEM et IA locale</a>, <a href="/projets/reseau-10-gigabit/">réseau 10G</a>, <a href="/projets/audit-cloud-aws/">audit AWS</a>, <a href="/projets/audit-active-directory/">audit AD</a>, <a href="/projets/attaque-active-directory/">attaque AD</a>, <a href="/projets/supervision-zabbix-grafana/">Zabbix</a>, <a href="/projets/vpn-wireguard/">WireGuard</a>, <a href="/projets/portail-b2b-dmz/">portail B2B en DMZ</a>.</p>
+        </li>
+        <li class="is-current">
+          <span class="timeline__when">Depuis septembre 2026</span>
+          <h3>Cycle ingénieur cybersécurité</h3>
+          <p class="timeline__where">École 2600 · alternance chez Recygo (groupe La Poste)</p>
+          <p>Après une PME où je faisais tout, une organisation où la sécurité se pilote : feuille de route cyber, tests d'intrusion, plans de continuité et de reprise (PCA, PRA), politique de sécurité (PSSI), gestion des identités et des postes. Projets à venir : ils rejoindront ce portfolio quand ils pourront être présentés.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="fils-rouges">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Fils rouges</p>
+        <h2>Six sujets, suivis dans le temps</h2>
+        <p>Chaque ligne part d'un projet du BTS et arrive à ce que je fais aujourd'hui. Cliquez sur une étape pour ouvrir la fiche.</p>
+      </div>
+    </div>
+    <div class="threads">
+<article class="thread">
+  <div class="thread__head"><h3>Superviser, puis détecter</h3><p>De la première sonde de supervision à un SOC à plusieurs couches.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/supervision-netdata/"><span class="thread__year">2024</span><span class="thread__label">Netdata sur une VM Debian</span><span class="thread__level">Voir l'état des serveurs en temps réel</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/supervision-zabbix-grafana/"><span class="thread__year">2026</span><span class="thread__label">Zabbix + Grafana en SNMP</span><span class="thread__level">Superviser le réseau, alerter en moins de 2 min</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/soc-wazuh/"><span class="thread__year">2026</span><span class="thread__label">SOC Wazuh multicouche</span><span class="thread__level">Détecter : système, réseau, leurre, MITRE ATT&amp;CK</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/siem-ia-locale/"><span class="thread__year">2026</span><span class="thread__label">SIEM durci + IA locale</span><span class="thread__level">Protéger le SIEM et rendre ses alertes lisibles</span></a></li></ol>
+</article>
+<article class="thread">
+  <div class="thread__head"><h3>Active Directory</h3><p>De l'administration courante à l'audit, puis à l'attaque.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/mise-en-service-postes/"><span class="thread__year">2024</span><span class="thread__label">Postes intégrés au domaine</span><span class="thread__level">Jonction, GPO, applications métier</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/second-controleur-domaine/"><span class="thread__year">2024</span><span class="thread__label">Second contrôleur de domaine</span><span class="thread__level">Supprimer le point unique de défaillance</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/ad-multisite/"><span class="thread__year">2025</span><span class="thread__label">AD sur deux sites (labo)</span><span class="thread__level">Répliquer derrière deux pare-feu</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/audit-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Audit PingCastle en production</span><span class="thread__level">Mesurer le risque, corriger sans coupure</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/attaque-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Attaque d'un AD (homelab)</span><span class="thread__level">Comprendre chaque faille côté attaquant</span></a></li></ol>
+</article>
+<article class="thread">
+  <div class="thread__head"><h3>Accès distant</h3><p>Du client VPN installé poste par poste à une architecture dédiée.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/acces-distant-fortigate-splashtop/"><span class="thread__year">2024–2025</span><span class="thread__label">FortiClient, puis Splashtop</span><span class="thread__level">Déployer et accompagner les utilisateurs</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/vpn-wireguard/"><span class="thread__year">2026</span><span class="thread__label">WireGuard + Firezone</span><span class="thread__level">Diagnostiquer, réarchitecturer, migrer sans coupure</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/portail-b2b-dmz/"><span class="thread__year">2026</span><span class="thread__label">Accès d'un prestataire à la DMZ</span><span class="thread__level">Ouvrir à un tiers sans outil non maîtrisé</span></a></li></ol>
+</article>
+<article class="thread">
+  <div class="thread__head"><h3>Pare-feu et segmentation</h3><p>Du premier pfSense en salle de TP à une DMZ exposée sur Internet.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/pfsense-dmz-haute-dispo/"><span class="thread__year">2023–2025</span><span class="thread__label">pfSense : DMZ et haute dispo (labo)</span><span class="thread__level">Filtrer, isoler, basculer</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/cyber-range-pentest/"><span class="thread__year">2026</span><span class="thread__label">Cyber range FortiGate (homelab)</span><span class="thread__level">Éprouver la segmentation en attaquant</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/portail-b2b-dmz/"><span class="thread__year">2026</span><span class="thread__label">DMZ de production, TLS noté A</span><span class="thread__level">Exposer un service réel sur Internet</span></a></li></ol>
+</article>
+<article class="thread">
+  <div class="thread__head"><h3>Réseau</h3><p>De la maquette Packet Tracer au cœur de réseau d'une entreprise.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/projet-one/"><span class="thread__year">2024</span><span class="thread__label">Projet ONE : 3 bâtiments</span><span class="thread__level">Concevoir et chiffrer une infrastructure</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/reseau-cisco/"><span class="thread__year">2025</span><span class="thread__label">VLAN, OSPF, HSRP (labo Cisco)</span><span class="thread__level">Segmenter et router</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/reseau-10-gigabit/"><span class="thread__year">2026</span><span class="thread__label">Cœur de réseau en 10 Gigabit</span><span class="thread__level">Auditer et migrer un réseau en service</span></a></li></ol>
+</article>
+<article class="thread">
+  <div class="thread__head"><h3>Sauvegarde et continuité</h3><p>Du disque en miroir aux sauvegardes qu'un rançongiciel ne peut pas effacer.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/raid1-debian/"><span class="thread__year">2025</span><span class="thread__label">RAID 1 logiciel (labo)</span><span class="thread__level">Survivre à la panne d'un disque</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/sauvegarde-veeam/"><span class="thread__year">2025</span><span class="thread__label">Veeam Backup &amp; Replication</span><span class="thread__level">Sauvegarder et restaurer les VM</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/siem-ia-locale/"><span class="thread__year">2026</span><span class="thread__label">Sauvegarde du SIEM</span><span class="thread__level">Protéger l'outil qui protège le reste</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/audit-cloud-aws/"><span class="thread__year">2026</span><span class="thread__label">Sauvegardes immuables S3</span><span class="thread__level">Résister à un rançongiciel</span></a></li></ol>
+</article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Méthode</p>
+        <h2>Ma façon de travailler aujourd'hui</h2>
+        <p>Ces réflexes ne viennent pas d'un cours : chacun vient d'un projet, souvent d'un incident.</p>
+      </div>
+    </div>
+    <div class="cards cards--2 cards--fit">
+      <div class="stage">
+        <span class="stage__when">01</span>
+        <h3>Auditer avant de toucher</h3>
+        <p>Avant de brancher un nouveau switch, j'ai audité le cœur de réseau : NAS en 100 Mb/s half-duplex, ports 10G bridés à 1G, mémoire à 96 %. Le projet a changé de nature.</p>
+        <a href="/projets/reseau-10-gigabit/">Réseau 10G →</a>
+      </div>
+      <div class="stage">
+        <span class="stage__when">02</span>
+        <h3>Toujours prévoir le retour arrière</h3>
+        <p>Configuration sauvegardée à trois endroits, comptes désactivés et mis en quarantaine avant d'être supprimés, ancien VPN laissé actif pendant la bascule.</p>
+        <a href="/projets/audit-active-directory/">Audit AD →</a>
+      </div>
+      <div class="stage">
+        <span class="stage__when">03</span>
+        <h3>Mesurer avant et après</h3>
+        <p>iPerf3, scores PingCastle, conformité Prowler, note SSL Labs : un changement n'est fini que lorsque je peux montrer ce qu'il a amélioré.</p>
+        <a href="/projets/audit-cloud-aws/">Audit AWS →</a>
+      </div>
+      <div class="stage">
+        <span class="stage__when">04</span>
+        <h3>Documenter les incidents</h3>
+        <p>Une même adresse IP portée par le switch cœur et par le pare-feu, un dirigeant bloqué en RDP par Protected Users : je garde la trace de ce qui a raté et de la correction.</p>
+        <a href="/projets/portail-b2b-dmz/">Portail B2B →</a>
+      </div>
+      <div class="stage">
+        <span class="stage__when">05</span>
+        <h3>Penser comme l'attaquant</h3>
+        <p>J'ai changé deux fois le mot de passe krbtgt en production. En labo, j'ai forgé un Golden Ticket pour voir ce que cette rotation invalide : les tickets forgés avec l'ancienne clé, pas ceux qu'un nouveau vol de la clé permettrait.</p>
+        <a href="/projets/attaque-active-directory/">Attaque AD →</a>
+      </div>
+      <div class="stage">
+        <span class="stage__when">06</span>
+        <h3>Garder un regard critique sur mes outils</h3>
+        <p>Le bilan de sécurité envoyé chaque matin sous-estimait les alertes : j'ai trouvé le bug dans mon propre script et je l'ai réécrit. Même chose pour l'IA : ses traductions passent par un garde-fou.</p>
+        <a href="/projets/siem-ia-locale/">SIEM et IA →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Et maintenant</p>
+        <h2>Ce que je travaille encore</h2>
+        <p>Mes projets ont aussi montré mes limites. Voici ce que je cherche à améliorer.</p>
+      </div>
+    </div>
+    <div class="p-body">
+      <ul class="retro">
+        <li><span><strong>Automatiser.</strong> J'ai beaucoup configuré à la main. Je veux décrire mes infrastructures en code (Ansible, scripts versionnés) pour les rendre reproductibles.</span></li>
+        <li><span><strong>Appliquer le moindre privilège jusqu'au bout.</strong> En faire un réflexe de conception plutôt qu'une correction : droits par utilisateur, double authentification sur tout accès distant, comptes d'administration nominatifs.</span></li>
+        <li><span><strong>Segmenter.</strong> Sur un réseau à plat, tout le monde peut joindre tout le monde : je veux faire du découpage en VLAN (administration, serveurs, utilisateurs, objets connectés) un point de départ, pas un chantier de rattrapage.</span></li>
+        <li><span><strong>Passer à l'échelle.</strong> Gouvernance, gestion des risques et continuité d'activité dans un grand groupe : c'est l'objet de mon cycle ingénieur.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Mevorah Abergel — cybersécurité &amp; infrastructure.</span>
+    <nav aria-label="Liens de pied de page">
+      <a href="/projets/">Projets</a>
+      <a href="/progression/">Progression</a>
+      <a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

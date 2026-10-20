@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- frame-ancestors n'est pas pris en compte dans une balise meta : GitHub Pages ne permet pas d'envoyer cet en-tête HTTP. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mevorah Abergel — Cybersécurité &amp; infrastructure</title>
+<meta name="description" content="Portfolio de Mevorah Abergel : trois ans d'alternance en administration systèmes et réseaux dans une PME, puis la cybersécurité. Projets documentés, incidents et résultats mesurés.">
+<link rel="canonical" href="https://abergelmevo.github.io/">
+<link rel="alternate" hreflang="fr" href="https://abergelmevo.github.io/">
+<link rel="alternate" hreflang="en" href="https://abergelmevo.github.io/en/">
+<link rel="alternate" hreflang="x-default" href="https://abergelmevo.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Mevorah Abergel">
+<meta property="og:title" content="Mevorah Abergel — Cybersécurité &amp; infrastructure">
+<meta property="og:description" content="Portfolio de Mevorah Abergel : trois ans d'alternance en administration systèmes et réseaux dans une PME, puis la cybersécurité. Projets documentés, incidents et résultats mesurés.">
+<meta property="og:url" content="https://abergelmevo.github.io/">
+<meta property="og:image" content="https://abergelmevo.github.io/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand__name">Mevorah Abergel</span>
+      <span class="brand__role">Cyber &amp; infra</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="bars"><span></span></span>Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Navigation principale">
+        <a href="/" aria-current="page">Accueil</a>
+        <a href="/progression/">Progression</a>
+        <a href="/projets/">Projets</a>
+        <a href="/articles/">Articles</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
+    </nav>
+  </div>
+</header>
+<main id="contenu">
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div>
+      <p class="status"><span class="dot" aria-hidden="true"></span><span>Cycle ingénieur cybersécurité · alternance chez Recygo (groupe La Poste)</span></p>
+      <h1>Construire une infrastructure, <em>puis la défendre.</em></h1>
+      <p class="lead">Pendant trois ans d'alternance, j'ai administré l'informatique d'une PME d'une vingtaine de personnes, où le service informatique tenait en deux personnes : le dirigeant et moi. Réseau, Active Directory, sauvegardes, puis détection et audit de sécurité. Chaque fiche de ce site raconte un projet, ses incidents et ses résultats mesurés.</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href="/projets/">Voir les projets <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn" href="/progression/">Ma progression</a>
+      </div>
+    </div>
+    <div class="facts">
+      <dl>
+        <div class="row"><dt>Aujourd'hui</dt><dd>Cycle ingénieur cybersécurité à l'École 2600, alternance chez Recygo</dd></div>
+        <div class="row"><dt>Parcours</dt><dd>BTS SIO SISR → Licence pro ASS&amp;R (UPEC) → cycle ingénieur</dd></div>
+        <div class="row"><dt>Terrain</dt><dd>3 ans sur la même infrastructure de PME, en production</dd></div>
+        <div class="row"><dt>Projets</dt><dd>20 documentés, dont 12 en production</dd></div>
+        <div class="row"><dt>Spécialités</dt><dd>Active Directory, SIEM Wazuh, réseau Cisco et pfSense</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" aria-label="Quelques résultats">
+  <div class="numbers">
+    <a class="number" href="/projets/audit-active-directory/">
+      <span class="number__value">808</span>
+      <span class="number__label">objets Active Directory audités, failles critiques corrigées sans coupure</span>
+      <span class="number__src">Audit AD →</span>
+    </a>
+    <a class="number" href="/projets/reseau-10-gigabit/">
+      <span class="number__value">8,25 Gb/s</span>
+      <span class="number__label">mesurés entre serveurs après la migration du cœur de réseau, contre 1 Gb/s avant</span>
+      <span class="number__src">Réseau 10G →</span>
+    </a>
+    <a class="number" href="/projets/soc-wazuh/">
+      <span class="number__value">&lt; 30 s</span>
+      <span class="number__label">pour qu'une connexion sur le leurre remonte en alerte critique dans le SIEM</span>
+      <span class="number__src">SOC Wazuh →</span>
+    </a>
+    <a class="number" href="/projets/portail-b2b-dmz/">
+      <span class="number__value">A</span>
+      <span class="number__label">note SSL Labs du portail B2B que j'ai mis en production dans une DMZ</span>
+      <span class="number__src">DMZ →</span>
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Progression</p>
+        <h2>Trois étapes, la même logique</h2>
+        <p>D'abord faire tourner l'infrastructure. Ensuite l'auditer, la mesurer et l'attaquer pour mieux la défendre. Aujourd'hui, passer à l'échelle d'un grand groupe.</p>
+      </div>
+      <a class="more" href="/progression/">Tout le parcours →</a>
+    </div>
+    <div class="stages">
+      <article class="stage">
+        <span class="stage__when">2023 – 2025</span>
+        <h3>Construire les fondations</h3>
+        <span class="stage__where">BTS SIO SISR · alternance en PME</span>
+        <p>Postes, annuaire, sauvegardes, accès distant en production. Réseau et pare-feu en labo.</p>
+        <ul>
+          <li><a href="/projets/second-controleur-domaine/">Second contrôleur de domaine</a><span>2024</span></li>
+          <li><a href="/projets/sauvegarde-veeam/">Sauvegarde Veeam</a><span>2025</span></li>
+          <li><a href="/projets/pfsense-dmz-haute-dispo/">DMZ et haute dispo pfSense</a><span>labo</span></li>
+        </ul>
+      </article>
+      <article class="stage">
+        <span class="stage__when">2025 – 2026</span>
+        <h3>Sécuriser et mesurer</h3>
+        <span class="stage__where">Licence pro ASS&amp;R · même entreprise</span>
+        <p>Auditer avant d'agir, mesurer avant et après, attaquer en labo ce que je défends en production.</p>
+        <ul>
+          <li><a href="/projets/audit-active-directory/">Audit Active Directory</a><span>2026</span></li>
+          <li><a href="/projets/soc-wazuh/">SOC Wazuh</a><span>2026</span></li>
+          <li><a href="/projets/attaque-active-directory/">Attaque d'un AD</a><span>homelab</span></li>
+        </ul>
+      </article>
+      <article class="stage stage--current">
+        <span class="stage__when">Depuis sept. 2026</span>
+        <h3>Projets à venir</h3>
+        <span class="stage__where">Cycle ingénieur · École 2600 · Recygo</span>
+        <p>Dans un grand groupe : feuille de route cyber, tests d'intrusion, continuité (PCA, PRA), politique de sécurité, gestion des identités et des postes. Ces projets rejoindront le portfolio quand ils pourront être présentés.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Fils rouges</p>
+        <h2>Le même sujet, à chaque fois plus loin</h2>
+        <p>Plusieurs thèmes reviennent d'une année sur l'autre. C'est là que la progression se voit le mieux.</p>
+      </div>
+      <a class="more" href="/progression/#fils-rouges">Les six fils rouges →</a>
+    </div>
+    <div class="threads">
+<article class="thread">
+  <div class="thread__head"><h3>Superviser, puis détecter</h3><p>De la première sonde de supervision à un SOC à plusieurs couches.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/supervision-netdata/"><span class="thread__year">2024</span><span class="thread__label">Netdata sur une VM Debian</span><span class="thread__level">Voir l'état des serveurs en temps réel</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/supervision-zabbix-grafana/"><span class="thread__year">2026</span><span class="thread__label">Zabbix + Grafana en SNMP</span><span class="thread__level">Superviser le réseau, alerter en moins de 2 min</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/soc-wazuh/"><span class="thread__year">2026</span><span class="thread__label">SOC Wazuh multicouche</span><span class="thread__level">Détecter : système, réseau, leurre, MITRE ATT&amp;CK</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/siem-ia-locale/"><span class="thread__year">2026</span><span class="thread__label">SIEM durci + IA locale</span><span class="thread__level">Protéger le SIEM et rendre ses alertes lisibles</span></a></li></ol>
+</article>
+<article class="thread">
+  <div class="thread__head"><h3>Active Directory</h3><p>De l'administration courante à l'audit, puis à l'attaque.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/mise-en-service-postes/"><span class="thread__year">2024</span><span class="thread__label">Postes intégrés au domaine</span><span class="thread__level">Jonction, GPO, applications métier</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/second-controleur-domaine/"><span class="thread__year">2024</span><span class="thread__label">Second contrôleur de domaine</span><span class="thread__level">Supprimer le point unique de défaillance</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/ad-multisite/"><span class="thread__year">2025</span><span class="thread__label">AD sur deux sites (labo)</span><span class="thread__level">Répliquer derrière deux pare-feu</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/audit-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Audit PingCastle en production</span><span class="thread__level">Mesurer le risque, corriger sans coupure</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/attaque-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Attaque d'un AD (homelab)</span><span class="thread__level">Comprendre chaque faille côté attaquant</span></a></li></ol>
+</article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Sélection</p>
+        <h2>Projets phares</h2>
+        <p>Six projets représentatifs. Les autres, du BTS au cycle ingénieur, sont sur la page Projets.</p>
+      </div>
+      <a class="more" href="/projets/">Les 20 projets →</a>
+    </div>
+    <div class="cards">
+<a class="card" href="/projets/audit-active-directory/" data-stage="licence" data-context="production" data-themes="systemes defense">
+  <div class="card__media"><img src="/assets/img/projets/audit-active-directory/cover.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="card__body">
+    <div class="card__meta"><span class="badge badge--production">Production</span><span>Juin – septembre 2026</span></div>
+    <h3>Audit et durcissement Active Directory</h3>
+    <p>Premier audit d'un annuaire jamais audité : SMBv1 retiré du contrôleur de domaine, krbtgt renouvelé après 11 ans, 169 objets obsolètes supprimés, sans coupure imprévue.</p>
+    <div class="card__kpi"><b>100 → 74</b><span>score PingCastle « Anomalies »</span></div>
+  </div>
+</a>
+<a class="card" href="/projets/soc-wazuh/" data-stage="licence" data-context="production" data-themes="defense supervision">
+  <div class="card__media"><img src="/assets/img/projets/soc-wazuh/cover.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="card__body">
+    <div class="card__meta"><span class="badge badge--production">Production</span><span>2025 – 2026</span></div>
+    <h3>SOC Wazuh multicouche</h3>
+    <p>Serveur SIEM Wazuh créé sur Hyper-V, puis trois couches de détection : machines, réseau avec Suricata, et un leurre qui alerte en moins de 30 secondes.</p>
+    <div class="card__kpi"><b>&lt; 30 s</b><span>entre une connexion au leurre et l'alerte de niveau 13</span></div>
+  </div>
+</a>
+<a class="card" href="/projets/portail-b2b-dmz/" data-stage="licence" data-context="production" data-themes="reseau defense systemes">
+  <div class="card__media"><img src="/assets/img/projets/portail-b2b-dmz/cover.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="card__body">
+    <div class="card__meta"><span class="badge badge--production">Production</span><span>Août 2026</span></div>
+    <h3>Portail B2B en DMZ, noté A</h3>
+    <p>Une application web métier exposée sur Internet : DMZ dédiée en /30, serveur hors domaine, supervision Wazuh avant l'ouverture, TLS noté A sur SSL Labs.</p>
+    <div class="card__kpi"><b>B → A</b><span>note SSL Labs après désactivation de TLS 1.0 et 1.1</span></div>
+  </div>
+</a>
+<a class="card" href="/projets/reseau-10-gigabit/" data-stage="licence" data-context="production" data-themes="reseau systemes">
+  <div class="card__media"><img src="/assets/img/projets/reseau-10-gigabit/cover.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="card__body">
+    <div class="card__meta"><span class="badge badge--production">Production</span><span>Juillet 2026</span></div>
+    <h3>Migration du cœur de réseau en 10 Gigabit</h3>
+    <p>L'achat d'un switch devient un chantier de fond : cœur Cisco assaini, serveurs passés en 10G, incident STP résolu en production, 8,25 Gb/s entre VM.</p>
+    <div class="card__kpi"><b>8,25 Gb/s</b><span>iPerf3 entre deux VM, 4 flux en parallèle</span></div>
+  </div>
+</a>
+<a class="card" href="/projets/attaque-active-directory/" data-stage="licence" data-context="homelab" data-themes="offensif systemes">
+  <div class="card__media"><img src="/assets/img/projets/attaque-active-directory/cover.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="card__body">
+    <div class="card__meta"><span class="badge badge--homelab">Homelab</span><span>Août 2026</span></div>
+    <h3>Attaque d'un Active Directory (homelab)</h3>
+    <p>Un Active Directory rendu vulnérable dans mon homelab, compromis d'un simple compte jusqu'au Golden Ticket, chaque étape reliée à sa détection et sa parade.</p>
+    <div class="card__kpi"><b>8</b><span>étapes, d'un simple compte utilisateur au contrôle complet du domaine</span></div>
+  </div>
+</a>
+<a class="card" href="/projets/siem-ia-locale/" data-stage="licence" data-context="production" data-themes="defense supervision resilience">
+  <div class="card__media"><img src="/assets/img/projets/siem-ia-locale/cover.webp" alt="" loading="lazy" decoding="async"></div>
+  <div class="card__body">
+    <div class="card__meta"><span class="badge badge--production">Production</span><span>2026</span></div>
+    <h3>SIEM durci et alertes enrichies par IA locale</h3>
+    <p>Antivirus, audit Lynis et sauvegarde pour le serveur SIEM, puis un modèle de langage local qui explique en français chaque alerte critique.</p>
+    <div class="card__kpi"><b>3 lignes</b><span>en français pour expliquer chaque alerte critique, puis une action</span></div>
+  </div>
+</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="competences">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Compétences</p>
+        <h2>Ce que je pratique, et à quel niveau</h2>
+        <p>Le niveau indique où je m'en suis servi : en production, en laboratoire, ou seulement en découverte.</p>
+      </div>
+    </div>
+    <div class="skills">
+      <div class="skill-group">
+        <h3>Systèmes &amp; annuaire</h3>
+        <ul>
+          <li>Active Directory, GPO, Kerberos<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>Windows Server<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>Linux Debian, Ubuntu Server<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>Hyper-V<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>PowerShell<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>Proxmox, Docker Compose<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Réseau &amp; pare-feu</h3>
+        <ul>
+          <li>Cisco IOS / IOS-XE, STP, trunks<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>pfSense : NAT, règles, DMZ<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>UniFi<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>WireGuard / Firezone<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>OSPF, HSRP, LACP, CARP<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+          <li>FortiGate<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Défense &amp; détection</h3>
+        <ul>
+          <li>Wazuh (SIEM, FIM, SCA)<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>Suricata, OpenCanary<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>PingCastle, durcissement AD<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>Certificats, durcissement TLS<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>ClamAV, Lynis<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>MITRE ATT&amp;CK, CIS Benchmarks<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Offensif</h3>
+        <ul>
+          <li>Nmap<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+          <li>BloodHound, Impacket<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+          <li>Kerberoasting, DCSync, Golden Ticket<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+          <li>Hashcat, CrackMapExec<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+          <li>Metasploit<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Supervision &amp; sauvegarde</h3>
+        <ul>
+          <li>Zabbix, SNMP<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>Grafana<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>Netdata<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>Veeam Backup &amp; Replication<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>RAID logiciel (mdadm)<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Cloud &amp; automatisation</h3>
+        <ul>
+          <li>Microsoft 365, Exchange Online<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>n8n + IA locale (Ollama)<span class="lvl" data-l="3" role="img" aria-label="production"><i></i><i></i><i></i></span></li>
+          <li>AWS : IAM, S3, EC2<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+          <li>Prowler<span class="lvl" data-l="2" role="img" aria-label="laboratoire"><i></i><i></i><i></i></span></li>
+          <li>Ansible, infrastructure as code<span class="lvl" data-l="1" role="img" aria-label="découverte"><i></i><i></i><i></i></span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legend">
+      <span><span class="lvl" data-l="3" aria-hidden="true"><i></i><i></i><i></i></span>utilisé en production</span>
+      <span><span class="lvl" data-l="2" aria-hidden="true"><i></i><i></i><i></i></span>pratiqué en labo ou en projet</span>
+      <span><span class="lvl" data-l="1" aria-hidden="true"><i></i><i></i><i></i></span>en cours d'apprentissage</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="wrap contact">
+    <div>
+      <p class="eyebrow">Contact</p>
+      <h2>Une question sur un projet ?</h2>
+      <p class="lead">Je réponds volontiers aux recruteurs, aux équipes sécurité et à tous ceux que ces sujets intéressent.</p>
+    </div>
+    <div class="contact__links">
+      <a href="mailto:abergelmevo@gmail.com"><span>abergelmevo@gmail.com</span><span>E-mail →</span></a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><span>Profil →</span></a>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Mevorah Abergel — cybersécurité &amp; infrastructure.</span>
+    <nav aria-label="Liens de pied de page">
+      <a href="/projets/">Projets</a>
+      <a href="/progression/">Progression</a>
+      <a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

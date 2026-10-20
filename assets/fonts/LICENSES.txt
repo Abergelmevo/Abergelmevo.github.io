@@ -1,0 +1,8 @@
+Polices hébergées sur le site (sous-ensembles latin et latin-ext, format WOFF2),
+toutes distribuées sous licence SIL Open Font License 1.1 : https://openfontlicense.org
+
+Inter           Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)
+JetBrains Mono  Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)
+Newsreader      Copyright 2020 The Newsreader Project Authors (https://github.com/productiontype/Newsreader)
+
+Fichiers obtenus depuis Google Fonts le 2026-10-20.

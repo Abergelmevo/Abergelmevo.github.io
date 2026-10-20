@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- frame-ancestors n'est pas pris en compte dans une balise meta : GitHub Pages ne permet pas d'envoyer cet en-tête HTTP. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accès distant : d'OpenVPN à WireGuard — Mevorah Abergel</title>
+<meta name="description" content="L'ancien VPN, hébergé sur le pare-feu, se dégradait au-delà de 3 connexions. WireGuard et Firezone sur une VM dédiée : un accès se crée en 2 min au lieu de 15.">
+<link rel="canonical" href="https://abergelmevo.github.io/projets/vpn-wireguard/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Mevorah Abergel">
+<meta property="og:title" content="Accès distant : d'OpenVPN à WireGuard — Mevorah Abergel">
+<meta property="og:description" content="L'ancien VPN, hébergé sur le pare-feu, se dégradait au-delà de 3 connexions. WireGuard et Firezone sur une VM dédiée : un accès se crée en 2 min au lieu de 15.">
+<meta property="og:url" content="https://abergelmevo.github.io/projets/vpn-wireguard/">
+<meta property="og:image" content="https://abergelmevo.github.io/assets/img/projets/vpn-wireguard/cover.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand__name">Mevorah Abergel</span>
+      <span class="brand__role">Cyber &amp; infra</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="bars"><span></span></span>Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/progression/">Progression</a>
+        <a href="/projets/" aria-current="page">Projets</a>
+        <a href="/articles/">Articles</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
+    </nav>
+  </div>
+</header>
+<main id="contenu">
+
+<article>
+  <header class="p-hero wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/projets/">Projets</a> / <a href="/projets/?stage=licence">Licence pro ASS&amp;R</a></nav>
+    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--production">Production</span><span class="p-read">Lecture : 3 min</span></div>
+    <h1>Accès distant : sortir le VPN du pare-feu, d'OpenVPN à WireGuard</h1>
+    <p class="lead">L'ancien VPN, hébergé sur le pare-feu, se dégradait au-delà de trois connexions : je l'ai remplacé par WireGuard et Firezone sur une machine virtuelle dédiée, sans couper l'ancien service pendant la bascule.</p>
+    <dl class="p-meta"><div><dt>Contexte</dt><dd>Production · PME, 6 utilisateurs à distance, pare-feu pfSense, hyperviseur Hyper-V</dd></div><div><dt>Période</dt><dd>Août 2026</dd></div><div><dt>Mon rôle</dt><dd>Étude, déploiement et bascule des utilisateurs, en autonomie</dd></div><div><dt>Outils</dt><dd>WireGuard · Firezone · Docker Compose · Debian 13 · pfSense</dd></div></dl>
+    <section class="brief" aria-label="En bref"><p class="brief__title">En bref</p><div class="brief__grid"><div><span class="brief__k">Le problème</span><p>OpenVPN tournait sur le pare-feu : au-delà de trois connexions simultanées, sessions coupées et mémoire saturée, alors que six personnes en avaient besoin.</p></div><div><span class="brief__k">Ce que j'ai fait</span><p>J'ai déplacé l'accès distant sur une VM Debian dédiée, avec WireGuard et le portail Firezone, en gardant OpenVPN en secours pendant la bascule.</p></div><div><span class="brief__k">Le résultat</span><p>Un accès se crée en 2 min au lieu de 15 et se révoque en un clic ; le pare-feu ne fait plus que rediriger un port. Test extérieur : 55 ms, 0 % de perte.</p></div></div></section>
+    <div class="kpis"><div class="kpi"><span class="kpi__value">15 → 2<small>min</small></span><span class="kpi__label">pour créer un accès, sans toucher au pare-feu</span></div><div class="kpi"><span class="kpi__value">3</span><span class="kpi__label">connexions simultanées : au-delà, l'ancien VPN se dégradait</span></div><div class="kpi"><span class="kpi__value">55<small>ms</small></span><span class="kpi__label">de latence vers le réseau local depuis l'extérieur, 0 % de perte</span></div></div>
+  </header>
+  <div class="wrap p-layout">
+    <div class="p-body">
+<section class="p-section" id="contexte">
+  <h2>Contexte</h2>
+  <p>Six utilisateurs se connectaient depuis leur poste personnel pour atteindre les partages du NAS, le bureau à distance et les applications métier. Le serveur OpenVPN tournait sur le pare-feu pfSense lui-même. Au-delà de <strong>trois connexions simultanées</strong>, les sessions tombaient et la mémoire du pare-feu saturait. Chaque coupure devenait un ticket.</p>
+  <p>La cause tenait à l'architecture : OpenVPN chiffre en espace utilisateur, sur la machine qui assure déjà le filtrage et le NAT de toute l'entreprise sur deux liens WAN. Ce projet prolonge mes premiers déploiements d'<a href="/projets/acces-distant-fortigate-splashtop/">accès distant</a>, faits poste par poste.</p>
+</section>
+
+<section class="p-section" id="demarche">
+  <h2>Ce que j'ai fait</h2>
+  <ol class="steps">
+    <li><strong>Choisir WireGuard, et Firezone pour le gérer</strong>WireGuard tourne dans le noyau Linux, en quelques milliers de lignes de code, avec des paires de clés au lieu de certificats. Firezone y ajoute ce qui manque : liste d'utilisateurs, dernières connexions, révocation en un clic.</li>
+    <li><strong>Monter une VM minimale</strong>Debian 13 sans interface graphique (2 vCPU, 2 Go de RAM), Firezone en trois conteneurs Docker : l'application, sa base PostgreSQL et Caddy pour le HTTPS. Le portail n'est joignable que depuis le réseau interne, télémétrie désactivée.</li>
+    <li><strong>Lire avant d'exécuter</strong>Le script d'installation officiel exigeait « v2 » dans la version de Docker Compose, alors que la version installée, plus récente, est compatible. J'ai assoupli ce test, sans toucher au reste du script.</li>
+    <li><strong>Adapter les profils clients</strong>Seul le trafic vers le réseau local passe dans le tunnel (split tunnel), les noms internes sont résolus par les contrôleurs de domaine, et le point de terminaison est l'adresse publique de l'entreprise.</li>
+    <li><strong>Basculer sans coupure</strong>J'ajoute l'utilisateur et son appareil dans le portail ; il installe le client officiel, importe le fichier et clique sur « Activer ». OpenVPN reste disponible en secours jusqu'à la fin de la bascule.</li>
+  </ol>
+  <figure class="fig fig--diagram">
+    <div class="fig__frame">
+      <svg viewBox="0 0 680 300" role="img" aria-labelledby="vpn-path-t">
+        <title id="vpn-path-t">Chemin d'une connexion WireGuard entrante : l'équipement de l'opérateur, puis le pare-feu, puis la VM dédiée, qui ne donne accès qu'au réseau local</title>
+        <text class="dg-tag" x="16" y="18">Connexion entrante · UDP 51820</text>
+
+        <rect class="dg-box" x="16" y="32" width="180" height="68" rx="8"/>
+        <text class="dg-title" x="106" y="57" text-anchor="middle">Poste distant</text>
+        <text class="dg-sub" x="106" y="75" text-anchor="middle">client WireGuard</text>
+        <text class="dg-sub" x="106" y="90" text-anchor="middle">connexion résidentielle</text>
+        <line class="dg-line" x1="196" y1="66" x2="242" y2="66"/>
+        <polygon class="dg-arrow" points="250,66 241,61 241,71"/>
+
+        <rect class="dg-box dg-box--warn" x="250" y="32" width="180" height="68" rx="8"/>
+        <text class="dg-title" x="340" y="57" text-anchor="middle">Équipement opérateur</text>
+        <text class="dg-sub" x="340" y="75" text-anchor="middle">porte l'adresse publique</text>
+        <text class="dg-sub" x="340" y="90" text-anchor="middle">NAT n°1, ajouté ensuite</text>
+        <line class="dg-line" x1="430" y1="66" x2="476" y2="66"/>
+        <polygon class="dg-arrow" points="484,66 475,61 475,71"/>
+
+        <rect class="dg-box" x="484" y="32" width="180" height="68" rx="8"/>
+        <text class="dg-title" x="574" y="57" text-anchor="middle">Pare-feu pfSense</text>
+        <text class="dg-sub" x="574" y="75" text-anchor="middle">WAN en adresse privée</text>
+        <text class="dg-sub" x="574" y="90" text-anchor="middle">NAT n°2 vers la VM</text>
+        <line class="dg-line" x1="574" y1="100" x2="574" y2="162"/>
+        <polygon class="dg-arrow" points="574,170 569,161 579,161"/>
+
+        <rect class="dg-box dg-box--accent" x="484" y="170" width="180" height="68" rx="8"/>
+        <text class="dg-title" x="574" y="195" text-anchor="middle">VM WireGuard</text>
+        <text class="dg-sub" x="574" y="213" text-anchor="middle">Firezone, Debian 13</text>
+        <text class="dg-sub" x="574" y="228" text-anchor="middle">2 vCPU · 2 Go de RAM</text>
+
+        <line class="dg-line dg-line--accent" x1="484" y1="204" x2="409" y2="204"/>
+        <polygon class="dg-arrow dg-arrow--accent" points="400,204 409,199 409,209"/>
+        <text class="dg-tag" x="442" y="194" text-anchor="middle">LAN seul</text>
+
+        <rect class="dg-zone" x="16" y="140" width="384" height="140" rx="10"/>
+        <text class="dg-tag" x="30" y="162">Réseau local</text>
+        <rect class="dg-box" x="30" y="180" width="112" height="56" rx="6"/>
+        <text class="dg-title" x="86" y="203" text-anchor="middle">Contrôleurs</text>
+        <text class="dg-sub" x="86" y="221" text-anchor="middle">domaine et DNS</text>
+        <rect class="dg-box" x="150" y="180" width="112" height="56" rx="6"/>
+        <text class="dg-title" x="206" y="203" text-anchor="middle">NAS</text>
+        <text class="dg-sub" x="206" y="221" text-anchor="middle">partages</text>
+        <rect class="dg-box" x="270" y="180" width="112" height="56" rx="6"/>
+        <text class="dg-title" x="326" y="203" text-anchor="middle">Serveurs</text>
+        <text class="dg-sub" x="326" y="221" text-anchor="middle">sessions RDP</text>
+      </svg>
+    </div>
+    <figcaption><b>Fig. 1</b>La connexion traverse deux traductions d'adresse, chez l'opérateur puis sur le pare-feu. Dans le tunnel, seul le trafic vers le réseau local passe ; la navigation Internet reste sur la connexion de l'utilisateur.</figcaption>
+  </figure>
+  <details class="tech">
+    <summary>Voir les détails techniques</summary>
+    <div class="tech__body">
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Critère</th><th>OpenVPN (existant)</th><th>WireGuard (cible)</th></tr></thead>
+          <tbody>
+            <tr><td>Exécution</td><td>Espace utilisateur</td><td>Module du noyau Linux</td></tr>
+            <tr><td>Authentification</td><td>Certificats X.509</td><td>Paires de clés publique et privée</td></tr>
+            <tr><td>Taille du code</td><td>Plusieurs centaines de milliers de lignes</td><td>Quelques milliers de lignes</td></tr>
+            <tr><td>Hébergement</td><td>Sur le pare-feu</td><td>VM dédiée sur Hyper-V</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="code-title">Bash · installation de Firezone</p>
+      <pre class="code"><code><span class="c"># Le script d'installation est téléchargé, lu, puis seulement exécuté</span>
+curl -fsSL https://raw.githubusercontent.com/firezone/firezone/legacy/scripts/install.sh -o install.sh
+<span class="c"># Il exigeait « v2 » dans la version de Docker Compose (la version installée est plus récente)</span>
+sed -i 's/$dc version | grep -q "v2"/$dc version | grep -qE "v[2-9]"/' install.sh
+bash install.sh</code></pre>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Paramètre client</th><th>Valeur par défaut</th><th>Valeur appliquée</th><th>Pourquoi</th></tr></thead>
+          <tbody>
+            <tr><td>Adresses autorisées (AllowedIPs)</td><td class="before">0.0.0.0/0, ::/0</td><td class="after">Réseau local de l'entreprise</td><td>Split tunnel : la navigation Internet reste sur la connexion de l'utilisateur</td></tr>
+            <tr><td>Serveurs DNS</td><td class="before">1.1.1.1, 1.0.0.1</td><td class="after">Contrôleurs de domaine</td><td>Résoudre les noms internes</td></tr>
+            <tr><td>Point de terminaison</td><td class="before">Adresse privée de la VM</td><td class="after">Adresse publique de l'entreprise</td><td>Sans cela, les fichiers générés pointent vers une adresse injoignable depuis Internet</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>La VM résout les noms, mais apt n'atteint aucun dépôt.</strong> Après le passage en adresse fixe, <code>ip route show</code> montrait une passerelle par défaut pointant vers un contrôleur de domaine : il répondait au DNS, mais rien ne sortait. Passerelle corrigée vers le switch cœur, <code>/etc/resolv.conf</code> rempli, IPv6 désactivé sur un réseau uniquement en IPv4.</p>
+      <p><strong>Le portail répond « 502 Bad Gateway ».</strong> Firezone démarrait avant que PostgreSQL accepte les connexions : le fichier docker-compose ne conditionnait pas l'un à l'autre. Démarrage en séquence, la base d'abord.</p>
+      <p class="code-title">Bash · démarrage séquencé</p>
+      <pre class="code"><code>docker compose down
+docker compose up -d postgres &amp;&amp; sleep 15 &amp;&amp; docker compose up -d firezone caddy
+docker compose ps &amp;&amp; docker logs firezone-firezone-1 --tail 10</code></pre>
+      <p><strong>Créer et révoquer un accès.</strong> Firezone génère la paire de clés, attribue une adresse dans le réseau du tunnel et produit un QR code pour les mobiles ou un fichier <code>.conf</code> pour les postes. Supprimer l'appareil ou désactiver l'utilisateur coupe le tunnel immédiatement. Avec l'ancien service, chaque accès demandait un certificat généré dans pfSense, l'export et l'envoi manuel d'une archive, et des droits d'administration sur le pare-feu de production.</p>
+      <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/vpn-wireguard/02-tunnel-wireguard-actif.webp" width="1023" height="614" alt="Client WireGuard Windows : interface activée, MTU 1280, DNS internes, homologue avec clé pré-partagée, adresses autorisées limitées au réseau interne et dernier établissement de liaison il y a 3 secondes ; nom du tunnel, clés publiques et point de terminaison masqués." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 2</b>Tunnel WireGuard établi depuis l'extérieur : dernier échange de clés il y a 3 secondes, trafic dans les deux sens et routage limité au réseau interne.</figcaption>
+  </figure>
+    </div>
+  </details>
+</section>
+
+<section class="p-section" id="incident">
+  <h2>L'incident</h2>
+  <div class="incident">
+    <p class="incident__title">Depuis l'extérieur, aucune connexion n'aboutit</p>
+    <div class="incident__row"><span class="incident__tag incident__tag--problem">Problème</span><p>La redirection de port et la règle du pare-feu étaient correctes, mais une capture de paquets sur l'interface WAN ne montrait aucune trame entrante.</p></div>
+    <div class="incident__row"><span class="incident__tag incident__tag--fix">Résolution</span><p>L'adresse publique est portée par l'équipement de l'opérateur, qui ne livre au pare-feu qu'une adresse privée : le trafic traverse deux NAT. J'ai ajouté une règle chez l'opérateur, du port UDP 51820 vers le WAN du pare-feu, qui redirige ensuite vers la VM.</p></div>
+  </div>
+</section>
+
+<section class="p-section" id="resultats">
+  <h2>Résultats</h2>
+  <p>Test de bout en bout depuis un poste personnel, sur une connexion résidentielle : tunnel établi en quelques secondes, ping d'un contrôleur de domaine à <strong>55 ms sans perte</strong>, lecteur du NAS monté avec les identifiants du domaine, session de bureau à distance ouverte sur un serveur interne, droits NTFS appliqués normalement.</p>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/vpn-wireguard/03-ping-a-travers-le-tunnel.webp" width="866" height="192" alt="Invite de commandes Windows : ping vers une adresse interne, quatre réponses, 0 % de perte, minimum 33 ms, maximum 106 ms, moyenne 55 ms." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 3</b>Test à travers le tunnel depuis une connexion résidentielle : 4 réponses du contrôleur de domaine, 0 % de perte et 55 ms de moyenne.</figcaption>
+  </figure>
+  <p>Une limite demeure, comme avec OpenVPN : sur un poste hors domaine, seuls les noms complets se résolvent, car le client Windows ne gère pas le suffixe de recherche DNS.</p>
+  <p>Un premier utilisateur était migré et se connectait sans intervention ; les autres suivaient, OpenVPN en secours. La tenue à six connexions simultanées et la mémoire du pare-feu n'ont donc pas été mesurées. Ce VPN a ensuite servi à ouvrir un accès encadré au prestataire du <a href="/projets/portail-b2b-dmz/">portail B2B en DMZ</a>.</p>
+</section>
+
+<section class="p-section" id="ameliorations">
+  <h2>Ce que j'améliorerais</h2>
+  <ul class="retro">
+    <li><span>Sur un prochain VPN, je prévoirais dès le départ une <strong>authentification à deux facteurs</strong> et des <strong>droits par utilisateur</strong> : le champ AllowedIPs règle le routage, il ne contrôle pas l'accès. Le filtrage se fait côté serveur, par utilisateur ou par groupe.</span></li>
+    <li><span>Faire <strong>générer la paire de clés sur le poste de l'utilisateur</strong>, pour que la clé privée ne le quitte jamais et qu'aucun fichier de configuration complet n'ait à circuler.</span></li>
+    <li><span>Appliquer la même règle à toutes les installations, Docker compris : <strong>télécharger, lire, puis exécuter</strong>, ou passer par le dépôt APT signé de l'éditeur plutôt que par <code>curl … | sh</code>.</span></li>
+  </ul>
+</section>
+
+<section class="p-section" id="competences">
+  <h2>Compétences</h2>
+  <ul class="tags">
+    <li>WireGuard et Firezone</li>
+    <li>Docker Compose</li>
+    <li>Diagnostic réseau de bout en bout</li>
+    <li>NAT et redirection de port</li>
+    <li>Choix technique argumenté</li>
+    <li>Migration sans coupure</li>
+  </ul>
+</section>
+    </div>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+  </div>
+</article>
+<section class="p-next wrap" aria-label="Autres projets">
+  <div class="p-next__grid">
+    <a href="/projets/audit-cloud-aws/"><small>← Projet précédent</small><span>Audit de sécurité d'un environnement AWS</span></a>
+    <a href="/projets/supervision-zabbix-grafana/"><small>Projet suivant →</small><span>Supervision réseau Zabbix + Grafana</span></a>
+  </div>
+  <article class="thread p-thread">
+  <div class="thread__head"><h3>Fil rouge : Accès distant</h3><p>Du client VPN installé poste par poste à une architecture dédiée.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/acces-distant-fortigate-splashtop/"><span class="thread__year">2024–2025</span><span class="thread__label">FortiClient, puis Splashtop</span><span class="thread__level">Déployer et accompagner les utilisateurs</span></a></li><li class="thread__step is-current"><span class="thread__year">2026 · vous êtes ici</span><span class="thread__label">WireGuard + Firezone</span><span class="thread__level">Diagnostiquer, réarchitecturer, migrer sans coupure</span></li><li class="thread__step"><a class="thread__link" href="/projets/portail-b2b-dmz/"><span class="thread__year">2026</span><span class="thread__label">Accès d'un prestataire à la DMZ</span><span class="thread__level">Ouvrir à un tiers sans outil non maîtrisé</span></a></li></ol>
+</article>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Mevorah Abergel — cybersécurité &amp; infrastructure.</span>
+    <nav aria-label="Liens de pied de page">
+      <a href="/projets/">Projets</a>
+      <a href="/progression/">Progression</a>
+      <a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

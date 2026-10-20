@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- frame-ancestors n'est pas pris en compte dans une balise meta : GitHub Pages ne permet pas d'envoyer cet en-tête HTTP. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portail B2B en DMZ, noté A — Mevorah Abergel</title>
+<meta name="description" content="Une application web métier exposée sur Internet : DMZ dédiée en /30, serveur hors domaine, supervision Wazuh avant l'ouverture, TLS noté A sur SSL Labs.">
+<link rel="canonical" href="https://abergelmevo.github.io/projets/portail-b2b-dmz/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Mevorah Abergel">
+<meta property="og:title" content="Portail B2B en DMZ, noté A — Mevorah Abergel">
+<meta property="og:description" content="Une application web métier exposée sur Internet : DMZ dédiée en /30, serveur hors domaine, supervision Wazuh avant l'ouverture, TLS noté A sur SSL Labs.">
+<meta property="og:url" content="https://abergelmevo.github.io/projets/portail-b2b-dmz/">
+<meta property="og:image" content="https://abergelmevo.github.io/assets/img/projets/portail-b2b-dmz/cover.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand__name">Mevorah Abergel</span>
+      <span class="brand__role">Cyber &amp; infra</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="bars"><span></span></span>Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/progression/">Progression</a>
+        <a href="/projets/" aria-current="page">Projets</a>
+        <a href="/articles/">Articles</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
+    </nav>
+  </div>
+</header>
+<main id="contenu">
+
+<article>
+  <header class="p-hero wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/projets/">Projets</a> / <a href="/projets/?stage=licence">Licence pro ASS&amp;R</a></nav>
+    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--production">Production</span><span class="p-read">Lecture : 4 min</span></div>
+    <h1>Mise en production d'un portail B2B dans une DMZ</h1>
+    <p class="lead">J'ai publié sur Internet la plateforme de commande en ligne développée par un prestataire, dans une DMZ conçue pour qu'une compromission du serveur n'ouvre pas le réseau interne.</p>
+    <dl class="p-meta"><div><dt>Contexte</dt><dd>Production · PME, application web métier d'un prestataire externe, exposée sur Internet</dd></div><div><dt>Période</dt><dd>Août 2026</dd></div><div><dt>Mon rôle</dt><dd>Réseau, sécurité et mise en ligne ; l'application est développée par le prestataire</dd></div><div><dt>Outils</dt><dd>pfSense · Cisco IOS-XE · Windows Server · IIS · PowerShell · Wazuh</dd></div></dl>
+    <section class="brief" aria-label="En bref"><p class="brief__title">En bref</p><div class="brief__grid"><div><span class="brief__k">Le problème</span><p>Une application web métier devait être joignable depuis Internet sans exposer le réseau interne, et son prestataire intervenait avec un outil tiers aux sessions limitées.</p></div><div><span class="brief__k">Ce que j'ai fait</span><p>J'ai construit une DMZ en /30 avec cinq flux définis, gardé le serveur hors domaine, déployé l'agent Wazuh avant l'ouverture et ouvert au prestataire un accès par VPN.</p></div><div><span class="brief__k">Le résultat</span><p>Sept tests de validation réussis en production, note SSL Labs passée de B à A, et un serveur placé dans son propre segment, derrière le pare-feu.</p></div></div></section>
+    <div class="kpis"><div class="kpi"><span class="kpi__value">B → A</span><span class="kpi__label">note SSL Labs après désactivation de TLS 1.0 et 1.1</span></div><div class="kpi"><span class="kpi__value">7/7</span><span class="kpi__label">tests de validation réussis en production</span></div><div class="kpi"><span class="kpi__value">/30</span><span class="kpi__label">réseau de la DMZ : deux adresses, le pare-feu et le serveur</span></div><div class="kpi"><span class="kpi__value">5</span><span class="kpi__label">flux définis vers ou depuis la DMZ</span></div></div>
+  </header>
+  <div class="wrap p-layout">
+    <div class="p-body">
+<section class="p-section" id="contexte">
+  <h2>Contexte</h2>
+  <p>L'entreprise voulait que ses partenaires passent commande en ligne. Un prestataire externe a développé l'application ; mon rôle était de la mettre en production sur l'infrastructure de l'entreprise.</p>
+  <p>Un serveur joignable depuis Internet se traite comme une <strong>zone de confiance nulle</strong> : même compromis, il ne doit offrir aucun accès direct au réseau interne. S'y ajoutaient quatre exigences : supervision active avant l'ouverture, accès du prestataire sans logiciel tiers sur le serveur, certificat reconnu par les navigateurs, et aucune coupure aux heures de bureau.</p>
+</section>
+
+<section class="p-section" id="demarche">
+  <h2>Ce que j'ai fait</h2>
+  <ol class="steps">
+    <li><strong>Isoler le serveur</strong>VLAN dédié sur le switch cœur, réseau /30 qui ne laisse place qu'au pare-feu et au serveur, pfSense comme unique passerelle. La VM Windows Server reste hors domaine : compromise, elle n'aurait aucune relation de confiance Kerberos avec les contrôleurs.</li>
+    <li><strong>Définir cinq flux</strong>HTTPS entrant, sortie pour les mises à jour, agent Wazuh vers le SIEM, bureau à distance depuis deux postes d'administration et depuis le VPN.</li>
+    <li><strong>Durcir le serveur</strong>Pare-feu Windows actif sur les trois profils, paquets bloqués journalisés, RDP restreint aux postes d'administration, toujours en PowerShell : la console graphique désactivait la règle modifiée sans prévenir. Agent Wazuh « Active » avant l'ouverture du portail.</li>
+    <li><strong>Encadrer le prestataire</strong>Son outil gratuit de prise en main coupait les sessions au bout de 30 à 45 minutes et aurait ouvert un tunnel sortant vers un service tiers. Je lui ai ouvert un accès par le <a href="/projets/vpn-wireguard/">VPN WireGuard</a>, tracé dans Firezone ; profil et mot de passe transmis par deux canaux distincts.</li>
+    <li><strong>Publier en HTTPS</strong>Demande de certificat RSA 2048 bits générée dans IIS, la clé privée ne quittant pas le serveur. Certificat wildcard lié au port 443 avec SNI, puis TLS 1.0 et 1.1 désactivés dans SCHANNEL après un premier audit SSL Labs.</li>
+  </ol>
+  <figure class="fig fig--diagram">
+    <div class="fig__frame">
+      <svg viewBox="0 0 680 340" role="img" aria-labelledby="dmz-archi-t">
+        <title id="dmz-archi-t">Architecture : Internet, le pare-feu au centre, le réseau interne à gauche, la DMZ et son serveur à droite</title>
+        <rect class="dg-box" x="250" y="10" width="180" height="50" rx="8"/>
+        <text class="dg-title" x="340" y="31" text-anchor="middle">Internet</text>
+        <text class="dg-sub" x="340" y="48" text-anchor="middle">partenaires, prestataire</text>
+        <line class="dg-line" x1="340" y1="60" x2="340" y2="110"/>
+        <text class="dg-tag" x="350" y="90">HTTPS · VPN</text>
+
+        <rect class="dg-box dg-box--accent" x="250" y="110" width="180" height="60" rx="8"/>
+        <text class="dg-title" x="340" y="134" text-anchor="middle">Pare-feu pfSense</text>
+        <text class="dg-sub" x="340" y="152" text-anchor="middle">point de passage unique</text>
+
+        <line class="dg-line" x1="250" y1="140" x2="160" y2="140"/>
+        <text class="dg-tag" x="205" y="132" text-anchor="middle">Agent · RDP</text>
+        <line class="dg-line dg-line--accent" x1="430" y1="140" x2="520" y2="140"/>
+        <text class="dg-tag" x="470" y="132" text-anchor="middle">5 flux</text>
+
+        <rect class="dg-zone" x="10" y="96" width="150" height="230" rx="10"/>
+        <text class="dg-tag" x="22" y="118">Réseau interne</text>
+        <rect class="dg-box" x="22" y="130" width="126" height="52" rx="6"/>
+        <text class="dg-title" x="85" y="152" text-anchor="middle">SIEM Wazuh</text>
+        <text class="dg-sub" x="85" y="170" text-anchor="middle">reçoit l'agent</text>
+        <rect class="dg-box" x="22" y="196" width="126" height="52" rx="6"/>
+        <text class="dg-title" x="85" y="218" text-anchor="middle">VM WireGuard</text>
+        <text class="dg-sub" x="85" y="236" text-anchor="middle">accès prestataire</text>
+        <rect class="dg-box" x="22" y="262" width="126" height="52" rx="6"/>
+        <text class="dg-title" x="85" y="284" text-anchor="middle">Postes d'admin</text>
+        <text class="dg-sub" x="85" y="302" text-anchor="middle">accès RDP</text>
+
+        <rect class="dg-zone" x="510" y="96" width="160" height="230" rx="10"/>
+        <text class="dg-tag" x="522" y="118">DMZ · /30</text>
+        <rect class="dg-box dg-box--accent" x="520" y="130" width="140" height="112" rx="6"/>
+        <text class="dg-title" x="590" y="154" text-anchor="middle">Serveur web</text>
+        <text class="dg-sub" x="590" y="174" text-anchor="middle">Windows Server</text>
+        <text class="dg-sub" x="590" y="191" text-anchor="middle">IIS, HTTPS avec SNI</text>
+        <text class="dg-sub" x="590" y="208" text-anchor="middle">hors domaine</text>
+        <text class="dg-sub" x="590" y="225" text-anchor="middle">agent Wazuh</text>
+        <text class="dg-sub" x="590" y="272" text-anchor="middle">VLAN dédié</text>
+        <text class="dg-sub" x="590" y="289" text-anchor="middle">sur le switch cœur</text>
+      </svg>
+    </div>
+    <figcaption><b>Fig. 1</b>Tout flux vers ou depuis le serveur passe par le pare-feu. Le détail des cinq flux autorisés est dans les détails techniques.</figcaption>
+  </figure>
+  <details class="tech">
+    <summary>Voir les détails techniques</summary>
+    <div class="tech__body">
+      <div class="table-wrap">
+        <table class="data">
+          <caption>Flux ouverts à la mise en ligne (août 2026)</caption>
+          <thead><tr><th>Flux autorisé</th><th>Détail</th><th>À quoi il sert</th></tr></thead>
+          <tbody>
+            <tr><td>Internet → serveur</td><td>TCP 443 uniquement, par redirection de port</td><td>Publier le portail</td></tr>
+            <tr><td>Serveur → Internet</td><td>Sortie en NAT</td><td>Mises à jour</td></tr>
+            <tr><td>Serveur → SIEM</td><td>Ports 1514-1515 de l'agent Wazuh</td><td>Remonter les événements de sécurité</td></tr>
+            <tr><td>Postes d'administration → serveur</td><td>RDP depuis deux postes autorisés</td><td>Administrer le serveur</td></tr>
+            <tr><td>VPN → serveur</td><td>RDP à travers le tunnel WireGuard</td><td>Interventions du prestataire</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure class="fig fig--diagram">
+        <div class="fig__frame">
+          <svg viewBox="0 0 680 280" role="img" aria-labelledby="dmz-arp-t">
+            <title id="dmz-arp-t">Adresse dupliquée : le serveur envoie son trafic soit directement à l'interface DMZ du pare-feu, soit au switch cœur, qui le route vers une autre interface du pare-feu</title>
+            <rect class="dg-box" x="16" y="110" width="170" height="60" rx="8"/>
+            <text class="dg-title" x="101" y="135" text-anchor="middle">Serveur DMZ</text>
+            <text class="dg-sub" x="101" y="153" text-anchor="middle">requête ARP</text>
+
+            <rect class="dg-box" x="400" y="16" width="264" height="104" rx="8"/>
+            <text class="dg-title" x="532" y="40" text-anchor="middle">Pare-feu pfSense</text>
+            <rect class="dg-box dg-box--accent" x="414" y="56" width="112" height="48" rx="6"/>
+            <text class="dg-sub" x="470" y="84" text-anchor="middle">interface DMZ</text>
+            <rect class="dg-box" x="538" y="56" width="112" height="48" rx="6"/>
+            <text class="dg-sub" x="594" y="84" text-anchor="middle">liaison cœur</text>
+
+            <rect class="dg-box dg-box--warn" x="400" y="180" width="264" height="72" rx="8"/>
+            <text class="dg-title" x="532" y="205" text-anchor="middle">Switch cœur</text>
+            <text class="dg-sub" x="532" y="223" text-anchor="middle">interface du VLAN de la DMZ</text>
+            <text class="dg-sub" x="532" y="240" text-anchor="middle">avec la même adresse</text>
+
+            <path class="dg-line dg-line--accent" d="M186 125 H280 V80 H406"/>
+            <polygon class="dg-arrow dg-arrow--accent" points="414,80 405,75 405,85"/>
+            <text class="dg-tag" x="343" y="70" text-anchor="middle">Chemin prévu</text>
+
+            <path class="dg-line dg-line--warn" d="M186 155 H280 V216 H392"/>
+            <polygon class="dg-arrow" points="400,216 391,211 391,221"/>
+            <text class="dg-tag" x="336" y="236" text-anchor="middle">Chemin parasite</text>
+
+            <line class="dg-line dg-line--warn" x1="594" y1="180" x2="594" y2="113"/>
+            <polygon class="dg-arrow" points="594,104 589,113 599,113"/>
+            <text class="dg-tag" x="604" y="150">Routé</text>
+          </svg>
+        </div>
+        <figcaption><b>Fig. 2</b>Deux équipements répondaient à l'adresse de la passerelle. Selon la réponse ARP retenue, le trafic entrait dans le pare-feu par l'interface DMZ ou par sa liaison avec le switch cœur ; avec des états liés à l'interface, les retours étaient rejetés.</figcaption>
+      </figure>
+      <p class="code-title">Cisco IOS-XE et pfSense · correction de l'adresse dupliquée</p>
+      <pre class="code"><code><span class="c">! Switch cœur : l'interface du VLAN DMZ porte-t-elle une adresse ?</span>
+SW-CORE# show ip interface brief | include Vlan&lt;DMZ&gt;
+Vlan&lt;DMZ&gt;  &lt;adresse de la passerelle DMZ&gt;   YES manual up    up
+
+<span class="c">! Avant de la retirer : rien d'autre ne dépend de cette interface</span>
+SW-CORE# show running-config interface Vlan&lt;DMZ&gt;
+SW-CORE# show ip route | include &lt;réseau DMZ&gt;
+
+<span class="c">! Correction : plus d'adresse, le VLAN reste actif en couche 2</span>
+SW-CORE(config)# interface Vlan&lt;DMZ&gt;
+SW-CORE(config-if)# no ip address
+SW-CORE# write memory          <span class="c">! seulement après validation</span>
+
+<span class="c"># pfSense : purge des seuls états du serveur, les autres sessions restent</span>
+pfctl -k &lt;adresse du serveur&gt;</code></pre>
+      <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/portail-b2b-dmz/02-tests-flux-dmz.webp" width="822" height="480" alt="PowerShell Test-NetConnection depuis le serveur : packages.wazuh.com port 443 et le manager Wazuh interne port 1514, TcpTestSucceeded True dans les deux cas ; adresse IP publique résolue masquée." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 3</b>Validation depuis le serveur en DMZ : connexions TCP réussies vers le dépôt Wazuh (443) et vers le manager Wazuh interne (1514).</figcaption>
+  </figure>
+      <p class="code-title">PowerShell · pare-feu Windows</p>
+      <pre class="code"><code><span class="c"># Pare-feu actif sur les trois profils, paquets bloqués journalisés</span>
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+Set-NetFirewallProfile -Profile Domain,Public,Private -LogBlocked True `
+    -LogFileName "%systemroot%\system32\LogFiles\Firewall\pfirewall.log"
+
+<span class="c"># RDP limité aux postes d'administration (adresses masquées)</span>
+$rdp = "Bureau à distance - Mode utilisateur (TCP entrant)"
+Set-NetFirewallRule -DisplayName $rdp -RemoteAddress $postesAdmin
+Enable-NetFirewallRule -DisplayName $rdp</code></pre>
+      <p><strong>Le pare-feu traduisait-il les adresses vers la DMZ ?</strong> Si oui, la restriction RDP par adresse n'aurait servi à rien. Le journal du pare-feu Windows a tranché : les paquets arrivaient avec l'adresse réelle du poste d'administration.</p>
+      <p><strong>Le trafic du prestataire contournait le tunnel.</strong> Les adresses autorisées (AllowedIPs) de son profil ne couvraient que le réseau interne, pas la plage de la DMZ : le trafic partait vers sa box Internet. Plage de la DMZ ajoutée dans Firezone.</p>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Difficulté HTTPS</th><th>Cause</th><th>Correction</th></tr></thead>
+          <tbody>
+            <tr><td>Première demande de certificat refusée</td><td>Nom commun saisi « *exemple.fr », sans le point</td><td>Nouvelle demande avec « *.exemple.fr », acceptée</td></tr>
+            <tr><td>Le nom du portail renvoyait encore, chez certains résolveurs, vers une ancienne adresse</td><td>Un ancien enregistrement générique (*) de la zone, encore en cache</td><td>Attendre l'expiration du TTL</td></tr>
+            <tr><td>Note B sur SSL Labs</td><td>TLS 1.0 et 1.1 encore acceptés</td><td>Désactivation dans le registre (SCHANNEL), puis redémarrage</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="code-title">PowerShell · TLS 1.0 et 1.1 refusés (extrait simplifié)</p>
+      <pre class="code"><code>foreach ($p in 'TLS 1.0', 'TLS 1.1') {
+    $k = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\$p\Server"
+    New-Item $k -Force | Out-Null
+    New-ItemProperty -Path $k -Name 'Enabled' -Value 0 -PropertyType DWord -Force
+    New-ItemProperty -Path $k -Name 'DisabledByDefault' -Value 1 -PropertyType DWord -Force
+}
+<span class="c"># SCHANNEL ne relit ces clés qu'au redémarrage</span></code></pre>
+      <p>Le serveur, installé en édition d'évaluation (180 jours), a été converti en édition Standard avec DISM, sans réinstallation, puis vérifié avec <code>slmgr.vbs /dli</code>.</p>
+    </div>
+  </details>
+</section>
+
+<section class="p-section" id="incident">
+  <h2>L'incident</h2>
+  <div class="incident">
+    <p class="incident__title">Le ping passe, mais aucune connexion TCP ne sort de la DMZ</p>
+    <div class="incident__row"><span class="incident__tag incident__tag--problem">Problème</span><p>Pendant plusieurs semaines avant l'ouverture, toutes les connexions TCP sortantes du serveur échouaient. Les états du pare-feu montraient ses paquets entrant tantôt par l'interface DMZ, tantôt par la liaison avec le switch cœur, et les retours étaient rejetés.</p></div>
+    <div class="incident__row"><span class="incident__tag incident__tag--fix">Résolution</span><p>L'interface du VLAN de la DMZ sur le switch cœur portait la même adresse que la passerelle du pare-feu. Après avoir vérifié qu'elle ne servait à rien d'autre, j'ai retiré cette adresse et purgé uniquement les états du serveur : connexions TCP rétablies, SIEM joignable.</p></div>
+  </div>
+  <p><a href="/articles/passerelle-dupliquee-dmz/">Le diagnostic complet, étape par étape, dans un article →</a></p>
+</section>
+
+<section class="p-section" id="resultats">
+  <h2>Résultats</h2>
+  <p>Sept tests menés en production, tous concluants : TCP vers un DNS public, vers le dépôt et vers le manager Wazuh ; passerelle à moins de 1 ms sans perte ; RDP accepté depuis un poste autorisé et refusé depuis un autre ; portail joignable en HTTPS depuis un réseau mobile 5G, certificat reconnu.</p>
+  <p>Au second audit SSL Labs, les quatre critères sont au vert : le serveur ne négocie plus qu'en TLS 1.3, avec TLS 1.2 en repli. Ce projet prolonge la <a href="/projets/pfsense-dmz-haute-dispo/">DMZ pfSense montée en laboratoire</a> pendant mon BTS, cette fois avec un service réel, et s'appuie sur le switch cœur <a href="/projets/reseau-10-gigabit/">migré en juillet</a>.</p>
+  <div class="fig-pair">
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/portail-b2b-dmz/03-ssllabs-avant.webp" width="1088" height="798" alt="Rapport Qualys SSL Labs : note globale B, barre Protocol Support en jaune et bandeau « This server supports TLS 1.0 and TLS 1.1. Grade capped to B » ; nom d'hôte et adresse IP masqués." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 4</b>Avant durcissement TLS : note B sur SSL Labs, plafonnée parce que le serveur acceptait encore TLS 1.0 et 1.1.</figcaption>
+  </figure>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/portail-b2b-dmz/04-ssllabs-apres.webp" width="1096" height="767" alt="Rapport Qualys SSL Labs : note globale A, barres Certificate, Protocol Support, Key Exchange et Cipher Strength en vert, TLS 1.3 pris en charge ; nom d'hôte et adresse IP masqués." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 5</b>Après désactivation de TLS 1.0 et 1.1 dans SCHANNEL : note A sur SSL Labs, les quatre critères au vert.</figcaption>
+  </figure>
+  </div>
+</section>
+
+<section class="p-section" id="ameliorations">
+  <h2>Ce que j'améliorerais</h2>
+  <ul class="retro">
+    <li><span>Sur une prochaine DMZ, je doublerais chaque filtrage réseau d'un <strong>filtrage sur le serveur lui-même</strong>, y compris pour les accès qui arrivent par le VPN : chaque couche doit filtrer sans dépendre d'une autre.</span></li>
+    <li><span>Pour un prestataire, je prévoirais dès le départ des <strong>droits par utilisateur</strong> côté serveur VPN et une <strong>authentification à deux facteurs</strong> : les adresses autorisées d'un client WireGuard règlent le routage, pas l'accès.</span></li>
+    <li><span>Avant de configurer une passerelle, <strong>vérifier qu'aucun équipement du segment ne porte déjà son adresse</strong> (table ARP, configuration du switch cœur) : ce contrôle aurait évité plusieurs semaines de blocage.</span></li>
+  </ul>
+</section>
+
+<section class="p-section" id="competences">
+  <h2>Compétences</h2>
+  <ul class="tags">
+    <li>Conception de DMZ</li>
+    <li>pfSense et filtrage des flux</li>
+    <li>Diagnostic ARP et états du pare-feu</li>
+    <li>Windows Server et IIS</li>
+    <li>Certificats et durcissement TLS</li>
+    <li>Encadrement d'un prestataire</li>
+  </ul>
+</section>
+    </div>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+  </div>
+</article>
+<section class="p-next wrap" aria-label="Autres projets">
+  <div class="p-next__grid">
+    <a href="/projets/supervision-zabbix-grafana/"><small>← Projet précédent</small><span>Supervision réseau Zabbix + Grafana</span></a>
+    <a href="/projets/attaque-active-directory/"><small>Projet suivant →</small><span>Attaque d'un Active Directory (homelab)</span></a>
+  </div>
+  <article class="thread p-thread">
+  <div class="thread__head"><h3>Fil rouge : Accès distant</h3><p>Du client VPN installé poste par poste à une architecture dédiée.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/acces-distant-fortigate-splashtop/"><span class="thread__year">2024–2025</span><span class="thread__label">FortiClient, puis Splashtop</span><span class="thread__level">Déployer et accompagner les utilisateurs</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/vpn-wireguard/"><span class="thread__year">2026</span><span class="thread__label">WireGuard + Firezone</span><span class="thread__level">Diagnostiquer, réarchitecturer, migrer sans coupure</span></a></li><li class="thread__step is-current"><span class="thread__year">2026 · vous êtes ici</span><span class="thread__label">Accès d'un prestataire à la DMZ</span><span class="thread__level">Ouvrir à un tiers sans outil non maîtrisé</span></li></ol>
+</article>
+<article class="thread p-thread">
+  <div class="thread__head"><h3>Fil rouge : Pare-feu et segmentation</h3><p>Du premier pfSense en salle de TP à une DMZ exposée sur Internet.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/pfsense-dmz-haute-dispo/"><span class="thread__year">2023–2025</span><span class="thread__label">pfSense : DMZ et haute dispo (labo)</span><span class="thread__level">Filtrer, isoler, basculer</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/cyber-range-pentest/"><span class="thread__year">2026</span><span class="thread__label">Cyber range FortiGate (homelab)</span><span class="thread__level">Éprouver la segmentation en attaquant</span></a></li><li class="thread__step is-current"><span class="thread__year">2026 · vous êtes ici</span><span class="thread__label">DMZ de production, TLS noté A</span><span class="thread__level">Exposer un service réel sur Internet</span></li></ol>
+</article>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Mevorah Abergel — cybersécurité &amp; infrastructure.</span>
+    <nav aria-label="Liens de pied de page">
+      <a href="/projets/">Projets</a>
+      <a href="/progression/">Progression</a>
+      <a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

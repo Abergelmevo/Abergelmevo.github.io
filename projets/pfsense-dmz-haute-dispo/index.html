@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- frame-ancestors n'est pas pris en compte dans une balise meta : GitHub Pages ne permet pas d'envoyer cet en-tête HTTP. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pfSense : DMZ et pare-feu redondant — Mevorah Abergel</title>
+<meta name="description" content="Trois labos d'école sur pfSense : un LAN et sa panne DNS, une DMZ qui publie un serveur web, puis deux pare-feu en cluster CARP.">
+<link rel="canonical" href="https://abergelmevo.github.io/projets/pfsense-dmz-haute-dispo/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Mevorah Abergel">
+<meta property="og:title" content="pfSense : DMZ et pare-feu redondant — Mevorah Abergel">
+<meta property="og:description" content="Trois labos d'école sur pfSense : un LAN et sa panne DNS, une DMZ qui publie un serveur web, puis deux pare-feu en cluster CARP.">
+<meta property="og:url" content="https://abergelmevo.github.io/projets/pfsense-dmz-haute-dispo/">
+<meta property="og:image" content="https://abergelmevo.github.io/assets/img/projets/pfsense-dmz-haute-dispo/cover.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand__name">Mevorah Abergel</span>
+      <span class="brand__role">Cyber &amp; infra</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="bars"><span></span></span>Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/progression/">Progression</a>
+        <a href="/projets/" aria-current="page">Projets</a>
+        <a href="/articles/">Articles</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
+    </nav>
+  </div>
+</header>
+<main id="contenu">
+
+<article>
+  <header class="p-hero wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/projets/">Projets</a> / <a href="/projets/?stage=bts">BTS SIO SISR</a></nav>
+    <div class="p-badges"><span class="badge">BTS SIO SISR</span><span class="badge badge--lab">Laboratoire</span><span class="p-read">Lecture : 3 min</span></div>
+    <h1>pfSense, de la première règle à la haute disponibilité</h1>
+    <p class="lead">Mon premier pare-feu, monté pendant le BTS puis repris deux fois en laboratoire : pour isoler un serveur web dans une DMZ et pour supprimer le point unique de défaillance avec un second pfSense.</p>
+    <dl class="p-meta"><div><dt>Contexte</dt><dd>Laboratoire d'école · VMware Workstation puis Proxmox, BTS SIO SISR</dd></div><div><dt>Période</dt><dd>Décembre 2023 – avril 2025</dd></div><div><dt>Mon rôle</dt><dd>Réalisé en autonomie, dans le cadre du BTS</dd></div><div><dt>Outils</dt><dd>pfSense · VMware Workstation · Proxmox / LXC · Apache · CARP</dd></div></dl>
+    <section class="brief" aria-label="En bref"><p class="brief__title">En bref</p><div class="brief__grid"><div><span class="brief__k">Le problème</span><p>Protéger un LAN avec un pare-feu open source, publier un serveur web sans exposer le réseau interne, puis ne plus dépendre d'un pare-feu unique.</p></div><div><span class="brief__k">Ce que j'ai fait</span><p>J'ai monté trois labos pfSense : un LAN avec DHCP et résolveur DNS, une DMZ à trois interfaces pour un serveur Apache, et deux nœuds en cluster CARP.</p></div><div><span class="brief__k">Le résultat</span><p>Trois zones séparées, un seul port publié (80), une panne DNS résolue, et deux IP virtuelles partagées entre un pare-feu maître et un secours.</p></div></div></section>
+    <div class="kpis"><div class="kpi"><span class="kpi__value">3</span><span class="kpi__label">zones séparées : WAN, LAN et DMZ</span></div><div class="kpi"><span class="kpi__value">2</span><span class="kpi__label">pare-feu en cluster CARP, maître et secours</span></div><div class="kpi"><span class="kpi__value">5</span><span class="kpi__label">risques analysés avant de monter le cluster</span></div><div class="kpi"><span class="kpi__value">12</span><span class="kpi__label">modifications préparées pour l'oral</span></div></div>
+  </header>
+  <div class="wrap p-layout">
+    <div class="p-body">
+<section class="p-section" id="contexte">
+  <h2>Contexte</h2>
+  <p>Trois travaux de mon BTS SIO, en laboratoire virtualisé, sur une même question : protéger un réseau local avec un pare-feu open source. Ordre réel : le pare-feu et son LAN (décembre 2023 – avril 2024), le cluster (décembre 2024 – janvier 2025), puis la DMZ (avril 2025).</p>
+</section>
+
+<section class="p-section" id="demarche">
+  <h2>Ce que j'ai fait</h2>
+  <h3>1. Un pare-feu, un LAN et une panne DNS</h3>
+  <p>Sous VMware Workstation : WAN en pont sur la box, LAN isolé en 192.168.14.0/24, et un client Windows Server 2022 qui ne sort que par pfSense. Une fois la sortie validée, j'ai activé le DHCP (plage .50 à .100) : c'est là qu'est apparue la panne DNS décrite plus bas.</p>
+
+  <h3>2. Une DMZ pour publier un serveur web</h3>
+  <p>Sur Proxmox, en suivant un TP guidé, pfSense reçoit une troisième interface : un serveur exposé à Internet ne doit pas atteindre le réseau interne s'il est compromis. Le serveur, un conteneur LXC Debian 12, a l'adresse réservée 192.168.10.250 ; il sort pour ses mises à jour (NAT sortant), et le port 80 du WAN est redirigé vers son Apache.</p>
+
+  <h3>3. Deux pare-feu en cluster CARP</h3>
+  <p>Après avoir comparé pfSense à Cisco ASA et Sophos XG, et analysé cinq risques dont l'échec silencieux de la synchronisation, j'ai monté deux pfSense, maître et secours. Ils partagent une IP virtuelle sur le WAN (192.168.10.1) et une sur le LAN (192.168.1.1) ; le maître pousse au secours les règles, le NAT, le DHCP et les paramètres système.</p>
+
+  <details class="tech">
+    <summary>Voir les détails techniques</summary>
+    <div class="tech__body">
+      <h4>Pare-feu et LAN</h4>
+      <p>Le WAN, en pont sur la box, a une adresse privée, d'où l'option « Block RFC1918 » décochée. Les interfaces ont été réassignées à la main avant de valider la sortie.</p>
+      <h4>DMZ</h4>
+      <p>Conteneur LXC Debian 12 : 1 cœur, 512 Mo de RAM, 8 Go.</p>
+      <figure class="fig fig--diagram">
+        <div class="fig__frame">
+          <svg viewBox="0 0 680 318" role="img" aria-labelledby="pf-dmz-t">
+            <title id="pf-dmz-t">DMZ à trois interfaces : Internet, LAN et DMZ reliés par pfSense</title>
+            <rect class="dg-box" x="255" y="10" width="170" height="48" rx="6"/>
+            <text class="dg-title" x="340" y="31" text-anchor="middle">Internet (WAN)</text>
+            <text class="dg-sub" x="340" y="49" text-anchor="middle">IP publique</text>
+            <line class="dg-line dg-line--accent" x1="340" y1="58" x2="340" y2="100"/>
+            <polygon class="dg-arrow dg-arrow--accent" points="334,100 346,100 340,110"/>
+            <text class="dg-sub" x="352" y="88">port 80 redirigé vers 192.168.10.250</text>
+
+            <rect class="dg-box dg-box--accent" x="255" y="110" width="170" height="48" rx="6"/>
+            <text class="dg-title" x="340" y="131" text-anchor="middle">pfSense</text>
+            <text class="dg-sub" x="340" y="149" text-anchor="middle">WAN · LAN · DMZ</text>
+
+            <line class="dg-line" x1="300" y1="158" x2="125" y2="220"/>
+            <line class="dg-line dg-line--accent" x1="380" y1="158" x2="545.6" y2="216.7"/>
+            <polygon class="dg-arrow dg-arrow--accent" points="543.9,221.4 547.2,212 555,220"/>
+
+            <rect class="dg-box" x="10" y="220" width="230" height="56" rx="6"/>
+            <text class="dg-title" x="125" y="243" text-anchor="middle">LAN</text>
+            <text class="dg-sub" x="125" y="264" text-anchor="middle">192.168.1.0/24 · postes</text>
+
+            <rect class="dg-box dg-box--accent" x="440" y="220" width="230" height="56" rx="6"/>
+            <text class="dg-title" x="555" y="243" text-anchor="middle">DMZ</text>
+            <text class="dg-sub" x="555" y="264" text-anchor="middle">192.168.10.0/24 · Apache .250</text>
+
+            <line class="dg-line dg-line--warn" x1="240" y1="248" x2="440" y2="248"/>
+            <text class="dg-sub" x="340" y="306" text-anchor="middle">Pointillés : DMZ → LAN, aucune règle de blocage explicite</text>
+          </svg>
+        </div>
+        <figcaption><b>Fig. 1</b>La DMZ du laboratoire : un seul flux entrant, le port 80. Le flux DMZ → LAN, en pointillés, est celui que la première règle ci-dessous bloque.</figcaption>
+      </figure>
+      <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/pfsense-dmz-haute-dispo/02-nat-sortant-dmz.webp" width="1442" height="137" alt="Tableau Mappings du NAT Outbound pfSense : interface DMZ, source DMZ subnets, destination WAN subnets, adresse NAT WAN address." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 2</b>Laboratoire : règle de NAT sortant permettant au réseau DMZ d'accéder à l'extérieur via l'adresse WAN.</figcaption>
+  </figure>
+      <h4>Règles de la DMZ, dans l'ordre où je les poserais</h4>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th class="num">Ordre</th><th>Action</th><th>Source</th><th>Destination</th><th>Ports</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td>Bloquer</td><td>DMZ net</td><td>LAN net</td><td>Tous</td></tr>
+            <tr><td class="num">2</td><td>Autoriser</td><td>DMZ net</td><td>Tout</td><td>53 (TCP et UDP)</td></tr>
+            <tr><td class="num">3</td><td>Autoriser</td><td>DMZ net</td><td>Tout</td><td>80 et 443 (TCP)</td></tr>
+            <tr><td class="num">4</td><td>Bloquer (implicite)</td><td>Tout</td><td>Tout</td><td>Tous</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h4>Cluster CARP</h4>
+      <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/pfsense-dmz-haute-dispo/01-schema-carp.webp" width="1224" height="1387" alt="Schéma réseau de deux pfSense (WAN 192.168.10.2 et .3, LAN 192.168.1.2 et .3) partageant l'IP virtuelle 192.168.10.1, priorités CARP 100 (Master) et 50 (Backup), reliés à un switch de niveau 2 et à deux postes." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 3</b>Laboratoire : schéma d'origine du cluster Master/Backup. Le lien noté « ActiveSync » entre les deux pare-feu correspond à la synchronisation XMLRPC (configuration) et pfsync (états).</figcaption>
+  </figure>
+      <p>Procédure de bascule : couper le maître, vérifier dans Status &gt; CARP que le secours passe MASTER et que les clients sortent, puis observer le retour du maître.</p>
+      <p>Pour départager les nœuds, on règle le décalage CARP (skew 0 et 100) plutôt que la base d'annonce (1 contre 2). Deux règles du cluster sont aussi à reprendre : l'administration HTTPS ouverte sur le WAN, à fermer, et « LAN → tout » placée en tête, qui rend inutiles les règles du dessous puisque pfSense s'arrête à la première qui correspond.</p>
+      <h4>Questions préparées pour l'oral</h4>
+      <p>À l'oral, le jury demande une modification en direct. Au BTS blanc, il a demandé un accès SSH pour un non-administrateur, un serveur web et sa base MariaDB derrière pfSense, et un VLAN limité aux ports 22, 80 et 443. J'en ai préparé douze autres.</p>
+    </div>
+  </details>
+</section>
+
+<section class="p-section" id="incident">
+  <h2>L'incident</h2>
+  <div class="incident">
+    <p class="incident__title">Internet répond, mais plus aucun nom ne se résout</p>
+    <div class="incident__row"><span class="incident__tag incident__tag--problem">Problème</span><p>Après le passage en DHCP, <code>ping 8.8.8.8</code> répond, <code>ping google.com</code> échoue et <code>nslookup</code> renvoie « Query refused ».</p></div>
+    <div class="incident__row"><span class="incident__tag incident__tag--fix">Résolution</span><p>J'ai contrôlé les DNS de pfSense, puis son résolveur (activé, à l'écoute sur le LAN, récursif). Avec les serveurs amont 8.8.8.8 et 1.1.1.1 et le mode <em>forwarding</em>, les noms se résolvent après <code>ipconfig /flushdns</code> et <code>/renew</code>. Leçon : tester par IP et par nom séparément, et ne changer qu'un réglage à la fois.</p></div>
+  </div>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/pfsense-dmz-haute-dispo/04-diagnostic-dns.webp" width="1051" height="137" alt="Invite de commandes : nslookup interroge le serveur 192.168.14.1 et renvoie « Query refused » pour google.com." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 4</b>Laboratoire : symptôme « Query refused » relevé avec nslookup avant la correction du DNS Resolver de pfSense.</figcaption>
+  </figure>
+</section>
+
+<section class="p-section" id="resultats">
+  <h2>Résultats</h2>
+  <figure class="fig fig--diagram">
+    <div class="fig__frame">
+      <svg viewBox="0 0 680 320" role="img" aria-labelledby="pf-carp-t">
+        <title id="pf-carp-t">Cluster CARP : deux pfSense partagent une IP virtuelle sur le WAN et une sur le LAN</title>
+        <rect class="dg-box" x="240" y="10" width="200" height="44" rx="6"/>
+        <text class="dg-title" x="340" y="29" text-anchor="middle">Passerelle amont</text>
+        <text class="dg-sub" x="340" y="46" text-anchor="middle">192.168.10.254</text>
+        <line class="dg-line" x1="340" y1="54" x2="340" y2="90"/>
+        <line class="dg-line" x1="60" y1="90" x2="620" y2="90"/>
+        <text class="dg-title" x="60" y="80">WAN 192.168.10.0/24</text>
+        <text class="dg-sub" x="620" y="80" text-anchor="end">IP virtuelle .1 · VHID 1</text>
+
+        <line class="dg-line" x1="195" y1="90" x2="195" y2="125"/>
+        <line class="dg-line" x1="485" y1="90" x2="485" y2="125"/>
+        <rect class="dg-box dg-box--accent" x="100" y="125" width="190" height="70" rx="6"/>
+        <text class="dg-title" x="195" y="147" text-anchor="middle">pfSense maître</text>
+        <text class="dg-sub" x="195" y="165" text-anchor="middle">WAN .2 · LAN .2</text>
+        <text class="dg-sub" x="195" y="183" text-anchor="middle">état MASTER</text>
+        <rect class="dg-box" x="390" y="125" width="190" height="70" rx="6"/>
+        <text class="dg-title" x="485" y="147" text-anchor="middle">pfSense secours</text>
+        <text class="dg-sub" x="485" y="165" text-anchor="middle">WAN .3 · LAN .3</text>
+        <text class="dg-sub" x="485" y="183" text-anchor="middle">état BACKUP</text>
+        <line class="dg-line dg-line--warn" x1="290" y1="160" x2="390" y2="160"/>
+        <text class="dg-sub" x="340" y="152" text-anchor="middle">synchro</text>
+
+        <line class="dg-line" x1="195" y1="195" x2="195" y2="230"/>
+        <line class="dg-line" x1="485" y1="195" x2="485" y2="230"/>
+        <line class="dg-line" x1="60" y1="230" x2="620" y2="230"/>
+        <text class="dg-title" x="60" y="250">LAN 192.168.1.0/24</text>
+        <text class="dg-sub" x="620" y="250" text-anchor="end">IP virtuelle .1 · VHID 2</text>
+
+        <line class="dg-line" x1="340" y1="230" x2="340" y2="265"/>
+        <rect class="dg-box" x="240" y="265" width="200" height="44" rx="6"/>
+        <text class="dg-title" x="340" y="284" text-anchor="middle">Switch et clients</text>
+        <text class="dg-sub" x="340" y="301" text-anchor="middle">passerelle : 192.168.1.1</text>
+      </svg>
+    </div>
+    <figcaption><b>Fig. 5</b>Le cluster du laboratoire. Les clients ont pour passerelle l'IP virtuelle du LAN, jamais l'adresse d'un nœud.</figcaption>
+  </figure>
+  <p>Le LAN sort par pfSense et résout les noms. La page d'Apache, en DMZ, s'affiche depuis le LAN ; l'accès depuis Internet reste à démontrer. Pour le cluster, la bascule est configurée pas à pas, mais je n'ai pas gardé de trace d'un test de coupure.</p>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/pfsense-dmz-haute-dispo/03-apache-dmz.webp" width="957" height="148" alt="Sortie de systemctl status apache2 dans le conteneur CT-Debian : service enabled et active (running)." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 6</b>Laboratoire : service Apache actif dans le conteneur Debian placé en DMZ.</figcaption>
+  </figure>
+</section>
+
+<section class="p-section" id="ameliorations">
+  <h2>Ce que j'améliorerais</h2>
+  <ul class="retro">
+    <li><span>Aujourd'hui, j'ajouterais en tête de la DMZ une <strong>règle qui bloque tout vers le LAN</strong>, puis une sortie limitée aux ports 53, 80 et 443.</span></li>
+    <li><span>Je ferais passer la <strong>synchronisation sur une interface dédiée</strong> : XMLRPC pour la configuration, pfsync pour les états.</span></li>
+    <li><span>J'ajouterais le <strong>NAT sortant vers l'IP virtuelle</strong> 192.168.10.1, pour que l'adresse de sortie ne change pas à la bascule, et je garderais une capture de chaque test.</span></li>
+  </ul>
+  <p>La suite : éprouver la segmentation en l'attaquant dans un <a href="/projets/cyber-range-pentest/">cyber range FortiGate</a>, puis exposer un service réel dans une <a href="/projets/portail-b2b-dmz/">DMZ de production</a>, en 2026.</p>
+</section>
+
+<section class="p-section" id="competences">
+  <h2>Compétences</h2>
+  <ul class="tags">
+    <li>pfSense</li>
+    <li>NAT et redirection de port</li>
+    <li>Diagnostic DNS</li>
+    <li>Segmentation en DMZ</li>
+    <li>Haute disponibilité CARP</li>
+    <li>Analyse de risques</li>
+  </ul>
+</section>
+    </div>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+  </div>
+</article>
+<section class="p-next wrap" aria-label="Autres projets">
+  <div class="p-next__grid">
+    <a href="/projets/raid1-debian/"><small>← Projet précédent</small><span>RAID 1 logiciel sous Debian</span></a>
+    <a href="/projets/soc-wazuh/"><small>Projet suivant →</small><span>SOC Wazuh multicouche</span></a>
+  </div>
+  <article class="thread p-thread">
+  <div class="thread__head"><h3>Fil rouge : Pare-feu et segmentation</h3><p>Du premier pfSense en salle de TP à une DMZ exposée sur Internet.</p></div>
+  <ol class="thread__steps"><li class="thread__step is-current"><span class="thread__year">2023–2025 · vous êtes ici</span><span class="thread__label">pfSense : DMZ et haute dispo (labo)</span><span class="thread__level">Filtrer, isoler, basculer</span></li><li class="thread__step"><a class="thread__link" href="/projets/cyber-range-pentest/"><span class="thread__year">2026</span><span class="thread__label">Cyber range FortiGate (homelab)</span><span class="thread__level">Éprouver la segmentation en attaquant</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/portail-b2b-dmz/"><span class="thread__year">2026</span><span class="thread__label">DMZ de production, TLS noté A</span><span class="thread__level">Exposer un service réel sur Internet</span></a></li></ol>
+</article>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Mevorah Abergel — cybersécurité &amp; infrastructure.</span>
+    <nav aria-label="Liens de pied de page">
+      <a href="/projets/">Projets</a>
+      <a href="/progression/">Progression</a>
+      <a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+<script src="/assets/js/site.js" defer></script>
+</body>
+</html>

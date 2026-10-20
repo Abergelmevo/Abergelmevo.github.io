@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://abergelmevo.github.io/sitemap.xml
