@@ -41,7 +41,7 @@
         <a href="/en/#projects" aria-current="page">Projects</a>
         <a href="/en/certifications/">Certifications</a>
         <a href="/en/#contact">Contact</a>
-        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
+        <a href="/assets/cv-mevorah-abergel-en.pdf">CV</a>
         <a class="nav__lang" href="/projets/audit-active-directory/" hreflang="fr" lang="fr" title="Version française">FR</a>
     </nav>
   </div>
@@ -51,7 +51,7 @@
 <article>
   <header class="p-hero wrap">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/en/">Home</a> / <a href="/en/#projects">Projects</a></nav>
-    <div class="p-badges"><span class="badge">Professional bachelor's (ASS&amp;R)</span><span class="badge badge--production">Production</span><span class="p-read">2 min read</span></div>
+    <div class="p-badges"><span class="badge">Professional bachelor's (ASS&amp;R)</span><span class="badge badge--production">Production</span><span class="p-read">4 min read</span></div>
     <h1>Auditing and hardening a production Active Directory</h1>
     <p class="lead">A directory that had never been audited since it was created, which I measured with PingCastle and then fixed in production, one weakness at a time.</p>
     <dl class="p-meta"><div><dt>Context</dt><dd>Production · small business, 808 objects, two Windows Server domain controllers</dd></div><div><dt>Period</dt><dd>June – September 2026</dd></div><div><dt>My role</dt><dd>Led independently; account changes approved by management</dd></div><div><dt>Tools</dt><dd>PingCastle · PowerShell · GPO · auditpol · repadmin</dd></div></dl>
@@ -155,26 +155,10 @@ Import-Csv .\postes_inactifs.csv | ForEach-Object {
 
 <section class="p-section" id="results">
   <h2>Results</h2>
-  <figure class="fig fig--bars">
-    <div class="fig__frame">
-      <div class="hbars">
-        <div class="hbars__row">
-          <p class="hbars__head"><span>“Anomalies” score</span><b>100 → 74</b></p>
-          <svg class="hbars__svg" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><rect class="ch-before" width="100" height="3"/><rect class="ch-after" y="5" width="74" height="3"/></svg>
-        </div>
-        <div class="hbars__row">
-          <p class="hbars__head"><span>Age of the krbtgt password</span><b>4,019 days → under 10 days</b></p>
-          <svg class="hbars__svg" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><rect class="ch-before" width="100" height="3"/><rect class="ch-after" y="5" width="0.6" height="3"/></svg>
-        </div>
-      </div>
-      <p class="hbars__legend"><span class="hbars__key hbars__key--before"></span>before <span class="hbars__key hbars__key--after"></span>after</p>
-    </div>
-    <figcaption><b>Fig. 5</b>Two indicators between the first and the last PingCastle scan (June → August 2026), each on its own scale.</figcaption>
-  </figure>
   <p>At the last scan, in August 2026, SMBv1 was uninstalled, the krbtgt password was less than ten days old, LM and NTLMv1 were refused, and a standard user could no longer join a machine to the domain. Work that required a maintenance window was handed to management as a roadmap.</p>
   <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/audit-active-directory/05-pingcastle-anomalies.webp" width="364" height="80" alt="PingCastle gauge for the Anomalies category, at 74 out of 100." loading="lazy" decoding="async"></div>
-    <figcaption><b>Fig. 6</b>Final PingCastle scan (August 2026): the “Anomalies” category brought down from 100 to 74/100.</figcaption>
+    <figcaption><b>Fig. 5</b>Final PingCastle scan (August 2026): the “Anomalies” category brought down from 100 to 74/100.</figcaption>
   </figure>
 </section>
 
@@ -205,7 +189,7 @@ Import-Csv .\postes_inactifs.csv | ForEach-Object {
 <section class="p-next wrap" aria-label="More projects">
   <div class="p-next__grid">
     <a href="/en/#projects"><small>← English pages</small><span>Flagship projects</span></a>
-    <a href="/projets/"><small>Full portfolio →</small><span>All 21 projects, in French</span></a>
+    <a href="/projets/"><small>Full portfolio →</small><span>All 17 projects, in French</span></a>
   </div>
 </section>
 </main>

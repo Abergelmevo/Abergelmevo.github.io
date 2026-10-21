@@ -50,10 +50,10 @@
 <article>
   <header class="p-hero wrap">
     <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/projets/">Projets</a> / <a href="/projets/?stage=licence">Licence pro ASS&amp;R</a></nav>
-    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--production">Production</span><span class="p-read">Lecture : 3 min</span></div>
+    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--production">Production</span><span class="p-read">Lecture : 6 min</span></div>
     <h1>Accès distant : sortir le VPN du pare-feu, d'OpenVPN à WireGuard</h1>
     <p class="lead">L'ancien VPN, hébergé sur le pare-feu, se dégradait au-delà de trois connexions : je l'ai remplacé par WireGuard et Firezone sur une machine virtuelle dédiée, sans couper l'ancien service pendant la bascule.</p>
-    <dl class="p-meta"><div><dt>Contexte</dt><dd>Production · PME, 6 utilisateurs à distance, pare-feu pfSense, hyperviseur Hyper-V</dd></div><div><dt>Période</dt><dd>Août 2026</dd></div><div><dt>Mon rôle</dt><dd>Étude, déploiement et bascule des utilisateurs, en autonomie</dd></div><div><dt>Outils</dt><dd>WireGuard · Firezone · Docker Compose · Debian 13 · pfSense</dd></div></dl>
+    <dl class="p-meta"><div><dt>Contexte</dt><dd>Production · PME, 6 utilisateurs à distance, pare-feu pfSense, hyperviseur Hyper-V</dd></div><div><dt>Période</dt><dd>Août 2026</dd></div><div><dt>Mon rôle</dt><dd>Étude, déploiement et bascule des utilisateurs, en autonomie</dd></div><div><dt>Outils</dt><dd>WireGuard · Firezone · Docker Compose · Debian 13 · pfSense · FortiClient et Splashtop (2024)</dd></div></dl>
     <section class="brief" aria-label="En bref"><p class="brief__title">En bref</p><div class="brief__grid"><div><span class="brief__k">Le problème</span><p>OpenVPN tournait sur le pare-feu : au-delà de trois connexions simultanées, sessions coupées et mémoire saturée, alors que six personnes en avaient besoin.</p></div><div><span class="brief__k">Ce que j'ai fait</span><p>J'ai déplacé l'accès distant sur une VM Debian dédiée, avec WireGuard et le portail Firezone, en gardant OpenVPN en secours pendant la bascule.</p></div><div><span class="brief__k">Le résultat</span><p>Un accès se crée en 2 min au lieu de 15 et se révoque en un clic ; le pare-feu ne fait plus que rediriger un port. Test extérieur : 55 ms, 0 % de perte.</p></div></div></section>
     <div class="kpis"><div class="kpi"><span class="kpi__value">15 → 2<small>min</small></span><span class="kpi__label">pour créer un accès, sans toucher au pare-feu</span></div><div class="kpi"><span class="kpi__value">3</span><span class="kpi__label">connexions simultanées : au-delà, l'ancien VPN se dégradait</span></div><div class="kpi"><span class="kpi__value">55<small>ms</small></span><span class="kpi__label">de latence vers le réseau local depuis l'extérieur, 0 % de perte</span></div></div>
   </header>
@@ -62,7 +62,24 @@
 <section class="p-section" id="contexte">
   <h2>Contexte</h2>
   <p>Six utilisateurs se connectaient à distance pour atteindre les partages du NAS, le bureau à distance et les applications métier. Le serveur OpenVPN tournait sur le pare-feu pfSense lui-même. Au-delà de <strong>trois connexions simultanées</strong>, les sessions tombaient et la mémoire du pare-feu saturait. Chaque coupure devenait un ticket.</p>
-  <p>La cause tenait à l'architecture : OpenVPN chiffre en espace utilisateur, sur la machine qui assure déjà le filtrage et le NAT de toute l'entreprise. Ce projet prolonge mes premiers déploiements d'<a href="/projets/acces-distant-fortigate-splashtop/">accès distant</a>, faits poste par poste.</p>
+  <p>La cause tenait à l'architecture : OpenVPN chiffre en espace utilisateur, sur la machine qui assure déjà le filtrage et le NAT de toute l'entreprise. Ce projet prolonge mes premiers déploiements d'accès distant, faits poste par poste (ci-dessous).</p>
+</section>
+
+<section class="p-section" id="avant-forticlient">
+  <h2>Avant : FortiClient, puis Splashtop</h2>
+  <p>Mon premier accès distant date de 2024, sur l'ancien pare-feu FortiGate. Mon travail se situait côté postes : FortiClient installé depuis un partage interne, en mode « VPN seulement », avec deux profils, VPN SSL et IPsec en secours. Je les ai testés câble débranché, depuis le partage 4G d'un téléphone, puis j'ai écrit une procédure illustrée pour équiper les postes suivants.</p>
+  <div class="fig-pair">
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/acces-distant-fortigate-splashtop/02-profil-ipsec.webp" width="941" height="747" alt="Fenêtre FortiClient « Nouvelle connexion VPN » onglet VPN IPsec, méthode Clé partagée et authentification XAuth ; nom de connexion, passerelle, clé et identifiant masqués." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 1</b>Paramétrage d'un profil VPN IPsec dans FortiClient, authentifié par clé partagée et XAuth.</figcaption>
+  </figure>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/acces-distant-fortigate-splashtop/03-vpn-connecte.webp" width="1253" height="981" alt="Console FortiClient indiquant « VPN connecté » pour une connexion IPsec avec la durée et les octets envoyés ; nom de la connexion masqué." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 2</b>Tunnel IPsec établi depuis l'extérieur du réseau de l'entreprise, lors du test en 4G.</figcaption>
+  </figure>
+  </div>
+  <p>Le VPN passait mes tests mais décevait à l'usage dans notre contexte : connexions qui tombaient, client délicat à paramétrer, demandes de support régulières. L'entreprise a adopté Splashtop, un accès poste à poste avec double authentification, où l'ordinateur distant n'entre plus dans le réseau. J'en ai retenu qu'on ne juge pas un service depuis son propre poste, et qu'on mesure avant de conclure : je n'avais gardé aucun chiffre avant et après.</p>
+  <p>Après le <a href="/projets/migration-pare-feu-pfsense/">remplacement du FortiGate par pfSense</a>, fin 2024, le VPN est revenu sous la forme d'un serveur OpenVPN sur le nouveau pare-feu. C'est lui que ce projet remplace.</p>
 </section>
 
 <section class="p-section" id="demarche">
@@ -123,7 +140,7 @@
         <text class="dg-sub" x="326" y="221" text-anchor="middle">sessions RDP</text>
       </svg>
     </div>
-    <figcaption><b>Fig. 1</b>La connexion traverse deux traductions d'adresse, chez l'opérateur puis sur le pare-feu. Dans le tunnel, seul le trafic vers le réseau local passe ; la navigation Internet reste sur la connexion de l'utilisateur.</figcaption>
+    <figcaption><b>Fig. 3</b>La connexion traverse deux traductions d'adresse, chez l'opérateur puis sur le pare-feu. Dans le tunnel, seul le trafic vers le réseau local passe ; la navigation Internet reste sur la connexion de l'utilisateur.</figcaption>
   </figure>
   <details class="tech">
     <summary>Voir les détails techniques</summary>
@@ -164,7 +181,7 @@ docker compose ps &amp;&amp; docker logs firezone-firezone-1 --tail 10</code></p
       <p><strong>Créer et révoquer un accès.</strong> Firezone génère la paire de clés, attribue une adresse dans le réseau du tunnel et produit un QR code pour les mobiles ou un fichier <code>.conf</code> pour les postes. Supprimer l'appareil ou désactiver l'utilisateur coupe le tunnel immédiatement. Avec l'ancien service, chaque accès demandait un certificat généré dans pfSense, l'export et l'envoi manuel d'une archive, et des droits d'administration sur le pare-feu de production.</p>
       <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/vpn-wireguard/02-tunnel-wireguard-actif.webp" width="1023" height="614" alt="Client WireGuard Windows : interface activée, MTU 1280, DNS internes, homologue avec clé pré-partagée, adresses autorisées limitées au réseau interne et dernier établissement de liaison il y a 3 secondes ; nom du tunnel, clés publiques et point de terminaison masqués." loading="lazy" decoding="async"></div>
-    <figcaption><b>Fig. 2</b>Tunnel WireGuard établi depuis l'extérieur : dernier échange de clés il y a 3 secondes, trafic dans les deux sens et routage limité au réseau interne.</figcaption>
+    <figcaption><b>Fig. 4</b>Tunnel WireGuard établi depuis l'extérieur : dernier échange de clés il y a 3 secondes, trafic dans les deux sens et routage limité au réseau interne.</figcaption>
   </figure>
     </div>
   </details>
@@ -184,7 +201,7 @@ docker compose ps &amp;&amp; docker logs firezone-firezone-1 --tail 10</code></p
   <p>Test de bout en bout depuis l'extérieur, sur une connexion résidentielle : tunnel établi en quelques secondes, ping d'un contrôleur de domaine à <strong>55 ms sans perte</strong>, lecteur du NAS monté avec les identifiants du domaine, session de bureau à distance ouverte sur un serveur interne, droits NTFS appliqués normalement.</p>
   <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/vpn-wireguard/03-ping-a-travers-le-tunnel.webp" width="866" height="192" alt="Invite de commandes Windows : ping vers une adresse interne, quatre réponses, 0 % de perte, minimum 33 ms, maximum 106 ms, moyenne 55 ms." loading="lazy" decoding="async"></div>
-    <figcaption><b>Fig. 3</b>Test à travers le tunnel depuis une connexion résidentielle : 4 réponses du contrôleur de domaine, 0 % de perte et 55 ms de moyenne.</figcaption>
+    <figcaption><b>Fig. 5</b>Test à travers le tunnel depuis une connexion résidentielle : 4 réponses du contrôleur de domaine, 0 % de perte et 55 ms de moyenne.</figcaption>
   </figure>
   <p>Une limite existait déjà avec OpenVPN : les noms courts ne se résolvaient pas, le client Windows ne gérant pas le suffixe de recherche DNS ; il fallait utiliser les noms complets.</p>
   <p>Un premier utilisateur était migré et se connectait sans intervention ; les autres suivaient, OpenVPN en secours. La tenue à six connexions simultanées et la mémoire du pare-feu n'ont donc pas été mesurées. Ce VPN a ensuite servi à ouvrir un accès encadré au prestataire du <a href="/projets/portail-b2b-dmz/">portail B2B en DMZ</a>.</p>
@@ -211,7 +228,7 @@ docker compose ps &amp;&amp; docker logs firezone-firezone-1 --tail 10</code></p
   </ul>
 </section>
     </div>
-    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#avant-forticlient">Avant : FortiClient, puis Splashtop</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
   </div>
 </article>
 <section class="p-next wrap" aria-label="Autres projets">
@@ -221,7 +238,7 @@ docker compose ps &amp;&amp; docker logs firezone-firezone-1 --tail 10</code></p
   </div>
   <article class="thread p-thread">
   <div class="thread__head"><h3>Fil rouge : Accès distant</h3><p>Du client VPN installé poste par poste à une architecture dédiée.</p></div>
-  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/acces-distant-fortigate-splashtop/"><span class="thread__year">2024–2025</span><span class="thread__label">FortiClient, puis Splashtop</span><span class="thread__level">Déployer et accompagner les utilisateurs</span></a></li><li class="thread__step is-current"><span class="thread__year">2026 · vous êtes ici</span><span class="thread__label">WireGuard + Firezone</span><span class="thread__level">Diagnostiquer, réarchitecturer, migrer sans coupure</span></li><li class="thread__step"><a class="thread__link" href="/projets/portail-b2b-dmz/"><span class="thread__year">2026</span><span class="thread__label">Accès d'un prestataire à la DMZ</span><span class="thread__level">Ouvrir à un tiers sans outil non maîtrisé</span></a></li></ol>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/vpn-wireguard/#avant-forticlient"><span class="thread__year">2024–2025</span><span class="thread__label">FortiClient, puis Splashtop</span><span class="thread__level">Déployer et accompagner les utilisateurs</span></a></li><li class="thread__step is-current"><span class="thread__year">2026 · vous êtes ici</span><span class="thread__label">WireGuard + Firezone</span><span class="thread__level">Diagnostiquer, réarchitecturer, migrer sans coupure</span></li><li class="thread__step"><a class="thread__link" href="/projets/portail-b2b-dmz/"><span class="thread__year">2026</span><span class="thread__label">Accès d'un prestataire à la DMZ</span><span class="thread__level">Ouvrir à un tiers sans outil non maîtrisé</span></a></li></ol>
 </article>
 </section>
 </main>

@@ -50,7 +50,7 @@
 <article>
   <header class="p-hero wrap">
     <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/projets/">Projets</a> / <a href="/projets/?stage=licence">Licence pro ASS&amp;R</a></nav>
-    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--production">Production</span><span class="p-read">Lecture : 3 min</span></div>
+    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--production">Production</span><span class="p-read">Lecture : 5 min</span></div>
     <h1>Migration du cœur de réseau d'une PME en 10 Gigabit</h1>
     <p class="lead">L'achat d'un simple switch d'accès a révélé un cœur de réseau au bord de la saturation, que j'ai assaini avant de passer serveurs et liaisons en 10 Gigabit.</p>
     <dl class="p-meta"><div><dt>Contexte</dt><dd>Production · PME d'une vingtaine de personnes, switch cœur Cisco, serveurs sous Hyper-V</dd></div><div><dt>Période</dt><dd>Juillet 2026</dd></div><div><dt>Mon rôle</dt><dd>Mené en autonomie, de l'audit aux tests de débit</dd></div><div><dt>Outils</dt><dd>Cisco IOS-XE · UniFi Network · Hyper-V · PowerShell · iPerf3</dd></div></dl>
@@ -63,10 +63,17 @@
   <h2>Contexte</h2>
   <p>L'entreprise, une PME de distribution d'une vingtaine de personnes, venait d'acheter un switch <strong>UniFi Pro 48 PoE</strong> (942 € HT, 4 ports SFP+ à 10 Gb/s) pour remplacer un switch d'accès. J'administre son infrastructure sans équipe externe permanente : serveurs sous Hyper-V, NAS, pare-feu pfSense, et un cœur de réseau Cisco complété par un switch de distribution.</p>
   <p>Avant de brancher quoi que ce soit, j'ai audité le cœur. Ce qui devait être un simple remplacement est devenu un chantier de fond, mené <strong>sur le réseau en service</strong> : un switch cœur qui ne redémarre pas, c'est toute l'entreprise à l'arrêt.</p>
-  <figure class="fig">
-    <div class="fig__frame"><img src="/assets/img/projets/reseau-10-gigabit/01-audit-switch-coeur.webp" width="1600" height="920" alt="Photo d'un terminal PuTTY : sortie « show inventory » du switch cœur listant le châssis, l'alimentation et quatre modules SFP-10GBase-CX1, puis un message d'alerte mémoire à 95 % ; numéros de série et nom d'hôte masqués." loading="lazy" decoding="async"></div>
-    <figcaption><b>Fig. 1</b>Audit du commutateur cœur en console série : inventaire des quatre câbles DAC SFP-10GBase-CX1 et alerte de mémoire utilisée à 95 %.</figcaption>
-  </figure>
+  <p class="code-title">Console série du switch cœur · inventaire et alerte mémoire (extrait, identifiants masqués)</p>
+  <pre class="code"><code><span class="p">#</span> show inventory
+<span class="c">! châssis, références et numéros de série masqués</span>
+NAME: "Switch 1 - Power Supply A", DESCR: "Switch 1 - Power Supply A"
+NAME: "Te1/1/1", DESCR: "SFP-10GBase-CX1"
+NAME: "Te1/1/2", DESCR: "SFP-10GBase-CX1"
+NAME: "Te1/1/3", DESCR: "SFP-10GBase-CX1"
+NAME: "Te1/1/4", DESCR: "SFP-10GBase-CX1"
+
+*Jul  9 08:42:20.522: %PLATFORM-4-ELEMENT_WARNING: Switch 1 R0/0: smand: 1/RP/0:
+  Used Memory value 95% exceeds warning level 90%</code></pre>
 </section>
 
 <section class="p-section" id="demarche">
@@ -120,7 +127,7 @@ Get-VM $vmSecondaires | Get-VMNetworkAdapter |
 Remove-VMSwitch -Name 'vSwitch-1G' -Force</code></pre>
       <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/reseau-10-gigabit/02-cimc-carte-non-supportee.webp" width="1566" height="400" alt="Interface Cisco CIMC, onglet Network Adapters : contrôleur Intel I350 1 Gbit/s avec deux interfaces et contrôleur 10G sans interface, marqué carte non supportée ; adresses MAC masquées." loading="lazy" decoding="async"></div>
-    <figcaption><b>Fig. 2</b>Diagnostic sur l'interface CIMC du serveur : la carte réseau 10G est signalée « Card not supported or option ROM disabled ».</figcaption>
+    <figcaption><b>Fig. 1</b>Diagnostic sur l'interface CIMC du serveur : la carte réseau 10G est signalée « Card not supported or option ROM disabled ».</figcaption>
   </figure>
       <p class="code-title">Cisco IOS-XE · racine Spanning Tree</p>
       <pre class="code"><code>SW-CORE# show spanning-tree vlan 1
@@ -138,7 +145,7 @@ SW-CORE# show spanning-tree vlan 1
       <p><strong>Agrégation LACP refusée.</strong> Les ports entre le cœur et le switch de distribution restaient suspendus (<code>LACP currently not enabled on the remote port</code>). Liaisons laissées en lien simple à 10 Gb/s, agrégation reportée à une fenêtre de maintenance dédiée.</p>
       <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/reseau-10-gigabit/04-iperf3-flux-unique.webp" width="790" height="412" alt="Terminal Linux : iperf3 client vers un serveur interne, débits par seconde entre 3,87 et 5,15 Gbit/s et moyenne de 4,60 Gbit/s." loading="lazy" decoding="async"></div>
-    <figcaption><b>Fig. 3</b>Mesure iPerf3 entre deux serveurs virtualisés après migration : 4,60 Gbit/s sur un flux unique pendant 10 secondes.</figcaption>
+    <figcaption><b>Fig. 2</b>Mesure iPerf3 entre deux serveurs virtualisés après migration : 4,60 Gbit/s sur un flux unique pendant 10 secondes.</figcaption>
   </figure>
     </div>
   </details>
@@ -194,13 +201,13 @@ SW-CORE# show spanning-tree vlan 1
         <text class="dg-tag" x="225" y="346" text-anchor="middle">2e lien 10G · SFP+</text>
       </svg>
     </div>
-    <figcaption><b>Fig. 4</b>Topologie après migration. Liaisons à 10 Gb/s en couleur ; l'agrégation LACP n'étant pas active, chaque liaison est un lien simple.</figcaption>
+    <figcaption><b>Fig. 3</b>Topologie après migration. Liaisons à 10 Gb/s en couleur ; l'agrégation LACP n'étant pas active, chaque liaison est un lien simple.</figcaption>
   </figure>
   <p>Entre deux VM, iPerf3 mesure <strong>4,60 Gb/s</strong> en flux unique et <strong>8,25 Gb/s</strong> sur quatre flux, soit 82 % du débit théorique d'un lien 10G. Un transfert réel de 12,7 Go depuis le NAS vers un poste Gigabit atteint <strong>111 Mo/s</strong>, environ 89 % du maximum : la carte du poste est le facteur limitant.</p>
   <p>Une réserve : aucune mesure n'a été faite avant la migration, et les deux VM tournaient sur le même serveur physique. Le gain se déduit des liens plafonnés à 1 Gb/s ; il n'est pas mesuré. Restaient planifiés le NAS en 10G, les ports 10G du second serveur et l'agrégation LACP. La supervision de ces switchs a suivi en août, avec <a href="/projets/supervision-zabbix-grafana/">Zabbix et Grafana en SNMP</a>.</p>
   <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/reseau-10-gigabit/05-iperf3-quatre-flux.webp" width="587" height="319" alt="Terminal iperf3 côté serveur : quatre flux d'environ 2 Gbit/s chacun et une ligne de somme à 8,24 Gbit/s en réception." loading="lazy" decoding="async"></div>
-    <figcaption><b>Fig. 5</b>Mesure iPerf3 côté serveur avec 4 flux parallèles : 9,60 Go reçus en 10 secondes, soit 8,24 Gbit/s.</figcaption>
+    <figcaption><b>Fig. 4</b>Mesure iPerf3 côté serveur avec 4 flux parallèles : 9,60 Go reçus en 10 secondes, soit 8,24 Gbit/s.</figcaption>
   </figure>
 </section>
 

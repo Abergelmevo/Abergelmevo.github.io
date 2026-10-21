@@ -50,10 +50,10 @@
 <article>
   <header class="p-hero wrap">
     <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/projets/">Projets</a> / <a href="/projets/?stage=licence">Licence pro ASS&amp;R</a></nav>
-    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--production">Production</span><span class="p-read">Lecture : 3 min</span></div>
+    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--production">Production</span><span class="p-read">Lecture : 7 min</span></div>
     <h1>Superviser le réseau d'une PME avec Zabbix et Grafana</h1>
     <p class="lead">Une panne de switch n'était connue que lorsqu'un utilisateur la signalait : j'ai déployé Zabbix et Grafana pour suivre en continu les trois switches de l'entreprise et prévenir par e-mail.</p>
-    <dl class="p-meta"><div><dt>Contexte</dt><dd>Production · PME, 3 switches (2 Cisco, 1 UniFi), VM Debian 12 sur Hyper-V</dd></div><div><dt>Période</dt><dd>Août 2026</dd></div><div><dt>Mon rôle</dt><dd>Déploiement, configuration et tests en autonomie</dd></div><div><dt>Outils</dt><dd>Zabbix 7.0 LTS · Grafana 10.4 · SNMP · MariaDB · Cisco IOS · Debian 12</dd></div></dl>
+    <dl class="p-meta"><div><dt>Contexte</dt><dd>Production · PME, 3 switches (2 Cisco, 1 UniFi), VM Debian 12 sur Hyper-V</dd></div><div><dt>Période</dt><dd>Août 2026</dd></div><div><dt>Mon rôle</dt><dd>Déploiement, configuration et tests en autonomie</dd></div><div><dt>Outils</dt><dd>Zabbix 7.0 LTS · Grafana 10.4 · SNMP · MariaDB · Cisco IOS · Debian 12 · Netdata (2024)</dd></div></dl>
     <section class="brief" aria-label="En bref"><p class="brief__title">En bref</p><div class="brief__grid"><div><span class="brief__k">Le problème</span><p>Les trois switches de la PME n'étaient pas supervisés : une panne n'était connue qu'une fois signalée, et personne ne voyait charge, processeur ni température.</p></div><div><span class="brief__k">Ce que j'ai fait</span><p>J'ai déployé Zabbix et Grafana sur une VM Debian : collecte SNMP toutes les 30 s, six panneaux, trois actions d'alerte par e-mail via Microsoft 365.</p></div><div><span class="brief__k">Le résultat</span><p>1 497 métriques collectées, alerte reçue en moins de 2 minutes au test de bout en bout, mené sans couper un vrai switch.</p></div></div></section>
     <div class="kpis"><div class="kpi"><span class="kpi__value">1 497</span><span class="kpi__label">métriques collectées sur 3 switches (431 + 577 + 489)</span></div><div class="kpi"><span class="kpi__value">30<small>s</small></span><span class="kpi__label">entre deux interrogations SNMP de chaque switch</span></div><div class="kpi"><span class="kpi__value">&lt; 2<small>min</small></span><span class="kpi__label">pour recevoir l'e-mail d'alerte au test de bout en bout</span></div><div class="kpi"><span class="kpi__value">6</span><span class="kpi__label">panneaux Grafana : charge, trafic, mémoire, CPU, température, erreurs</span></div></div>
   </header>
@@ -62,7 +62,17 @@
 <section class="p-section" id="contexte">
   <h2>Contexte</h2>
   <p>Le réseau de l'entreprise, une PME de distribution d'une vingtaine de personnes, repose sur trois switches : un Cisco au cœur, un Cisco de distribution et un UniFi 48 ports PoE, piloté par son contrôleur. Aucun n'était supervisé.</p>
-  <p>Ce projet prolonge la <a href="/projets/supervision-netdata/">supervision des serveurs avec Netdata</a> et suit la <a href="/projets/reseau-10-gigabit/">migration du cœur de réseau en 10 Gigabit</a>, dont il surveille les liens.</p>
+  <p>Ce projet prolonge ma première supervision des serveurs, avec Netdata (ci-dessous), et suit la <a href="/projets/reseau-10-gigabit/">migration du cœur de réseau en 10 Gigabit</a>, dont il surveille les liens.</p>
+</section>
+
+<section class="p-section" id="avant-netdata">
+  <h2>Avant : Netdata, en 2024</h2>
+  <p>Ma première supervision date de décembre 2024, côté serveurs. Les lenteurs se découvraient quand un utilisateur appelait : j'ai monté une VM Debian 11 avec Netdata et rattaché cinq serveurs Windows à un tableau de bord commun, avec des alertes à deux niveaux, vérifiées par une montée en charge CPU provoquée. Pour la première fois, l'état des serveurs se lisait avant qu'un utilisateur se plaigne.</p>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/supervision-netdata/01-tableau-de-bord.webp" width="1385" height="533" alt="Accueil Netdata avec 6 nœuds (5 en ligne, 1 hors ligne), une alerte d'avertissement sur les dernières 24 h, 12,4 k métriques, 338 graphiques et 53 alertes configurées ; noms des nœuds masqués." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 1</b>Tableau de bord Netdata Cloud : six nœuds supervisés, 12,4 k métriques collectées et 53 alertes configurées.</figcaption>
+  </figure>
+  <p>Elle m'a surtout appris ce qu'il ne fallait pas refaire. Le tableau de bord local de Netdata s'ouvrait sans mot de passe, et chaque agent envoyait l'état des serveurs à Netdata Cloud, un service tiers hors de l'entreprise. Zabbix et Grafana tournent sur une VM de l'entreprise, sans confier les mesures à un service extérieur. Et les switches, eux, n'étaient toujours pas supervisés.</p>
 </section>
 
 <section class="p-section" id="demarche">
@@ -92,7 +102,7 @@
       <p>L'écart entre les deux Cisco vient du nombre d'interfaces découvertes. Le template Cisco relève le trafic par interface (IF-MIB), le processeur (CISCO-PROCESS-MIB), la mémoire (CISCO-MEMORY-POOL-MIB) et la température (CISCO-ENVMON-MIB). Hôtes déclarés avec une interface SNMP sur le port 161 et la communauté portée par la macro <code>{$SNMP_COMMUNITY}</code>.</p>
       <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/supervision-zabbix-grafana/02-hotes-snmp-zabbix.webp" width="1600" height="129" alt="Liste des hôtes Zabbix : trois équipements réseau avec interface SNMP active, état Activé et nombre de données collectées, plus le serveur Zabbix lui-même ; noms d'hôtes masqués." loading="lazy" decoding="async"></div>
-    <figcaption><b>Fig. 1</b>Les trois switches supervisés en SNMP dans Zabbix, chacun avec plusieurs centaines d'éléments collectés.</figcaption>
+    <figcaption><b>Fig. 2</b>Les trois switches supervisés en SNMP dans Zabbix, chacun avec plusieurs centaines d'éléments collectés.</figcaption>
   </figure>
       <p><strong>Switch UniFi.</strong> Template générique « Network Generic Device by SNMP », découverte des interfaces forcée au lieu d'attendre son cycle d'une heure : 489 métriques (48 ports cuivre, 4 ports SFP+ et les interfaces de gestion). Processeur, mémoire et température : trois OID testés, trois refus. Je l'ai documenté comme une limite de l'équipement.</p>
       <p class="code-title">Bash · tests SNMP sur le switch UniFi</p>
@@ -208,13 +218,13 @@ snmpwalk &lt;options SNMP&gt; &lt;ip-unifi&gt; 1.3.6.1.4.1.41112
         <polygon class="dg-arrow" points="583,184 588,190 593,184"/>
       </svg>
     </div>
-    <figcaption><b>Fig. 2</b>Zabbix interroge les trois switches, stocke les mesures dans MariaDB et alimente Grafana ; ses alertes partent d'une boîte partagée Microsoft 365. En pointillés : l'hôte fictif du test de bout en bout.</figcaption>
+    <figcaption><b>Fig. 3</b>Zabbix interroge les trois switches, stocke les mesures dans MariaDB et alimente Grafana ; ses alertes partent d'une boîte partagée Microsoft 365. En pointillés : l'hôte fictif du test de bout en bout.</figcaption>
   </figure>
   <p>Valeurs observées : mémoire à 35,7 % et 12,4 % sur les Cisco, processeur sous 45 %, températures de 25 à 41 °C pour un seuil d'alerte à 50 °C, erreurs proches de zéro. Le firmware UniFi n'expose que la MIB-II (interfaces, trafic, erreurs, durée de fonctionnement) : processeur, mémoire et température ne concernent que les Cisco.</p>
   <p>Au test, le déclencheur « Cisco IOS: Unavailable by ICMP ping » s'est levé après trois cycles sans réponse, et l'e-mail est arrivé <strong>en moins de 2 minutes</strong> dans la boîte de réception principale. L'hôte fictif a été supprimé aussitôt après.</p>
   <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/supervision-zabbix-grafana/01-dashboard-grafana.webp" width="1600" height="591" alt="Tableau de bord Grafana sombre à six panneaux : jauges de charge des interfaces, courbes de trafic des liens 10G, jauges mémoire, CPU, températures entre 25 et 41 °C et erreurs proches de zéro ; noms d'hôtes masqués dans la légende CPU." loading="lazy" decoding="async"></div>
-    <figcaption><b>Fig. 3</b>Tableau de bord Grafana alimenté par Zabbix : charge des interfaces 10G, trafic, mémoire (35,7 % et 12,4 %), CPU, températures et erreurs des trois commutateurs.</figcaption>
+    <figcaption><b>Fig. 4</b>Tableau de bord Grafana alimenté par Zabbix : charge des interfaces 10G, trafic, mémoire (35,7 % et 12,4 %), CPU, températures et erreurs des trois commutateurs.</figcaption>
   </figure>
 </section>
 
@@ -239,7 +249,7 @@ snmpwalk &lt;options SNMP&gt; &lt;ip-unifi&gt; 1.3.6.1.4.1.41112
   </ul>
 </section>
     </div>
-    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#avant-netdata">Avant : Netdata, en 2024</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
   </div>
 </article>
 <section class="p-next wrap" aria-label="Autres projets">
@@ -249,7 +259,7 @@ snmpwalk &lt;options SNMP&gt; &lt;ip-unifi&gt; 1.3.6.1.4.1.41112
   </div>
   <article class="thread p-thread">
   <div class="thread__head"><h3>Fil rouge : Superviser, puis détecter</h3><p>De la première sonde de supervision à un SOC à plusieurs couches.</p></div>
-  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/supervision-netdata/"><span class="thread__year">2024</span><span class="thread__label">Netdata sur une VM Debian</span><span class="thread__level">Voir l'état des serveurs en temps réel</span></a></li><li class="thread__step is-current"><span class="thread__year">2026 · vous êtes ici</span><span class="thread__label">Zabbix + Grafana en SNMP</span><span class="thread__level">Superviser le réseau, alerter en moins de 2 min</span></li><li class="thread__step"><a class="thread__link" href="/projets/soc-wazuh/"><span class="thread__year">2026</span><span class="thread__label">SOC Wazuh multicouche</span><span class="thread__level">Détecter : système, réseau, leurre, MITRE ATT&amp;CK</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/siem-ia-locale/"><span class="thread__year">2026</span><span class="thread__label">SIEM durci + IA locale</span><span class="thread__level">Protéger le SIEM et rendre ses alertes lisibles</span></a></li></ol>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/supervision-zabbix-grafana/#avant-netdata"><span class="thread__year">2024</span><span class="thread__label">Netdata sur une VM Debian</span><span class="thread__level">Voir l'état des serveurs en temps réel</span></a></li><li class="thread__step is-current"><span class="thread__year">2026 · vous êtes ici</span><span class="thread__label">Zabbix + Grafana en SNMP</span><span class="thread__level">Superviser le réseau, alerter en moins de 2 min</span></li><li class="thread__step"><a class="thread__link" href="/projets/soc-wazuh/"><span class="thread__year">2026</span><span class="thread__label">SOC Wazuh multicouche</span><span class="thread__level">Détecter : système, réseau, leurre, MITRE ATT&amp;CK</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/siem-ia-locale/"><span class="thread__year">2026</span><span class="thread__label">SIEM durci + IA locale</span><span class="thread__level">Protéger le SIEM et rendre ses alertes lisibles</span></a></li></ol>
 </article>
 </section>
 </main>

@@ -41,7 +41,7 @@
         <a href="/en/#projects">Projects</a>
         <a href="/en/certifications/">Certifications</a>
         <a href="/en/#contact">Contact</a>
-        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
+        <a href="/assets/cv-mevorah-abergel-en.pdf">CV</a>
         <a class="nav__lang" href="/" hreflang="fr" lang="fr" title="Version française">FR</a>
     </nav>
   </div>
@@ -52,11 +52,11 @@
     <div>
       <p class="status"><span class="dot" aria-hidden="true"></span><span>Engineering degree in cybersecurity · work-study at Recygo (a La Poste and Suez company)</span></p>
       <h1>Build an infrastructure, <em>then defend it.</em></h1>
-      <p class="lead">For three years of work-study, I ran IT for a small business of about twenty people, with my hands on almost the entire infrastructure. Network, Active Directory, backups, then detection and security audits. This English version covers three flagship projects; the full portfolio is in French.</p>
+      <p class="lead">For three years of work-study, I ran IT for a small business of about twenty people, with my hands on almost the entire infrastructure. Network, Active Directory, backups, then detection and security audits. This is a short English version: three flagship projects in full, and the complete portfolio in French.</p>
       <div class="btn-row">
         <a class="btn btn--primary" href="#projects">See the projects <span class="arrow" aria-hidden="true">→</span></a>
         <a class="btn" href="/projets/" hreflang="fr">Full portfolio (French)</a>
-        <a class="btn" href="/assets/cv-mevorah-abergel.pdf">Download my CV (PDF, French)</a>
+        <a class="btn" href="/assets/cv-mevorah-abergel-en.pdf">Download my CV (PDF)</a>
       </div>
     </div>
     <div class="facts">
@@ -64,7 +64,7 @@
         <div class="row"><dt>Today</dt><dd>Cybersecurity and administration engineer (work-study) at Recygo, engineering degree at École 2600</dd></div>
         <div class="row"><dt>Path</dt><dd>BTS SIO (2-year IT diploma) → professional bachelor's in network and systems security (UPEC) → engineering degree</dd></div>
         <div class="row"><dt>Field work</dt><dd>3 years on the same small-business infrastructure, in production</dd></div>
-        <div class="row"><dt>Projects</dt><dd>21 documented, 12 of them in production</dd></div>
+        <div class="row"><dt>Projects</dt><dd>17 documented, 10 of them in production</dd></div>
       </dl>
     </div>
   </div>
@@ -110,11 +110,12 @@
         <span class="stage__when">2023 – 2025</span>
         <h3>Laying the foundations</h3>
         <span class="stage__where">BTS SIO SISR · work-study at a small business</span>
-        <p>Workstations, directory, backups and remote access in production. Networking and firewalls in the lab.</p>
+        <p>Workstations, directory, backups and the firewall in production. Networking and high availability in the lab.</p>
         <ul>
-          <li><a href="/projets/second-controleur-domaine/" hreflang="fr">Second domain controller (FR)</a><span>2024</span></li>
+          <li><a href="/projets/socle-active-directory/" hreflang="fr">Active Directory foundations (FR)</a><span>2024</span></li>
+          <li><a href="/projets/migration-pare-feu-pfsense/" hreflang="fr">Firewall migration to pfSense (FR)</a><span>2024</span></li>
           <li><a href="/projets/sauvegarde-veeam/" hreflang="fr">Veeam backups (FR)</a><span>2025</span></li>
-          <li><a href="/projets/pfsense-dmz-haute-dispo/" hreflang="fr">pfSense DMZ and high availability (FR)</a><span>lab</span></li>
+          <li><a href="/projets/labos-reseau-bts/" hreflang="fr">pfSense labs: DMZ, CARP, two sites (FR)</a><span>lab</span></li>
         </ul>
       </article>
       <article class="stage">
@@ -148,7 +149,7 @@
       <div>
         <p class="eyebrow">Selection</p>
         <h2>Flagship projects</h2>
-        <p>Three projects translated into English. All 21 projects, from the BTS to the engineering degree, are documented in French.</p>
+        <p>Three projects translated into English. All 17 projects, from the BTS to the engineering degree, are documented in French.</p>
       </div>
       <a class="more" href="/projets/" hreflang="fr">All projects (French) →</a>
     </div>
@@ -165,7 +166,7 @@
 <a class="card" href="/en/projects/soc-wazuh/">
   <div class="card__media"><img src="/assets/img/projets/soc-wazuh/cover.webp" alt="" loading="lazy" decoding="async"></div>
   <div class="card__body">
-    <div class="card__meta"><span class="badge badge--production">Production</span><span>2025 – 2026</span></div>
+    <div class="card__meta"><span class="badge badge--production">Production</span><span>June 2026</span></div>
     <h3>Layered SOC with Wazuh</h3>
     <p>A Wazuh SIEM server built on Hyper-V, then three detection layers: endpoints, network with Suricata, and a decoy that raises an alert in under 30 seconds.</p>
     <div class="card__kpi"><b>&lt; 30 s</b><span>between a connection to the decoy and the level-13 alert</span></div>
@@ -269,8 +270,8 @@
 <section class="section" id="certifications">
   <div class="wrap">
     <div class="section-head">
-      <div><p class="eyebrow">Certifications</p><h2>Certifications</h2><p>Certifications first, then the courses I completed during my studies.</p></div>
-      <a class="more" href="/en/certifications/">All certifications →</a>
+      <div><p class="eyebrow">Certifications</p><h2>Certifications</h2><p>Certifications held and in preparation. Degrees and courses are on the dedicated page.</p></div>
+      <a class="more" href="/en/certifications/">Degrees, certifications and courses →</a>
     </div>
     <div class="certs certs--compact">
 <article class="cert cert--certification">
@@ -280,19 +281,6 @@
   <p class="cert__issuer">Cisco</p>
   <p class="cert__desc">Cisco's reference networking certification (Associate level): it validates building, running and troubleshooting an enterprise network, from cabling to security and automation.</p>
   
-  
-  
-  
-  </div>
-  
-</article>
-<article class="cert cert--certification">
-  <div class="cert__top"><span class="badge badge--production">Obtained</span><span class="cert__date">January 2024</span></div>
-  <div class="cert__main">
-  <h3>Certificate in Web 3.0 and blockchain technologies</h3>
-  <p class="cert__issuer">Paris School of Technology &amp; Business</p>
-  <p class="cert__desc">Professional certificate built into the school's BTS SIO, focused on Web 3.0 and blockchain technologies.</p>
-  <p class="cert__detail">Highest honours</p>
   
   
   
@@ -325,32 +313,6 @@
   </div>
   
 </article>
-<article class="cert cert--formation">
-  <div class="cert__top"><span class="badge badge--production">Completed</span><span class="cert__date">May 2024</span></div>
-  <div class="cert__main">
-  <h3>Introduction to Cybersecurity</h3>
-  <p class="cert__issuer">Cisco Networking Academy</p>
-  <p class="cert__desc">Cisco's entry course in cybersecurity: common threats and attacks, protecting personal data, then defending an organisation.</p>
-  
-  
-  
-  
-  </div>
-  
-</article>
-<article class="cert cert--formation">
-  <div class="cert__top"><span class="badge badge--production">Completed</span><span class="cert__date">June 2024</span></div>
-  <div class="cert__main">
-  <h3>CNIL GDPR MOOC (L'atelier RGPD), modules 1 and 2</h3>
-  <p class="cert__issuer">CNIL</p>
-  <p class="cert__desc">The MOOC written by the CNIL's lawyers: the GDPR framework and its key notions, then the principles any data processing must follow.</p>
-  <p class="cert__detail">Final quizzes: 93% and 100%</p>
-  
-  
-  
-  </div>
-  
-</article>
     </div>
   </div>
 </section>
@@ -365,6 +327,7 @@
     <div class="contact__links">
       <a href="mailto:abergelmevo@gmail.com"><span>abergelmevo@gmail.com</span><span>Email →</span></a>
       <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><span>Profile →</span></a>
+      <a href="https://github.com/Abergelmevo" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span>Scripts and code →</span></a>
     </div>
   </div>
 </section>

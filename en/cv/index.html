@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>CV — Mevorah Abergel</title>
+<meta name="description" content="CV of Mevorah Abergel: cybersecurity and infrastructure, three years of work-study at a small business, engineering degree in cybersecurity at École 2600.">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/css/cv.css?v=8228f13421">
+</head>
+<body>
+<main class="cv">
+  <header class="cv__head">
+    <div>
+      <h1>Mevorah Abergel</h1>
+      <p class="cv__title">Cybersecurity &amp; infrastructure</p>
+      <p class="cv__now">Cybersecurity and administration engineer (work-study) at Recygo · engineering degree at École 2600</p>
+    </div>
+    <ul class="cv__contact">
+      <li><a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a></li>
+      <li><a href="https://abergelmevo.github.io/en/">abergelmevo.github.io/en</a></li>
+      <li><a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" rel="noopener noreferrer">linkedin.com/in/mevorah-abergel-a33325298</a></li>
+      <li><a href="https://github.com/Abergelmevo" rel="noopener noreferrer">github.com/Abergelmevo</a></li>
+    </ul>
+  </header>
+
+  <p class="cv__profile">Three years of work-study on a small business's infrastructure: keeping the network, the directory and the backups running, then auditing, measuring and defending them. I audit before acting, measure before and after, and test my defences by attacking them in a lab. Every project is documented on my portfolio, with its incidents and its results.</p>
+
+  <div class="cv__grid">
+    <div class="cv__main">
+      <section>
+        <h2>Experience</h2>
+        <div class="cv__job">
+          <p class="cv__role"><b>Cybersecurity and administration engineer</b> (work-study) · Recygo, a La Poste and Suez company</p>
+          <p class="cv__when">Since September 2026</p>
+          <p>Within the IT and Data department: cybersecurity roadmap for the information system and SaaS applications, driven by penetration test results; staff awareness and testing; business continuity, disaster recovery and security policy; identity and endpoint management (IAM, UEM); business process automation with n8n.</p>
+        </div>
+        <div class="cv__job">
+          <p class="cv__role"><b>Work-study in systems, network and security administration</b> · distribution company (about twenty people)</p>
+          <p class="cv__when">2023 – 2026 · BTS SIO, then professional bachelor's degree</p>
+          <ul>
+            <li><b>Active Directory audit and hardening</b> in production: PingCastle "Anomalies" score from 100 to 74, SMBv1 removed, krbtgt rotated after 11 years, 169 stale objects deleted, with no unplanned outage.</li>
+            <li><b>Detection:</b> Wazuh SIEM, Suricata IDS (50,682 rules) and a honeypot that alerts in under 30 s; local AI (n8n, Ollama) that explains critical alerts without any data leaving the server.</li>
+            <li><b>Network:</b> core network audited, then migrated to 10 Gigabit (8.25 Gb/s measured); Zabbix and Grafana monitoring with alerts.</li>
+            <li><b>Exposure and access:</b> B2B portal published in a DMZ, TLS graded A on SSL Labs; dedicated WireGuard VPN, users switched over with no downtime.</li>
+            <li><b>Foundations:</b> second domain controller, Veeam backups, workstation deployment procedure.</li>
+          </ul>
+        </div>
+      </section>
+      <section>
+        <h2>Lab and school projects</h2>
+        <ul>
+          <li><b>Linux kernel</b> (École 2600): recompiled kernel, system calls, an ftrace-hook rootkit, then a BPF-LSM miniEDR that logs and jails processes (17 tests out of 17).</li>
+          <li><b>Attacking Active Directory</b> (homelab): from a plain user account to a Golden Ticket, each step tied to its trace and its countermeasure.</li>
+          <li><b>Cyber range</b> (homelab): measuring what a SIEM really sees of an intrusion behind a FortiGate firewall.</li>
+          <li><b>AWS audit</b> (lab): Prowler, critical findings from 5 to 3 and high from 20 to 14, immutable backups with Object Lock.</li>
+        </ul>
+      </section>
+    </div>
+
+    <aside class="cv__side">
+      <section>
+        <h2>Skills</h2>
+        <p><b>Systems</b><br>Active Directory, GPO, Kerberos, Windows Server, Linux, Hyper-V, PowerShell</p>
+        <p><b>Defence</b><br>Wazuh, Suricata, PingCastle, AD and TLS hardening, MITRE ATT&amp;CK</p>
+        <p><b>Network</b><br>Cisco IOS, pfSense, VLAN, OSPF, WireGuard, Zabbix, Grafana</p>
+        <p><b>Offensive (lab)</b><br>Nmap, BloodHound, Impacket, Hashcat, Metasploit</p>
+        <p><b>Automation and cloud</b><br>n8n, Python, local AI (Ollama), AWS, Microsoft 365; learning Ansible</p>
+      </section>
+      <section>
+        <h2>Education</h2>
+        <p><b>Engineering degree in cybersecurity</b><br>École 2600 · since 2026</p>
+        <p><b>Professional bachelor's degree, with honours</b><br>Systems and network administration and security · UPEC · 2025 – 2026</p>
+        <p><b>Bachelor Technology &amp; Business</b><br>PST&amp;B · 2025 – 2026</p>
+        <p><b>BTS SIO, SISR option</b><br>Two-year national IT diploma · PST&amp;B · 2023 – 2025</p>
+      </section>
+      <section class="cv__certs">
+<h2>Certifications</h2><ul><li><b>CCNA</b> · Cisco, July 2026</li><li><b>eJPT v2</b> · INE Security, in progress, exam in December 2026</li><li><b>HTB CDSA</b> · Hack The Box, in progress</li><li><b>CNIL GDPR MOOC, modules 1 and 2</b> · CNIL, June 2024</li></ul>
+      </section>
+    </aside>
+  </div>
+</main>
+</body>
+</html>

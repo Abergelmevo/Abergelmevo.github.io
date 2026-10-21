@@ -7,13 +7,13 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Audit de sécurité d'un environnement AWS — Mevorah Abergel</title>
-<meta name="description" content="Laboratoire AWS mal configuré exprès, audité avec Prowler en trois scans : conformité de 47,8 % à 57 %, échecs critiques de 5 à 3, sauvegardes immuables.">
+<meta name="description" content="Laboratoire AWS mal configuré exprès, audité avec Prowler en trois scans : échecs critiques de 5 à 3, hauts de 20 à 14, sauvegardes immuables.">
 <link rel="canonical" href="https://abergelmevo.github.io/projets/audit-cloud-aws/">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Mevorah Abergel">
 <meta property="og:title" content="Audit de sécurité d'un environnement AWS — Mevorah Abergel">
-<meta property="og:description" content="Laboratoire AWS mal configuré exprès, audité avec Prowler en trois scans : conformité de 47,8 % à 57 %, échecs critiques de 5 à 3, sauvegardes immuables.">
+<meta property="og:description" content="Laboratoire AWS mal configuré exprès, audité avec Prowler en trois scans : échecs critiques de 5 à 3, hauts de 20 à 14, sauvegardes immuables.">
 <meta property="og:url" content="https://abergelmevo.github.io/projets/audit-cloud-aws/">
 <meta property="og:image" content="https://abergelmevo.github.io/assets/img/projets/audit-cloud-aws/cover.webp">
 <meta name="twitter:card" content="summary_large_image">
@@ -50,12 +50,12 @@
 <article>
   <header class="p-hero wrap">
     <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/projets/">Projets</a> / <a href="/projets/?stage=licence">Licence pro ASS&amp;R</a></nav>
-    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--lab">Laboratoire</span><span class="p-read">Lecture : 3 min</span></div>
+    <div class="p-badges"><span class="badge">Licence pro ASS&amp;R</span><span class="badge badge--lab">Laboratoire</span><span class="p-read">Lecture : 6 min</span></div>
     <h1>Audit de sécurité d'un environnement AWS et sauvegardes immuables</h1>
     <p class="lead">J'ai appliqué au cloud la démarche de mon audit Active Directory : un environnement AWS mal configuré exprès, mesuré avec Prowler, corrigé par ordre de gravité, puis mesuré à nouveau.</p>
     <dl class="p-meta"><div><dt>Contexte</dt><dd>Laboratoire · compte AWS, région de Paris, ressources volontairement mal configurées</dd></div><div><dt>Période</dt><dd>Juillet 2026</dd></div><div><dt>Mon rôle</dt><dd>Conception de l'environnement, audit et remédiation</dd></div><div><dt>Outils</dt><dd>AWS · Prowler · IAM · S3 Object Lock · CloudTrail · KMS</dd></div></dl>
-    <section class="brief" aria-label="En bref"><p class="brief__title">En bref</p><div class="brief__grid"><div><span class="brief__k">Le problème</span><p>Des sauvegardes hors site doivent survivre à un rançongiciel, et à la prise de contrôle du compte Microsoft 365 qui porte déjà la messagerie de l'entreprise.</p></div><div><span class="brief__k">Ce que j'ai fait</span><p>J'ai audité un compte AWS volontairement mal configuré avec Prowler en lecture seule, appliqué huit remédiations par gravité, puis verrouillé les sauvegardes avec Object Lock.</p></div><div><span class="brief__k">Le résultat</span><p>Conformité de 47,8 % à 57 %, échecs critiques de 5 à 3 et hauts de 20 à 14, sauvegardes non supprimables pendant 30 jours, même par le compte racine.</p></div></div></section>
-    <div class="kpis"><div class="kpi"><span class="kpi__value">47,8 → 57,0<small>%</small></span><span class="kpi__label">conformité mesurée par Prowler, du 1er au 3e scan</span></div><div class="kpi"><span class="kpi__value">5 → 3</span><span class="kpi__label">échecs de gravité critique</span></div><div class="kpi"><span class="kpi__value">20 → 14</span><span class="kpi__label">échecs de gravité haute</span></div><div class="kpi"><span class="kpi__value">30<small>jours</small></span><span class="kpi__label">de rétention Object Lock en mode Conformité</span></div></div>
+    <section class="brief" aria-label="En bref"><p class="brief__title">En bref</p><div class="brief__grid"><div><span class="brief__k">Le problème</span><p>Des sauvegardes hors site doivent survivre à un rançongiciel, et à la prise de contrôle du compte Microsoft 365 qui porte déjà la messagerie de l'entreprise.</p></div><div><span class="brief__k">Ce que j'ai fait</span><p>J'ai audité un compte AWS volontairement mal configuré avec Prowler en lecture seule, appliqué huit remédiations par gravité, puis verrouillé les sauvegardes avec Object Lock.</p></div><div><span class="brief__k">Le résultat</span><p>Échecs critiques de 5 à 3 et hauts de 20 à 14, conformité de 47,8 % à 57 %, sauvegardes non supprimables pendant 30 jours, même par le compte racine.</p></div></div></section>
+    <div class="kpis"><div class="kpi"><span class="kpi__value">5 → 3</span><span class="kpi__label">échecs de gravité critique</span></div><div class="kpi"><span class="kpi__value">20 → 14</span><span class="kpi__label">échecs de gravité haute</span></div><div class="kpi"><span class="kpi__value">47,8 → 57,0<small>%</small></span><span class="kpi__label">conformité mesurée par Prowler, du 1er au 3e scan</span></div><div class="kpi"><span class="kpi__value">30<small>jours</small></span><span class="kpi__label">de rétention Object Lock en mode Conformité</span></div></div>
   </header>
   <div class="wrap p-layout">
     <div class="p-body">
@@ -74,6 +74,10 @@
     <li><strong>Corriger par ordre de gravité</strong>Huit remédiations : SSH limité à l'adresse de l'administrateur, accès publics S3 bloqués au niveau du compte, CloudTrail, chiffrement EBS par défaut, versioning, et pour IAM le moindre privilège, la MFA et la suppression d'une clé superflue.</li>
     <li><strong>Rendre les sauvegardes immuables</strong>Second bucket avec Object Lock en mode Conformité : même le compte racine ne peut pas supprimer un objet avant la fin de sa rétention. Chiffrement SSE-KMS avec une clé que je gère, chaque utilisation tracée dans CloudTrail.</li>
   </ol>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/audit-cloud-aws/01-prowler-premier-scan.webp" width="1380" height="352" alt="En-tête du rapport HTML de Prowler 5.33 : informations du rapport, compte AWS audité (masqué), profil prowler-audit en lecture seule, région eu-west-3, puis la synthèse : 186 constats, 89 réussis, 97 en échec, 45 ressources." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 1</b>Premier scan Prowler, le 15 juillet 2026 : 186 contrôles évalués, 89 réussis et 97 en échec, sur la région de Paris. Identifiants du compte masqués.</figcaption>
+  </figure>
   <details class="tech">
     <summary>Voir les détails techniques</summary>
     <div class="tech__body">
@@ -88,6 +92,20 @@
         </table>
       </div>
       <p>Premier scan : échecs IAM (30), EC2 (15) et S3 (11).</p>
+      <h4>Les cinq échecs critiques du premier scan</h4>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Contrôle Prowler</th><th>Ce qui le déclenchait</th><th>Correction</th></tr></thead>
+          <tbody>
+            <tr><td>EC2 : SSH (port 22) ouvert depuis Internet</td><td>L'instance au SSH ouvert à toute adresse, défaut introduit</td><td>SSH limité à l'adresse de l'administrateur</td></tr>
+            <tr><td>IAM : utilisateur doté de AdministratorAccess</td><td>Le compte de service des sauvegardes, défaut introduit</td><td>Politique sur mesure : écrire dans le bucket, rien d'autre</td></tr>
+            <tr><td>IAM : utilisateur doté de AdministratorAccess</td><td>Un second utilisateur IAM</td><td>—</td></tr>
+            <tr><td>IAM : politique gérée par AWS accordant « *:* »</td><td>AdministratorAccess attachée à un utilisateur</td><td>—</td></tr>
+            <tr><td>IAM : MFA matérielle sur le compte racine</td><td>Une MFA est active sur le compte racine, mais pas sur une clé matérielle</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Sur ces 25 échecs critiques et hauts, 16 touchent deux familles : les identités (11 : MFA, droits d'administration, clés à longue durée de vie) et l'exposition réseau (5 : SSH, groupes de sécurité et ACL ouverts à tout Internet). Les neuf autres portent surtout sur la journalisation, les disques (chiffrement, instantanés) et les accès publics S3.</p>
       <div class="table-wrap">
         <table class="data">
           <thead><tr><th>Correction</th><th>Gravité</th><th>Pourquoi</th></tr></thead>
@@ -154,7 +172,7 @@
       </div>
       <p class="hbars__legend">Scan 1 : état initial · Scan 2 : après 8 remédiations · Scan 3 : après KMS et Object Lock</p>
     </div>
-    <figcaption><b>Fig. 1</b>Le taux de conformité calculé par Prowler (échelle de 0 à 100 %) et le nombre de contrôles évalués (échelle de 0 à 250), à chaque scan.</figcaption>
+    <figcaption><b>Fig. 2</b>Le taux de conformité calculé par Prowler (échelle de 0 à 100 %) et le nombre de contrôles évalués (échelle de 0 à 250), à chaque scan.</figcaption>
   </figure>
   <p>Entre le deuxième et le troisième scan, le taux recule légèrement (57,3 % puis 57,0 %) alors que la configuration s'est améliorée. La raison : Prowler n'audite que ce qui existe. Activer CloudTrail ou créer le second bucket ajoute de nouveaux contrôles, dont une partie échoue au départ ; le nombre de contrôles passe de 186 à 232.</p>
   <p>Un taux de conformité ne mesure donc pas seul une progression : il se lit avec le nombre de contrôles évalués et les <strong>échecs par gravité</strong>, qui baissent nettement (critiques de 5 à 3, hauts de 20 à 14).</p>
@@ -194,8 +212,8 @@
     <a href="/projets/vpn-wireguard/"><small>Projet suivant →</small><span>Accès distant : d'OpenVPN à WireGuard</span></a>
   </div>
   <article class="thread p-thread">
-  <div class="thread__head"><h3>Fil rouge : Sauvegarde et continuité</h3><p>Du disque en miroir aux sauvegardes qu'un rançongiciel ne peut pas effacer.</p></div>
-  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/raid1-debian/"><span class="thread__year">2025</span><span class="thread__label">RAID 1 logiciel (labo)</span><span class="thread__level">Survivre à la panne d'un disque</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/sauvegarde-veeam/"><span class="thread__year">2025</span><span class="thread__label">Veeam Backup &amp; Replication</span><span class="thread__level">Sauvegarder et restaurer les VM</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/siem-ia-locale/"><span class="thread__year">2026</span><span class="thread__label">Sauvegarde du SIEM</span><span class="thread__level">Protéger l'outil qui protège le reste</span></a></li><li class="thread__step is-current"><span class="thread__year">2026 · vous êtes ici</span><span class="thread__label">Sauvegardes immuables S3</span><span class="thread__level">Résister à un rançongiciel</span></li></ol>
+  <div class="thread__head"><h3>Fil rouge : Sauvegarde et continuité</h3><p>Des sauvegardes de VM à celles qu'un rançongiciel ne peut pas effacer.</p></div>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/sauvegarde-veeam/"><span class="thread__year">2025</span><span class="thread__label">Veeam Backup &amp; Replication</span><span class="thread__level">Sauvegarder et restaurer les VM</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/siem-ia-locale/"><span class="thread__year">2026</span><span class="thread__label">Sauvegarde du SIEM</span><span class="thread__level">Protéger l'outil qui protège le reste</span></a></li><li class="thread__step is-current"><span class="thread__year">2026 · vous êtes ici</span><span class="thread__label">Sauvegardes immuables S3</span><span class="thread__level">Résister à un rançongiciel</span></li></ol>
 </article>
 </section>
 </main>

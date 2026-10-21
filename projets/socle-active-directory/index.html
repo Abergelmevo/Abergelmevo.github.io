@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<!-- frame-ancestors n'est pas pris en compte dans une balise meta : GitHub Pages ne permet pas d'envoyer cet en-tête HTTP. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Socle Active Directory : postes et second contrôleur — Mevorah Abergel</title>
+<meta name="description" content="Une procédure de mise en service des postes dans le domaine, puis un second contrôleur sur Hyper-V, avec DNS répliqué et DHCP en basculement : fini le serveur unique.">
+<link rel="canonical" href="https://abergelmevo.github.io/projets/socle-active-directory/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Mevorah Abergel">
+<meta property="og:title" content="Socle Active Directory : postes et second contrôleur — Mevorah Abergel">
+<meta property="og:description" content="Une procédure de mise en service des postes dans le domaine, puis un second contrôleur sur Hyper-V, avec DNS répliqué et DHCP en basculement : fini le serveur unique.">
+<meta property="og:url" content="https://abergelmevo.github.io/projets/socle-active-directory/">
+<meta property="og:image" content="https://abergelmevo.github.io/assets/img/projets/socle-active-directory/cover.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FAF9F6">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css?v=c3d4fd726c">
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand__name">Mevorah Abergel</span>
+      <span class="brand__role">Cyber &amp; infra</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="bars"><span></span></span>Menu</button>
+    <nav class="nav" id="site-nav" aria-label="Navigation principale">
+        <a href="/">Accueil</a>
+        <a href="/progression/">Progression</a>
+        <a href="/projets/" aria-current="page">Projets</a>
+        <a href="/articles/">Articles</a>
+        <a href="/certifications/">Certifications</a>
+        <a href="/#contact">Contact</a>
+        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
+        <a class="nav__lang" href="/en/" hreflang="en" lang="en" title="English version">EN</a>
+    </nav>
+  </div>
+</header>
+<main id="contenu">
+
+<article>
+  <header class="p-hero wrap">
+    <nav class="crumbs" aria-label="Fil d'Ariane"><a href="/projets/">Projets</a> / <a href="/projets/?stage=bts">BTS SIO SISR</a></nav>
+    <div class="p-badges"><span class="badge">BTS SIO SISR</span><span class="badge badge--production">Production</span><span class="p-read">Lecture : 5 min</span></div>
+    <h1>Le socle Active Directory : des postes en domaine, puis un second contrôleur</h1>
+    <p class="lead">Ma première année en production : préparer les postes selon une procédure écrite, puis supprimer le point unique de défaillance du domaine, pour que l'arrêt d'un serveur ne prive plus personne de session, de DNS ni d'adresse IP.</p>
+    <dl class="p-meta"><div><dt>Contexte</dt><dd>Production · PME d'une vingtaine de personnes, postes Windows et domaine Active Directory existant</dd></div><div><dt>Période</dt><dd>Année 2024</dd></div><div><dt>Mon rôle</dt><dd>Préparation des postes et procédure, puis second contrôleur, de la VM aux tests de bascule, en alternance</dd></div><div><dt>Outils</dt><dd>Windows Server · Hyper-V · AD DS · DNS · DHCP · GPO · PowerShell · Sage 100c</dd></div></dl>
+    <section class="brief" aria-label="En bref"><p class="brief__title">En bref</p><div class="brief__grid"><div><span class="brief__k">Le problème</span><p>Chaque nouvel arrivant devait trouver un poste prêt dans le domaine, et tout le domaine reposait sur un seul serveur, qui portait aussi le DNS et le DHCP : chaque redémarrage coupait tout le monde.</p></div><div><span class="brief__k">Ce que j'ai fait</span><p>J'ai écrit et appliqué la procédure de mise en service des postes, puis promu une VM Hyper-V en second contrôleur, avec zone DNS répliquée et DHCP en basculement 50/50.</p></div><div><span class="brief__k">Le résultat</span><p>Des postes identiques, validés en cinq points. Panne simulée réussie, et en 2026, le second contrôleur a assuré l'authentification pendant les 25 minutes de redémarrage du premier.</p></div></div></section>
+    <div class="kpis"><div class="kpi"><span class="kpi__value">1 → 2</span><span class="kpi__label">contrôleurs de domaine portant AD DS, DNS et DHCP</span></div><div class="kpi"><span class="kpi__value">25<small>min</small></span><span class="kpi__label">de redémarrage du premier contrôleur couvertes par le second, en 2026</span></div><div class="kpi"><span class="kpi__value">5</span><span class="kpi__label">vérifications à la fin de chaque mise en service de poste</span></div></div>
+  </header>
+  <div class="wrap p-layout">
+    <div class="p-body">
+<section class="p-section" id="contexte">
+  <h2>Contexte</h2>
+  <p>Première année d'alternance, dans une PME d'une vingtaine de personnes. Deux besoins de base. Chaque nouvel arrivant devait trouver un poste prêt : session du domaine, stratégies de groupe appliquées, partages accessibles, ERP de gestion commerciale installé. Et le domaine ne devait plus dépendre d'un seul serveur.</p>
+  <p>Tout reposait en effet sur un contrôleur unique, DC1, un serveur physique qui portait aussi le DNS et le DHCP. S'il s'arrêtait : plus de session ni de partages, plus de DNS (donc plus de Kerberos) et, une fois les baux expirés, plus d'adresse pour les postes. Chaque redémarrage de DC1 coupait tout le monde.</p>
+</section>
+
+<section class="p-section" id="demarche">
+  <h2>Ce que j'ai fait</h2>
+  <ol class="steps">
+    <li><strong>Écrire la procédure des postes</strong>DNS pointé vers les contrôleurs et heure juste, car Kerberos refuse par défaut un écart de plus de cinq minutes. Compte créé dans l'unité d'organisation de son service, qui détermine ses GPO. Jonction, puis <code>gpupdate /force</code>, puis l'ERP depuis le partage informatique. Une procédure que n'importe qui dans l'équipe peut suivre.</li>
+    <li><strong>Valider chaque poste en cinq points</strong>Ping du domaine, accès aux partages, profil créé à la première connexion, devis de test dans l'ERP, Observateur d'événements sans erreur critique.</li>
+    <li><strong>Préparer le second contrôleur</strong>Windows Server sur Hyper-V, adresse IP fixe, mises à jour, jonction comme serveur membre. Un contrôleur ne doit jamais changer d'adresse : les postes l'utilisent comme DNS.</li>
+    <li><strong>Promouvoir, puis répliquer le DNS</strong>Rôle AD DS installé (voir l'incident), promotion en contrôleur supplémentaire, réplication initiale. La zone du domaine, intégrée à l'annuaire, se réplique avec lui, sans transfert de zone ; les deux serveurs DNS sont déclarés.</li>
+    <li><strong>Répartir le DHCP</strong>Basculement en équilibrage de charge 50/50 plutôt qu'en secours à chaud : un partenaire qui travaille tous les jours révèle tout de suite qu'il ne répond plus.</li>
+  </ol>
+  <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/second-controleur-domaine/03-basculement-dhcp.webp" width="638" height="679" alt="Fenêtre « Configurer un basculement » de la console DHCP : MCLT d'1 heure, mode Équilibrage de charge à 50 % / 50 %, authentification des messages activée ; nom du serveur partenaire masqué." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 1</b>Configuration du basculement DHCP entre les deux contrôleurs : MCLT d'une heure et équilibrage de charge 50/50.</figcaption>
+  </figure>
+  <details class="tech">
+    <summary>Voir les détails techniques</summary>
+    <div class="tech__body">
+      <h4>Mise en service d'un poste</h4>
+      <p>Adresse par DHCP ou fixe selon l'usage, mot de passe administrateur local, mises à jour et pilotes avant la jonction. Le compte de l'utilisateur est créé dans le Centre d'administration Active Directory, dans l'OU de son service. Sage 100c s'installe depuis le partage informatique, ses deux installeurs dans l'ordre, puis s'active avec la licence de l'entreprise.</p>
+      <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/mise-en-service-postes/01-creation-utilisateur.webp" width="1386" height="776" alt="Formulaire « Créer Utilisateur » du Centre d'administration Active Directory, sections Compte et Organisation encore vides." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 2</b>Création d'un compte utilisateur dans le Centre d'administration Active Directory avant la jonction du poste.</figcaption>
+  </figure>
+      <h4>Basculement DHCP</h4>
+      <p>En secours à chaud, DC2 attendrait la panne de DC1. En équilibrage de charge, les deux serveurs distribuent en permanence, chacun sur la moitié de la plage.</p>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Paramètre DHCP</th><th>Valeur</th><th>Rôle</th></tr></thead>
+          <tbody>
+            <tr><td>Mode</td><td>Équilibrage, 50 % / 50 %</td><td>Chaque serveur distribue la moitié des adresses</td></tr>
+            <tr><td>MCLT</td><td>1 h</td><td>Écart maximal de durée de bail entre les deux serveurs, et délai avant de reprendre toute la plage si le partenaire est déclaré arrêté</td></tr>
+            <tr><td>Authentification des messages</td><td>Activée, secret partagé</td><td>Chaque serveur vérifie que les messages de synchronisation viennent bien de son partenaire</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/second-controleur-domaine/01-promotion-dc2.webp" width="755" height="552" alt="Assistant de configuration des services de domaine Active Directory, option « Ajouter un contrôleur de domaine à un domaine existant » sélectionnée ; serveur cible, domaine et compte masqués." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 3</b>Promotion du nouveau serveur en contrôleur de domaine supplémentaire d'un domaine existant.</figcaption>
+  </figure>
+      <p class="code-title">PowerShell · diagnostic et correction de l'incident</p>
+      <pre class="code"><code><span class="c"># État réel du rôle et de ses outils</span>
+Get-WindowsFeature AD-Domain-Services
+Get-WindowsFeature RSAT-ADDS
+<span class="c"># Install State : Available, et non Installed</span>
+
+<span class="c"># Réinstallation avec les outils d'administration</span>
+Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
+
+<span class="c"># Vérification : Install State = Installed</span>
+Get-WindowsFeature AD-Domain-Services</code></pre>
+      <figure class="fig">
+    <div class="fig__frame"><img src="/assets/img/projets/second-controleur-domaine/02-diagnostic-powershell.webp" width="735" height="470" alt="Deux sorties PowerShell de Get-WindowsFeature pour AD-Domain-Services et RSAT-ADDS : en haut l'état Available, en bas l'état Installed." loading="lazy" decoding="async"></div>
+    <figcaption><b>Fig. 4</b>Diagnostic PowerShell : le rôle AD DS apparaît « Available » avant la réinstallation, puis « Installed » après correction.</figcaption>
+  </figure>
+    </div>
+  </details>
+</section>
+
+<section class="p-section" id="incident">
+  <h2>L'incident</h2>
+  <div class="incident">
+    <p class="incident__title">Le rôle AD DS « ajouté »… mais absent</p>
+    <div class="incident__row"><span class="incident__tag incident__tag--problem">Problème</span><p>Après l'ajout du rôle par l'assistant, la promotion échouait. <code>Get-WindowsFeature</code> indiquait <code>Available</code>, et non <code>Installed</code> : l'assistant n'était pas allé au bout.</p></div>
+    <div class="incident__row"><span class="incident__tag incident__tag--fix">Résolution</span><p>Réinstallation en PowerShell, vérification, puis promotion sans erreur. Leçon retenue : vérifier un état par une commande, pas par l'interface.</p></div>
+  </div>
+</section>
+
+<section class="p-section" id="resultats">
+  <h2>Résultats</h2>
+  <figure class="fig fig--diagram">
+    <div class="fig__frame">
+      <svg viewBox="0 0 680 300" role="img" aria-labelledby="dc2-schema-t">
+        <title id="dc2-schema-t">Avant : un seul contrôleur porte l'annuaire, le DNS et le DHCP. Après : deux contrôleurs répliqués et un DHCP en basculement.</title>
+        <rect class="dg-zone" x="0.5" y="0.5" width="679" height="112" rx="8"/>
+        <text class="dg-title" x="16" y="24">Avant</text>
+        <rect class="dg-box dg-box--warn" x="16" y="36" width="250" height="60" rx="6"/>
+        <text class="dg-title" x="32" y="61">DC1</text>
+        <text class="dg-sub" x="32" y="82">AD DS · DNS · DHCP</text>
+        <line class="dg-line dg-line--warn" x1="266" y1="66" x2="424" y2="66"/>
+        <text class="dg-sub" x="345" y="57" text-anchor="middle">point unique</text>
+        <rect class="dg-box" x="424" y="36" width="240" height="60" rx="6"/>
+        <text class="dg-title" x="440" y="61">Postes et serveurs</text>
+        <text class="dg-sub" x="440" y="82">dépendent tous de DC1</text>
+
+        <rect class="dg-zone" x="0.5" y="128.5" width="679" height="171" rx="8"/>
+        <text class="dg-title" x="16" y="152">Après</text>
+        <rect class="dg-box dg-box--accent" x="16" y="166" width="200" height="62" rx="6"/>
+        <text class="dg-title" x="32" y="191">DC1</text>
+        <text class="dg-sub" x="32" y="212">AD DS · DNS · DHCP 50 %</text>
+        <rect class="dg-box dg-box--accent" x="464" y="166" width="200" height="62" rx="6"/>
+        <text class="dg-title" x="480" y="191">DC2 · VM Hyper-V</text>
+        <text class="dg-sub" x="480" y="212">AD DS · DNS · DHCP 50 %</text>
+        <line class="dg-line dg-line--accent" x1="216" y1="186" x2="464" y2="186"/>
+        <text class="dg-sub" x="340" y="178" text-anchor="middle">réplication AD et zone DNS</text>
+        <line class="dg-line dg-line--accent" x1="216" y1="210" x2="464" y2="210"/>
+        <text class="dg-sub" x="340" y="226" text-anchor="middle">basculement DHCP · MCLT 1 h</text>
+        <path class="dg-line" d="M116 228 V270 H190"/>
+        <path class="dg-line" d="M564 228 V270 H490"/>
+        <rect class="dg-box" x="190" y="252" width="300" height="36" rx="6"/>
+        <text class="dg-title" x="340" y="275" text-anchor="middle">Postes et serveurs</text>
+      </svg>
+    </div>
+    <figcaption><b>Fig. 5</b>Avant et après. DC1 est un serveur physique ; DC2, une machine virtuelle sous Hyper-V.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Réplication</strong> : un compte de test créé sur DC1 est apparu sur DC2.</li>
+    <li><strong>DHCP</strong> : <code>ipconfig /release</code> puis <code>/renew</code> sur un poste, bail obtenu.</li>
+    <li><strong>Panne simulée</strong> : DC1 arrêté, l'ouverture de session passait par DC2, qui distribuait aussi les baux.</li>
+  </ul>
+  <p>Ces tests manuels prouvent la bascule, pas sa durée. La vraie preuve est venue deux ans plus tard : pendant un redémarrage de DC1 en 2026, personne n'a perdu sa session. Côté postes, la procédure a rendu chaque mise en service identique à la précédente ; en revanche, tout restait manuel et sa durée n'était pas mesurée.</p>
+</section>
+
+<section class="p-section" id="ameliorations">
+  <h2>Ce que j'améliorerais</h2>
+  <ul class="retro">
+    <li><span>J'<strong>automatiserais</strong> la jonction et l'installation des logiciels, par un script PowerShell ou une image de déploiement, et je déploierais <strong>Windows LAPS</strong> : un mot de passe d'administrateur local différent par poste, changé automatiquement.</span></li>
+    <li><span>Active Directory est <strong>multi-maître</strong> : seuls les cinq <strong>rôles FSMO</strong> restent uniques, ici sur DC1. Je les répartirais en connaissance de cause, je vérifierais que DC2 est catalogue global et j'écrirais la procédure de reprise.</span></li>
+    <li><span>J'activerais l'<strong>intervalle de basculement d'état</strong> du DHCP : lors d'une panne longue, DC2 reprendrait de lui-même toute la plage.</span></li>
+    <li><span>Je <strong>chronométrerais la bascule</strong> et la prouverais par <code>dcdiag</code>, <code>repadmin /replsummary</code>, <code>netdom query fsmo</code> et <code>Get-DhcpServerv4Failover</code>.</span></li>
+  </ul>
+  <p>La suite du fil rouge : passer de la disponibilité à la sécurité, avec l'<a href="/projets/audit-active-directory/">audit PingCastle de ce même annuaire</a> en 2026.</p>
+</section>
+
+<section class="p-section" id="competences">
+  <h2>Compétences</h2>
+  <ul class="tags">
+    <li>Active Directory</li>
+    <li>Unités d'organisation et GPO</li>
+    <li>DNS intégré à l'annuaire</li>
+    <li>Basculement DHCP</li>
+    <li>Hyper-V</li>
+    <li>Diagnostic PowerShell</li>
+    <li>Procédure reproductible</li>
+    <li>Test de panne</li>
+  </ul>
+</section>
+    </div>
+    <aside class="p-toc" aria-label="Sommaire"><p>Sur cette page</p><ol><li><a href="#contexte">Contexte</a></li><li><a href="#demarche">Ce que j'ai fait</a></li><li><a href="#incident">L'incident</a></li><li><a href="#resultats">Résultats</a></li><li><a href="#ameliorations">Ce que j'améliorerais</a></li><li><a href="#competences">Compétences</a></li></ol></aside>
+  </div>
+</article>
+<section class="p-next wrap" aria-label="Autres projets">
+  <div class="p-next__grid">
+    <a href="/projets/migration-pare-feu-pfsense/"><small>← Projet précédent</small><span>Migration du pare-feu : FortiGate → pfSense</span></a>
+    <a href="/projets/reseau-cisco/"><small>Projet suivant →</small><span>Réseau Cisco : VLAN, OSPF, HSRP</span></a>
+  </div>
+  <article class="thread p-thread">
+  <div class="thread__head"><h3>Fil rouge : Active Directory</h3><p>De l'administration courante à l'audit, puis à l'attaque.</p></div>
+  <ol class="thread__steps"><li class="thread__step is-current"><span class="thread__year">2024 · vous êtes ici</span><span class="thread__label">Socle AD en production</span><span class="thread__level">Postes en domaine, puis second contrôleur</span></li><li class="thread__step"><a class="thread__link" href="/projets/labos-reseau-bts/"><span class="thread__year">2025</span><span class="thread__label">AD sur deux sites (labo)</span><span class="thread__level">Répliquer derrière deux pare-feu</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/audit-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Audit PingCastle en production</span><span class="thread__level">Mesurer le risque, corriger sans coupure</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/attaque-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Attaque d'un AD (homelab)</span><span class="thread__level">Comprendre chaque faille côté attaquant</span></a></li></ol>
+</article>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 Mevorah Abergel — cybersécurité &amp; infrastructure.</span>
+    <nav aria-label="Liens de pied de page">
+      <a href="/projets/">Projets</a>
+      <a href="/progression/">Progression</a>
+      <a href="mailto:abergelmevo@gmail.com">abergelmevo@gmail.com</a>
+      <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
+  </div>
+</footer>
+<script src="/assets/js/site.js?v=bdc05cffcd" defer></script>
+</body>
+</html>

@@ -66,7 +66,7 @@
         <div class="row"><dt>Aujourd'hui</dt><dd>Ingénieur cybersécurité et administration en alternance chez Recygo, cycle ingénieur à l'École 2600</dd></div>
         <div class="row"><dt>Parcours</dt><dd>BTS SIO SISR → Licence pro ASS&amp;R (UPEC) → cycle ingénieur</dd></div>
         <div class="row"><dt>Terrain</dt><dd>3 ans sur la même infrastructure de PME, en production</dd></div>
-        <div class="row"><dt>Projets</dt><dd>21 documentés, dont 12 en production</dd></div>
+        <div class="row"><dt>Projets</dt><dd>17 documentés, dont 10 en production</dd></div>
       </dl>
     </div>
   </div>
@@ -112,11 +112,12 @@
         <span class="stage__when">2023 – 2025</span>
         <h3>Construire les fondations</h3>
         <span class="stage__where">BTS SIO SISR · alternance en PME</span>
-        <p>Postes, annuaire, sauvegardes, accès distant en production. Réseau et pare-feu en labo.</p>
+        <p>Postes, annuaire, sauvegardes et pare-feu en production. Réseau et haute disponibilité en labo.</p>
         <ul>
-          <li><a href="/projets/second-controleur-domaine/">Second contrôleur de domaine</a><span>2024</span></li>
+          <li><a href="/projets/socle-active-directory/">Socle Active Directory</a><span>2024</span></li>
+          <li><a href="/projets/migration-pare-feu-pfsense/">Migration du pare-feu vers pfSense</a><span>2024</span></li>
           <li><a href="/projets/sauvegarde-veeam/">Sauvegarde Veeam</a><span>2025</span></li>
-          <li><a href="/projets/pfsense-dmz-haute-dispo/">DMZ et haute dispo pfSense</a><span>labo</span></li>
+          <li><a href="/projets/labos-reseau-bts/">Labos pfSense : DMZ, CARP, deux sites</a><span>labo</span></li>
         </ul>
       </article>
       <article class="stage">
@@ -157,11 +158,11 @@
     <div class="threads">
 <article class="thread">
   <div class="thread__head"><h3>Superviser, puis détecter</h3><p>De la première sonde de supervision à un SOC à plusieurs couches.</p></div>
-  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/supervision-netdata/"><span class="thread__year">2024</span><span class="thread__label">Netdata sur une VM Debian</span><span class="thread__level">Voir l'état des serveurs en temps réel</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/supervision-zabbix-grafana/"><span class="thread__year">2026</span><span class="thread__label">Zabbix + Grafana en SNMP</span><span class="thread__level">Superviser le réseau, alerter en moins de 2 min</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/soc-wazuh/"><span class="thread__year">2026</span><span class="thread__label">SOC Wazuh multicouche</span><span class="thread__level">Détecter : système, réseau, leurre, MITRE ATT&amp;CK</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/siem-ia-locale/"><span class="thread__year">2026</span><span class="thread__label">SIEM durci + IA locale</span><span class="thread__level">Protéger le SIEM et rendre ses alertes lisibles</span></a></li></ol>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/supervision-zabbix-grafana/#avant-netdata"><span class="thread__year">2024</span><span class="thread__label">Netdata sur une VM Debian</span><span class="thread__level">Voir l'état des serveurs en temps réel</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/supervision-zabbix-grafana/"><span class="thread__year">2026</span><span class="thread__label">Zabbix + Grafana en SNMP</span><span class="thread__level">Superviser le réseau, alerter en moins de 2 min</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/soc-wazuh/"><span class="thread__year">2026</span><span class="thread__label">SOC Wazuh multicouche</span><span class="thread__level">Détecter : système, réseau, leurre, MITRE ATT&amp;CK</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/siem-ia-locale/"><span class="thread__year">2026</span><span class="thread__label">SIEM durci + IA locale</span><span class="thread__level">Protéger le SIEM et rendre ses alertes lisibles</span></a></li></ol>
 </article>
 <article class="thread">
   <div class="thread__head"><h3>Active Directory</h3><p>De l'administration courante à l'audit, puis à l'attaque.</p></div>
-  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/mise-en-service-postes/"><span class="thread__year">2024</span><span class="thread__label">Postes intégrés au domaine</span><span class="thread__level">Jonction, GPO, applications métier</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/second-controleur-domaine/"><span class="thread__year">2024</span><span class="thread__label">Second contrôleur de domaine</span><span class="thread__level">Supprimer le point unique de défaillance</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/ad-multisite/"><span class="thread__year">2025</span><span class="thread__label">AD sur deux sites (labo)</span><span class="thread__level">Répliquer derrière deux pare-feu</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/audit-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Audit PingCastle en production</span><span class="thread__level">Mesurer le risque, corriger sans coupure</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/attaque-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Attaque d'un AD (homelab)</span><span class="thread__level">Comprendre chaque faille côté attaquant</span></a></li></ol>
+  <ol class="thread__steps"><li class="thread__step"><a class="thread__link" href="/projets/socle-active-directory/"><span class="thread__year">2024</span><span class="thread__label">Socle AD en production</span><span class="thread__level">Postes en domaine, puis second contrôleur</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/labos-reseau-bts/"><span class="thread__year">2025</span><span class="thread__label">AD sur deux sites (labo)</span><span class="thread__level">Répliquer derrière deux pare-feu</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/audit-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Audit PingCastle en production</span><span class="thread__level">Mesurer le risque, corriger sans coupure</span></a></li><li class="thread__step"><a class="thread__link" href="/projets/attaque-active-directory/"><span class="thread__year">2026</span><span class="thread__label">Attaque d'un AD (homelab)</span><span class="thread__level">Comprendre chaque faille côté attaquant</span></a></li></ol>
 </article>
     </div>
   </div>
@@ -175,7 +176,7 @@
         <h2>Projets phares</h2>
         <p>Six projets représentatifs. Les autres, du BTS au cycle ingénieur, sont sur la page Projets.</p>
       </div>
-      <a class="more" href="/projets/">Les 21 projets →</a>
+      <a class="more" href="/projets/">Les 17 projets →</a>
     </div>
     <div class="cards">
 <a class="card" href="/projets/audit-active-directory/" data-stage="licence" data-context="production" data-themes="systemes defense">
@@ -190,7 +191,7 @@
 <a class="card" href="/projets/soc-wazuh/" data-stage="licence" data-context="production" data-themes="defense supervision">
   <div class="card__media"><img src="/assets/img/projets/soc-wazuh/cover.webp" alt="" loading="lazy" decoding="async"></div>
   <div class="card__body">
-    <div class="card__meta"><span class="badge badge--production">Production</span><span>2025 – 2026</span></div>
+    <div class="card__meta"><span class="badge badge--production">Production</span><span>Juin 2026</span></div>
     <h3>SOC Wazuh multicouche</h3>
     <p>Serveur SIEM Wazuh créé sur Hyper-V, puis trois couches de détection : machines, réseau avec Suricata, et un leurre qui alerte en moins de 30 secondes.</p>
     <div class="card__kpi"><b>&lt; 30 s</b><span>entre une connexion au leurre et l'alerte de niveau 13</span></div>
@@ -226,7 +227,7 @@
 <a class="card" href="/projets/siem-ia-locale/" data-stage="licence" data-context="production" data-themes="defense supervision resilience">
   <div class="card__media"><img src="/assets/img/projets/siem-ia-locale/cover.webp" alt="" loading="lazy" decoding="async"></div>
   <div class="card__body">
-    <div class="card__meta"><span class="badge badge--production">Production</span><span>2026</span></div>
+    <div class="card__meta"><span class="badge badge--production">Production</span><span>Juin 2026</span></div>
     <h3>SIEM durci et alertes enrichies par IA locale</h3>
     <p>Antivirus, audit Lynis et sauvegarde pour le serveur SIEM, puis un modèle de langage local qui explique en français chaque alerte critique.</p>
     <div class="card__kpi"><b>3 lignes</b><span>en français pour expliquer chaque alerte critique, puis une action</span></div>
@@ -321,8 +322,8 @@
 <section class="section" id="certifications">
   <div class="wrap">
     <div class="section-head">
-      <div><p class="eyebrow">Certifications</p><h2>Certifications</h2><p>Les certifications, puis les formations suivies pendant mes études.</p></div>
-      <a class="more" href="/certifications/">Toutes les certifications →</a>
+      <div><p class="eyebrow">Certifications</p><h2>Certifications</h2><p>Les certifications obtenues et en préparation. Diplômes et formations sont sur la page dédiée.</p></div>
+      <a class="more" href="/certifications/">Diplômes, certifications et formations →</a>
     </div>
     <div class="certs certs--compact">
 <article class="cert cert--certification">
@@ -332,19 +333,6 @@
   <p class="cert__issuer">Cisco</p>
   <p class="cert__desc">La certification réseau de référence de Cisco, niveau Associate : elle valide la mise en place, l'exploitation et le dépannage d'un réseau d'entreprise, du câblage jusqu'à la sécurité et l'automatisation.</p>
   
-  
-  
-  
-  </div>
-  
-</article>
-<article class="cert cert--certification">
-  <div class="cert__top"><span class="badge badge--production">Obtenue</span><span class="cert__date">janvier 2024</span></div>
-  <div class="cert__main">
-  <h3>Certificat en Web 3.0 et technologies blockchain</h3>
-  <p class="cert__issuer">Paris School of Technology &amp; Business</p>
-  <p class="cert__desc">Certification professionnelle intégrée au BTS SIO de l'école, consacrée au Web 3.0 et aux technologies blockchain.</p>
-  <p class="cert__detail">Mention très bien</p>
   
   
   
@@ -377,32 +365,6 @@
   </div>
   
 </article>
-<article class="cert cert--formation">
-  <div class="cert__top"><span class="badge badge--production">Terminée</span><span class="cert__date">mai 2024</span></div>
-  <div class="cert__main">
-  <h3>Introduction to Cybersecurity</h3>
-  <p class="cert__issuer">Cisco Networking Academy</p>
-  <p class="cert__desc">Le cours d'entrée de Cisco en cybersécurité : menaces et attaques courantes, protection des données personnelles, puis défense d'une organisation.</p>
-  
-  
-  
-  
-  </div>
-  
-</article>
-<article class="cert cert--formation">
-  <div class="cert__top"><span class="badge badge--production">Terminée</span><span class="cert__date">juin 2024</span></div>
-  <div class="cert__main">
-  <h3>MOOC L'atelier RGPD, modules 1 et 2</h3>
-  <p class="cert__issuer">CNIL</p>
-  <p class="cert__desc">Le MOOC des juristes de la CNIL : le cadre du RGPD et ses notions clés, puis les principes qu'un traitement de données doit respecter.</p>
-  <p class="cert__detail">Quiz finaux : 93 % et 100 %</p>
-  
-  
-  
-  </div>
-  
-</article>
     </div>
   </div>
 </section>
@@ -417,6 +379,7 @@
     <div class="contact__links">
       <a href="mailto:abergelmevo@gmail.com"><span>abergelmevo@gmail.com</span><span>E-mail →</span></a>
       <a href="https://www.linkedin.com/in/mevorah-abergel-a33325298/" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><span>Profil →</span></a>
+      <a href="https://github.com/Abergelmevo" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span>Scripts et code →</span></a>
     </div>
   </div>
 </section>

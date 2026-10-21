@@ -41,7 +41,7 @@
         <a href="/en/#projects" aria-current="page">Projects</a>
         <a href="/en/certifications/">Certifications</a>
         <a href="/en/#contact">Contact</a>
-        <a href="/assets/cv-mevorah-abergel.pdf">CV</a>
+        <a href="/assets/cv-mevorah-abergel-en.pdf">CV</a>
         <a class="nav__lang" href="/projets/soc-wazuh/" hreflang="fr" lang="fr" title="Version française">FR</a>
     </nav>
   </div>
@@ -51,11 +51,11 @@
 <article>
   <header class="p-hero wrap">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/en/">Home</a> / <a href="/en/#projects">Projects</a></nav>
-    <div class="p-badges"><span class="badge">Professional bachelor's (ASS&amp;R)</span><span class="badge badge--production">Production</span><span class="p-read">3 min read</span></div>
+    <div class="p-badges"><span class="badge">Professional bachelor's (ASS&amp;R)</span><span class="badge badge--production">Production</span><span class="p-read">5 min read</span></div>
     <h1>From SIEM to SOC: layered detection around Wazuh</h1>
     <p class="lead">The company's logs stayed on each machine: I built a Wazuh SIEM server, then added three detection layers, from endpoints to the network and a decoy.</p>
-    <dl class="p-meta"><div><dt>Context</dt><dd>Production · small business of about twenty people, SIEM on an Ubuntu VM (Hyper-V)</dd></div><div><dt>Period</dt><dd>2025 – 2026</dd></div><div><dt>My role</dt><dd>Designed, installed and validated independently</dd></div><div><dt>Tools</dt><dd>Wazuh · Suricata · OpenCanary · Auditd · Ubuntu Server · Hyper-V</dd></div></dl>
-    <section class="brief" aria-label="In short"><p class="brief__title">In short</p><div class="brief__grid"><div><span class="brief__k">The problem</span><p>In a small business of about twenty people, every machine kept its own logs: nothing collected or correlated them.</p></div><div><span class="brief__k">What I did</span><p>I built a Wazuh SIEM server on Hyper-V, then added three layers: endpoint integrity and configuration, network traffic with Suricata, an isolated OpenCanary decoy.</p></div><div><span class="brief__k">The result</span><p>A connection to the decoy is reported in under 30 s, 50,682 network rules active, endpoint CIS compliance measured, MITRE ATT&amp;CK tagging repaired.</p></div></div></section>
+    <dl class="p-meta"><div><dt>Context</dt><dd>Production · small business of about twenty people, SIEM on an Ubuntu VM (Hyper-V)</dd></div><div><dt>Period</dt><dd>June 2026</dd></div><div><dt>My role</dt><dd>Designed, installed and validated independently</dd></div><div><dt>Tools</dt><dd>Wazuh · Suricata · OpenCanary · Auditd · Ubuntu Server · Hyper-V</dd></div></dl>
+    <section class="brief" aria-label="In short"><p class="brief__title">In short</p><div class="brief__grid"><div><span class="brief__k">The problem</span><p>In a small business of about twenty people, every machine kept its own logs: nothing collected or correlated them.</p></div><div><span class="brief__k">What I did</span><p>I built a Wazuh SIEM server on Hyper-V, then added three layers: endpoint integrity and configuration, network traffic with Suricata, an isolated OpenCanary decoy.</p></div><div><span class="brief__k">The result</span><p>A connection to the decoy is reported in under 30 s, 50,682 network rules active, endpoint CIS compliance measured at 28-29%, MITRE ATT&amp;CK tagging repaired.</p></div></div></section>
     <div class="kpis"><div class="kpi"><span class="kpi__value">&lt; 30<small>s</small></span><span class="kpi__label">between a connection to the decoy and the level-13 alert</span></div><div class="kpi"><span class="kpi__value">50,682</span><span class="kpi__label">active Suricata rules (Emerging Threats Open), out of 66,607</span></div><div class="kpi"><span class="kpi__value">3</span><span class="kpi__label">detection layers added: endpoints, network, decoy</span></div></div>
   </header>
   <div class="wrap p-layout">
@@ -200,7 +200,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" 'https://localhost:55000/sca/001?pret
     <figcaption><b>Fig. 2</b>Logs converge on the SIEM server. Suricata and Auditd run on that same server; the decoy, on its own VM, sends its events over Syslog.</figcaption>
   </figure>
   <p>An HTTP request to the decoy makes the alert appear in under 30 seconds. It detects connections to itself, not every lateral movement, and a legitimate inventory tool may touch it: each alert is triaged before any response.</p>
-  <p>The first CIS measurement of the Windows endpoints gave the score expected without hardening GPOs. Each failed check points to the GPO that fixes it: a work list. Wazuh's PCI DSS and GDPR dashboards map alerts to requirements: useful to prepare an audit, without proving compliance.</p>
+  <p>The first CIS measurement of the Windows endpoints gave 28 to 29%, the score expected without hardening GPOs. Each failed check points to the GPO that fixes it: a work list. Wazuh's PCI DSS and GDPR dashboards map alerts to requirements: useful to prepare an audit, without proving compliance.</p>
   <figure class="fig">
     <div class="fig__frame"><img src="/assets/img/projets/soc-wazuh/04-tableau-pci-dss.webp" width="1041" height="335" alt="Wazuh PCI DSS dashboard: list of requirements with their alert counts, requirement 10 (logging) and requirement 11 (security testing) at the top." loading="lazy" decoding="async"></div>
     <figcaption><b>Fig. 3</b>Wazuh's PCI DSS compliance module: alerts are mapped to requirements, including 49,728 for requirement 10 and 18,793 for requirement 11.</figcaption>
@@ -235,7 +235,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" 'https://localhost:55000/sca/001?pret
 <section class="p-next wrap" aria-label="More projects">
   <div class="p-next__grid">
     <a href="/en/#projects"><small>← English pages</small><span>Flagship projects</span></a>
-    <a href="/projets/"><small>Full portfolio →</small><span>All 21 projects, in French</span></a>
+    <a href="/projets/"><small>Full portfolio →</small><span>All 17 projects, in French</span></a>
   </div>
 </section>
 </main>
